@@ -16,7 +16,7 @@ using EducationApp.BusinessLogicLayer.Models.Account;
 
 namespace EducationApp.BusinessLogicLayer.Services
 {
-    public class AccountService : IAccountService
+    public class AccountController : IAccountService
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
@@ -25,7 +25,7 @@ namespace EducationApp.BusinessLogicLayer.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        public AccountService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IEmailService emailService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IEmailService emailService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor)
         {
             _userManager = userManager;
             _signInManager = signInManager;

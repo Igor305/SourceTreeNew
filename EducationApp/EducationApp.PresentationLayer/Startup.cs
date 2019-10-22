@@ -23,8 +23,6 @@ using Microsoft.OpenApi.Models;
 using Stripe;
 using System;
 using System.IO;
-using AccountService = EducationApp.BusinessLogicLayer.Services.AccountService;
-using OrderService = EducationApp.BusinessLogicLayer.Services.OrderService;
 
 namespace EducationApp.PresentationLayer
 {
@@ -46,7 +44,7 @@ namespace EducationApp.PresentationLayer
             services.AddScoped<IUserStore<IdentityUser>, UserOnlyStore<IdentityUser, IdentityDbContext>>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IAccountService, BusinessLogicLayer.Services.AccountService>();
             services.AddScoped<IPrintingEditionRepository, PrintingEditionRepository>();
             services.AddScoped<IPrintingEditionService, PrintingEditionService>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
@@ -54,12 +52,12 @@ namespace EducationApp.PresentationLayer
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderService, BusinessLogicLayer.Services.OrderService>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             var mappingConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MappingProfile());
+                mc.AddProfile(new MapperProfile());
             });
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);

@@ -79,9 +79,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 string dateNotVanga = "The future has not come yet";
                 return dateNotVanga;
             }
-            var model = _mapper.Map<CreateAuthorModel>(author);
-            // author.DataBirth = createAuthorModel.DateBirth;
-            // author.DataDeath = createAuthorModel.DataDeath;
+            author = _mapper.Map<AuthorsModel,Author>(createAuthorModel);
             author.CreateDateTime = DateTime.Now;
             author.UpdateDateTime = DateTime.Now;
             _authorRepository.Create(author);
@@ -108,8 +106,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 string dateNotVanga = "The future has not come yet";
                 return dateNotVanga;
             }
-            findauthor.DataBirth = updateAuthorModel.DateBirth;
-            findauthor.DataDeath = updateAuthorModel.DataDeath;
+            findauthor = _mapper.Map<AuthorsModel, Author>(updateAuthorModel);
             findauthor.UpdateDateTime = DateTime.Now;
             _authorRepository.Update(findauthor);
             string status = "Добавлена новая запись";

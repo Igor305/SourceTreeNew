@@ -1,4 +1,5 @@
-﻿using EducationApp.BusinessLogicLayer.Models.Enums;
+﻿using AutoMapper;
+using EducationApp.BusinessLogicLayer.Models.Enums;
 using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using EducationApp.DataAccessLayer.Entities;
@@ -12,9 +13,11 @@ namespace EducationApp.BusinessLogicLayer.Services
     public class PrintingEditionService : IPrintingEditionService
     {
         private readonly IPrintingEditionRepository _printingEditionsRepository;
-        public PrintingEditionService(IPrintingEditionRepository printingEditionsRepository)
+        private readonly IMapper _mapper;
+        public PrintingEditionService(IPrintingEditionRepository printingEditionsRepository, IMapper mapper)
         {
             _printingEditionsRepository = printingEditionsRepository;
+            _mapper = mapper;
         }
         public List<PrintingEdition> GetAllIsDeleted()
         {
@@ -56,34 +59,21 @@ namespace EducationApp.BusinessLogicLayer.Services
         }
         public void Create(CreatePrintingEditionModel createPrintingEditionModel)
         {
-            PrintingEdition printingEdition = new PrintingEdition();
-            printingEdition.Name = createPrintingEditionModel.Name;
-            printingEdition.Description = createPrintingEditionModel.Description;
-            printingEdition.Price = createPrintingEditionModel.Price;
-            printingEdition.Status = createPrintingEditionModel.Status;
-            printingEdition.Currency = createPrintingEditionModel.Currency;
-            printingEdition.Type = createPrintingEditionModel.Type;
+            PrintingEdition printingEdition = _mapper.Map<PrintingEditionModel, PrintingEdition>(createPrintingEditionModel);
             printingEdition.CreateDateTime = DateTime.Now;
             printingEdition.UpdateDateTime = DateTime.Now;
             _printingEditionsRepository.Create(printingEdition);
         }
         public void Update(UpdatePrintingEditionModel updatePrintingEditionModel)
         {
-            var all = _printingEditionsRepository.GetAll();
-            var findPrintingEdition = all.Find(x => x.Id == updatePrintingEditionModel.Id);
-            findPrintingEdition.Name = updatePrintingEditionModel.Name;
-            findPrintingEdition.Description = updatePrintingEditionModel.Description;
-            findPrintingEdition.Price = updatePrintingEditionModel.Price;
-            findPrintingEdition.Status = updatePrintingEditionModel.Status;
-            findPrintingEdition.Currency = updatePrintingEditionModel.Currency;
-            findPrintingEdition.Type = updatePrintingEditionModel.Type;
+            PrintingEdition findPrintingEdition = _printingEditionsRepository.GetById(updatePrintingEditionModel.Id);
+            _mapper.Map(updatePrintingEditionModel, findPrintingEdition);
             findPrintingEdition.UpdateDateTime = DateTime.Now;
             _printingEditionsRepository.Update(findPrintingEdition);
         }
         public void Delete(DeletePrintingEditionModel deletePrintingEditionModel)
         {
-            var all = _printingEditionsRepository.GetAll();
-            var findPrintingEdition = all.Find(x => x.Id == deletePrintingEditionModel.Id);
+            PrintingEdition findPrintingEdition = _printingEditionsRepository.GetById(deletePrintingEditionModel.Id);
             findPrintingEdition.IsDeleted = true;
             _printingEditionsRepository.Update(findPrintingEdition);
         }

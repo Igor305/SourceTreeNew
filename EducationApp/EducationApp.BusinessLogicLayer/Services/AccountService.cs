@@ -116,7 +116,6 @@ namespace EducationApp.BusinessLogicLayer.Services
                 string subject = "Подтверждение регистрации";
                 string message = $"Подтвердите регистрацию, перейдя по ссылке: <a href={regurl}>Confirm email</a>";
                 await _emailService.SendEmail(reg.Email, subject, message);
-                await _signInManager.SignInAsync(user, false);
                 return "Confirm account from email";
             }
             return result.ToString();

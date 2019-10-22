@@ -49,6 +49,8 @@ namespace EducationApp.BusinessLogicLayer.Services
             order.Description = createOrderModel.Description;
             order.CreateDateTime = DateTime.Now;
             order.UpdateDateTime = DateTime.Now;
+            OrderItem orderItem = new OrderItem();
+            //orderItem
             _orderRepository.Create(order);
             return "Добавлена новая запись";
         }
