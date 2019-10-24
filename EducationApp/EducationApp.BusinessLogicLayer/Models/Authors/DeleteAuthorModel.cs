@@ -1,9 +1,8 @@
-﻿using System;
+﻿using EducationApp.BusinessLogicLayer.Models.Base;
 
 namespace EducationApp.BusinessLogicLayer.Models.Authors
 {
-    public class DeleteAuthorModel
+    public class DeleteAuthorModel : BaseModel
     {
-        public Guid Id { get; set; }
     }
 }

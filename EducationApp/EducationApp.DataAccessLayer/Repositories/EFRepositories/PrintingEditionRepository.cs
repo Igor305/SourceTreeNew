@@ -4,6 +4,7 @@ using EducationApp.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
 {
@@ -12,14 +13,14 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
         public PrintingEditionRepository(ApplicationContext applicationContext) : base(applicationContext)
         {
         }
-        public List<PrintingEdition> GetAllIsDeleted()
+        public async Task<List<PrintingEdition>> GetAllIsDeleted()
         {
-            var allIsDeleted = _applicationContext.PrintingEditions.IgnoreQueryFilters().ToList();
+            var allIsDeleted = await _applicationContext.PrintingEditions.IgnoreQueryFilters().ToListAsync();
             return allIsDeleted;
         }
-        public List<PrintingEdition> GetAll()
+        public async Task<List<PrintingEdition>> GetAll()
         {
-            var all = _applicationContext.PrintingEditions.ToList();
+            var all = await _applicationContext.PrintingEditions.ToListAsync();
             return all;
         }
         public IQueryable<PrintingEdition> Pagination()

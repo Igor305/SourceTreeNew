@@ -1,6 +1,11 @@
 ﻿using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EducationApp.PresentationLayer.Controllers
 {
@@ -23,14 +28,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAllIsDeleted")]
-        public object GetAllIsDeleted()
+        public async Task<PrintingEditionResponseModel> GetAllIsDeleted()
         {
-            if (ModelState.IsValid)
-            {
-                var getAll = _printingEditionService.GetAllIsDeleted();
-                return getAll;
-            }
-            return "Модель не валидная(";
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.GetAllIsDeleted();
+            return printingEditionResponseModel;
         }
         /// <summary>
         /// Get all PrintingEdition 
@@ -42,14 +43,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAll")]
-        public object GetAll()
+        public async Task <PrintingEditionResponseModel> GetAll()
         {
-            if (ModelState.IsValid)
-            {
-                var getAll = _printingEditionService.GetAll();
-                return getAll;
-            }
-            return "Модель не валидная(";
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.GetAll();
+            return printingEditionResponseModel;
         }
         /// <summary>
         /// Get Pagination PrintingEdition
@@ -65,14 +62,73 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("Pagination")]
-        public object Pagination([FromQuery] PaginationPagePrintingEditionModel paginationPagePrintingEditionModel)
+        public PrintingEditionResponseModel Pagination([FromQuery] PaginationPagePrintingEditionModel paginationPagePrintingEditionModel)
         {
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
             if (ModelState.IsValid)
             {
-                var filter = _printingEditionService.Pagination(paginationPagePrintingEditionModel);
-                return filter;
+                printingEditionResponseModel = _printingEditionService.Pagination(paginationPagePrintingEditionModel);
+                return printingEditionResponseModel;
             }
-            return "Модель не валидная(";
+            printingEditionResponseModel.Messege = "Error";
+            printingEditionResponseModel.Status = false;
+            printingEditionResponseModel.Error.Add("Post, not valide");
+            return printingEditionResponseModel;
+        }
+        /// <summary>
+        /// Sort Order
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Get/Sort
+        ///     {
+        ///         "NameSort": ""
+        ///     }
+        ///
+        /// </remarks>
+        [HttpGet("Sort")]
+        public async Task<PrintingEditionResponseModel> Sort([FromQuery]SortPrintingEditionModel sortPrintingEditionModel)
+        {
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
+            if (ModelState.IsValid)
+            {
+                printingEditionResponseModel = await _printingEditionService.Sort(sortPrintingEditionModel);
+                return printingEditionResponseModel;
+            }
+            printingEditionResponseModel.Messege = "Error";
+            printingEditionResponseModel.Status = false;
+            printingEditionResponseModel.Error.Add("Post, not valide");
+            return printingEditionResponseModel;
+        }
+        /// <summary>
+        /// Filter Order
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Get/Filter
+        ///     {
+        ///         "NameFilter": "",
+        ///         "Name":"",
+        ///         "Price":"",
+        ///         "Status":"",
+        ///     }
+        ///
+        /// </remarks>
+        [HttpGet("Filter")]
+        public async Task<PrintingEditionResponseModel> Filter([FromQuery]FiltrationPrintingEditionModel filtrationPrintingEditionModel)
+        {
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
+            if (ModelState.IsValid)
+            {
+                printingEditionResponseModel = await _printingEditionService.Filter(filtrationPrintingEditionModel);
+                return printingEditionResponseModel;
+            }
+            printingEditionResponseModel.Messege = "Error";
+            printingEditionResponseModel.Status = false;
+            printingEditionResponseModel.Error.Add("Post, not valide");
+            return printingEditionResponseModel;
         }
         /// <summary>
         /// Buy PrintingEdition
@@ -86,15 +142,19 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpPost("Buy")]
-        public object Buy([FromBody]BuyPrintingEditionModel buyPrintingEditionModel)
+        [HttpGet("Buy")]
+        public async Task<PrintingEditionResponseModel> Buy([FromQuery]BuyPrintingEditionModel buyPrintingEditionModel)
         {
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
             if (ModelState.IsValid)
             {
-                var buy = _printingEditionService.Buy(buyPrintingEditionModel);
-                return buy;
+                printingEditionResponseModel = await _printingEditionService.Buy(buyPrintingEditionModel);
+                return printingEditionResponseModel;
             }
-            return "Модель не валидная";
+            printingEditionResponseModel.Messege = "Error";
+            printingEditionResponseModel.Status = false;
+            printingEditionResponseModel.Error.Add("Post, not valide");
+            return printingEditionResponseModel;
         }
         /// <summary>
         /// Create new PrintingEdition
@@ -114,14 +174,18 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpPost("Create")]
-        public string Create([FromBody]CreatePrintingEditionModel createPrintingEditionModel)
+        public async Task<PrintingEditionResponseModel> Create([FromBody]CreatePrintingEditionModel createPrintingEditionModel)
         {
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
             if (ModelState.IsValid)
             {
-                _printingEditionService.Create(createPrintingEditionModel);
-                return "Добавлена новая запись";
+                printingEditionResponseModel = await _printingEditionService.Create(createPrintingEditionModel);
+                return printingEditionResponseModel;
             }
-            return "Модель не валидная(";
+            printingEditionResponseModel.Messege = "Error";
+            printingEditionResponseModel.Status = false;
+            printingEditionResponseModel.Error.Add("Post, not valide");
+            return printingEditionResponseModel;
         }
         /// <summary>
         /// Update PrintingEdition for Id
@@ -142,14 +206,18 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpPut("Update")]
-        public string Update([FromBody]UpdatePrintingEditionModel updatePrintingEditionModel)
+        public async Task<PrintingEditionResponseModel> Update([FromBody]UpdatePrintingEditionModel updatePrintingEditionModel)
         {
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
             if (ModelState.IsValid)
             {
-                _printingEditionService.Update(updatePrintingEditionModel);
-                return "Запись обновлена";
+                printingEditionResponseModel = await _printingEditionService.Update(updatePrintingEditionModel);
+                return printingEditionResponseModel;
             }
-            return "Запись не валидна(";
+            printingEditionResponseModel.Messege = "Error";
+            printingEditionResponseModel.Status = false;
+            printingEditionResponseModel.Error.Add("Post, not valide");
+            return printingEditionResponseModel;
         }
         /// <summary>
         /// Delete PrintingEdition for Id
@@ -164,61 +232,18 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpDelete("Delete")]
-        public string Delete([FromBody]DeletePrintingEditionModel deletePrintingEditionModel)
+        public async Task<PrintingEditionResponseModel> Delete([FromBody]DeletePrintingEditionModel deletePrintingEditionModel)
         {
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
             if (ModelState.IsValid)
             {
-                _printingEditionService.Delete(deletePrintingEditionModel);
-                return "Запись удалена";
+                printingEditionResponseModel = await _printingEditionService.Delete(deletePrintingEditionModel);
+                return printingEditionResponseModel;
             }
-            return "Запись не валидна(";
-        }
-        /// <summary>
-        /// Sort Order
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     Post/Sort
-        ///     {
-        ///         "NameSort": ""
-        ///     }
-        ///
-        /// </remarks>
-        [HttpPost("Sort")]
-        public object Sort([FromBody]SortPrintingEditionModel sortPrintingEditionModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var sort = _printingEditionService.Sort(sortPrintingEditionModel);
-                return sort;
-            }
-            return "Модель не валидная(";
-        }
-        /// <summary>
-        /// Filter Order
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     Post/Filter
-        ///     {
-        ///         "NameFilter": "",
-        ///         "Name":"",
-        ///         "Price":"",
-        ///         "Status":"",
-        ///     }
-        ///
-        /// </remarks>
-        [HttpPost("Filter")]
-        public object Filter([FromBody]FiltrationPrintingEditionModel filtrationPrintingEditionModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var filter = _printingEditionService.Filter(filtrationPrintingEditionModel);
-                return filter;
-            }
-            return "Модель не валидная(";
+            printingEditionResponseModel.Messege = "Error";
+            printingEditionResponseModel.Status = false;
+            printingEditionResponseModel.Error.Add("Post, not valide");
+            return printingEditionResponseModel;
         }
     }
 }

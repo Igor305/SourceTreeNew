@@ -1,6 +1,8 @@
 ﻿using EducationApp.BusinessLogicLayer.Models.Authors;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace EducationApp.PresentationLayer.Controllers
 {
@@ -23,14 +25,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAllIsDeleted")]
-        public object GetAllIsDeleted()
+        public async Task<AuthorResponseModel> GetAllIsDeleted()
         {
-            if (ModelState.IsValid)
-            {
-                var allIsDeleted = _authorService.GetAllIsDeleted();
-                return allIsDeleted;
-            }
-            return "Запись не валидна(";
+            AuthorResponseModel allIsDeleted = await _authorService.GetAllIsDeleted();
+            return allIsDeleted;
         }
         /// <summary>
         /// Get All Author
@@ -42,14 +40,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAll")]
-        public object GetAll()
+        public async Task<AuthorResponseModel> GetAll()
         {
-            if (ModelState.IsValid)
-            {
-                var all = _authorService.GetAll();
-                return all;
-            }
-            return "Запись не валидна(";
+            AuthorResponseModel all = await _authorService.GetAll();
+            return all;
         }
         /// <summary>
         /// Get Pagination Author
@@ -65,14 +59,18 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("Pagination")]
-        public object Pagination([FromQuery] PaginationPageAuthorModel paginationPageAuthorModel)
+        public AuthorResponseModel Pagination([FromQuery] PaginationPageAuthorModel paginationPageAuthorModel)
         {
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                var all = _authorService.Pagination(paginationPageAuthorModel);
-                return all;
+                authorResponseModel = _authorService.Pagination(paginationPageAuthorModel);
+                return authorResponseModel;
             }
-            return "Запись не валидна(";
+            authorResponseModel.Messege = "Error";
+            authorResponseModel.Status = false;
+            authorResponseModel.Error.Add("Post, not valide");
+            return authorResponseModel;
         }
         /// <summary>
         /// Get Name Author
@@ -82,19 +80,24 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     Get/Find Name
         ///     {
-        ///        "Name": "Пушкин"
+        ///        "First Name": "Сергей",
+        ///        "Last Name": "Конушенко"
         ///     }
         ///
         /// </remarks>
         [HttpGet("FindName")]
-        public object FindName([FromQuery] GetNameAuthorModel getNameAuthorModel)
+        public async Task<AuthorResponseModel> FindName([FromQuery] GetNameAuthorModel getNameAuthorModel)
         {
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                var all = _authorService.FindName(getNameAuthorModel);
-                return all;
+                authorResponseModel = await _authorService.FindName(getNameAuthorModel);
+                return authorResponseModel;
             }
-            return "Запись не валидна(";
+            authorResponseModel.Messege = "Error";
+            authorResponseModel.Status = false;
+            authorResponseModel.Error.Add("Post, not valide");
+            return authorResponseModel;
         }
         /// <summary>
         /// Create new Author
@@ -104,22 +107,27 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     POST/Create
         ///     {
-        ///        "Name": "Пушкин",
-        ///        "DateBirth":"1805-10-09T08:38:40.163Z",
+        ///        "First Name": "Сергей",
+        ///        "Last Name": "Конушенко",
+        ///        "DataBirth":"1805-10-09T08:38:40.163Z",
         ///        "DatadDeath": "1855-10-09T08:38:40.163Z",
         ///     }
         ///
         /// </remarks>
         [Produces("application/json")]
         [HttpPost("Create")]
-        public string Create([FromBody]CreateAuthorModel createAuthorModel)
+        public async Task<AuthorResponseModel> Create([FromBody]CreateAuthorModel createAuthorModel)
         {
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                string result = _authorService.Create(createAuthorModel);
-                return result;
+                authorResponseModel = await _authorService.Create(createAuthorModel);
+                return authorResponseModel;
             }
-            return "Запись не валидна(";
+            authorResponseModel.Messege = "Error";
+            authorResponseModel.Status = false;
+            authorResponseModel.Error.Add("Post, not valide");
+            return authorResponseModel;
         }
         /// <summary>
         /// Update Author for Id
@@ -130,22 +138,25 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     PUT/Update
         ///     {
         ///         "Id": "",
-        ///         "Name": "Пушкин",
-        ///         "DateBirth":"1805-10-09T08:38:40.163Z",
+        ///         "First Name": "Сергей",
+        ///         "Last Name": "Конушенко",
+        ///         "DataBirth":"1805-10-09T08:38:40.163Z",
         ///         "DatadDeath": "1855-10-09T08:38:40.163Z",
         ///     }
         ///
         /// </remarks>
         [Produces("application/json")]
         [HttpPut("Update")]
-        public string Update([FromBody]UpdateAuthorModel updateAuthorModel)
+        public async Task<AuthorResponseModel> Update([FromBody]UpdateAuthorModel updateAuthorModel)
         {
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                var result = _authorService.Update(updateAuthorModel);
-                return result;
+                authorResponseModel = await _authorService.Update(updateAuthorModel);
+                return authorResponseModel;
             }
-            return "Запись не валидна(";
+            authorResponseModel.Messege = "Post, not valide";
+            return authorResponseModel;
         }
         /// <summary>
         /// Delete  Author for Id
@@ -161,14 +172,16 @@ namespace EducationApp.PresentationLayer.Controllers
         /// </remarks>
         [Produces("application/json")]
         [HttpDelete("Delete")]
-        public string Delete([FromBody]DeleteAuthorModel deleteAuthorModel)
+        public async Task<AuthorResponseModel> Delete([FromBody]DeleteAuthorModel deleteAuthorModel)
         {
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                _authorService.Delete(deleteAuthorModel);
-                return "Запись удалена";
+                authorResponseModel = await _authorService.Delete(deleteAuthorModel);
+                return authorResponseModel;
             }
-            return "Запись не валидна(";
+            authorResponseModel.Messege = "Post, not valide";
+            return authorResponseModel;
         }
     }
 }

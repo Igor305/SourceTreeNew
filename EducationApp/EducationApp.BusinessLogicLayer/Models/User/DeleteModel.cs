@@ -1,9 +1,9 @@
-﻿using System;
+﻿using EducationApp.BusinessLogicLayer.Models.Base;
+using System;
 
 namespace EducationApp.BusinessLogicLayer.Models.User
 {
-    public class DeleteModel
+    public class DeleteModel : BaseModel
     {
-        public Guid Id { get; set; }
     }
 }

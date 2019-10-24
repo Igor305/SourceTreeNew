@@ -1,9 +1,9 @@
-﻿using System;
+﻿using EducationApp.BusinessLogicLayer.Models.Base;
+using System;
 
 namespace EducationApp.BusinessLogicLayer.Models.PrintingEditions
 {
-    public class BuyPrintingEditionModel
+    public class BuyPrintingEditionModel : BaseModel
     {
-        public Guid Id { get; set; }
     }
 }

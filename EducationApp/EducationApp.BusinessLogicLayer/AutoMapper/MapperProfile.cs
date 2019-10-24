@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using EducationApp.BusinessLogicLayer.Models.Authors;
 using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
 using EducationApp.BusinessLogicLayer.Models.User;
 using EducationApp.DataAccessLayer.Entities;
 
@@ -10,13 +13,24 @@ namespace EducationApp.BusinessLogicLayer.AutoMapper
     {
         public MapperProfile()
         {
-            CreateMap<Author, AuthorsModel>();
-            CreateMap<AuthorsModel, Author>();
-            CreateMap<PrintingEdition, PrintingEditionModel>();
+            CreateMap<AuthorModel, Author>();
+            CreateMap<Author, AuthorModel>();
+            CreateMap<Author, CreateAuthorModel>();
+            CreateMap<CreateAuthorModel, Author>();
+            CreateMap<Author, UpdateAuthorModel>();
+            CreateMap<UpdateAuthorModel, Author>();
             CreateMap<PrintingEditionModel, PrintingEdition>();
+            CreateMap<PrintingEdition, PrintingEditionModel>();
+            CreateMap<PrintingEdition, CreatePrintingEditionModel>();
+            CreateMap<CreatePrintingEditionModel, PrintingEdition>();
             CreateMap<UpdatePrintingEditionModel, PrintingEdition>();
-            CreateMap<User, UserModel>();
+            CreateMap<PrintingEdition, UpdatePrintingEditionModel>();
             CreateMap<UserModel, User>();
+            CreateMap<User, UserModel>();
+            CreateMap<CreateUserModel, User>();
+            CreateMap<User, CreateUserModel>();
+            CreateMap<UpdateUserModel, User>();
+            CreateMap<User, UpdateUserModel>();
         }
     }
 }

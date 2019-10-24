@@ -2,8 +2,10 @@
 using EducationApp.DataAccessLayer.Entities;
 using EducationApp.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
 {
@@ -12,15 +14,20 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
         public UserRepository(ApplicationContext dbContext) : base(dbContext)
         {
         }
-        public List<User> GetAllIsDeleted()
+        public async Task<List<User>> GetAllIsDeleted()
         {
-            var allIsDeleted = _applicationContext.Users.IgnoreQueryFilters().ToList();
+            List<User> allIsDeleted = await _applicationContext.Users.IgnoreQueryFilters().ToListAsync();
             return allIsDeleted;
         }
-        public List<User> GetAll()
+        public async Task<List<User>> GetAll()
         {
-            var all = _applicationContext.Users.ToList();
+            List<User> all = await _applicationContext.Users.ToListAsync();
             return all;
+        }
+        public async Task<User> GetByIdAllIsDeleted(Guid Id)
+        {
+            User finduser = await _applicationContext.Users.IgnoreQueryFilters().FirstOrDefaultAsync(x=>x.Id == Id);
+            return finduser;
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System;
+﻿using EducationApp.BusinessLogicLayer.Models.Base;
 
 namespace EducationApp.BusinessLogicLayer.Models.PrintingEditions
 {
-    public class DeletePrintingEditionModel
+    public class DeletePrintingEditionModel : BaseModel
     {
-        public Guid Id { get; set; }
     }
 }

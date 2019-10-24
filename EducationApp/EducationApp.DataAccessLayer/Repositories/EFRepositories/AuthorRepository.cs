@@ -4,6 +4,7 @@ using EducationApp.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
 {
@@ -13,16 +14,21 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
         public AuthorRepository(ApplicationContext applicationContext) : base(applicationContext)
         {
         }
-
-        public List<Author> GetAll()
+        public async Task<List<Author>> GetAllIsDeleted()
         {
-            var all = _applicationContext.Authors.ToList();
+            List<Author> all = await _applicationContext.Authors.IgnoreQueryFilters().ToListAsync();
             return all;
         }
-        public List<Author> GetAllIsDeleted()
+        public async Task<List<Author>> GetAll()
         {
-            var all = _applicationContext.Authors.IgnoreQueryFilters().ToList();
+            List<Author> all = await _applicationContext.Authors.ToListAsync();
             return all;
+        }
+        public async Task<Author> GetName(string FirstName, string LastName)
+        {
+            IQueryable<Author> listgetname = _applicationContext.Authors.Where(x => x.LastName == LastName);
+            Author getname = await listgetname.FirstOrDefaultAsync(x => x.FirstName == FirstName);
+            return getname;
         }
         public IQueryable<Author> Pagination()
         {

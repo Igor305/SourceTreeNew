@@ -1,17 +1,17 @@
 ﻿using EducationApp.BusinessLogicLayer.Models.Authors;
-using EducationApp.DataAccessLayer.Entities;
-using System.Collections.Generic;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
+using System.Threading.Tasks;
 
 namespace EducationApp.BusinessLogicLayer.Services.Interfaces
 {
     public interface IAuthorService
     {
-        List<Author> GetAll();
-        List<Author> GetAllIsDeleted();
-        List<Author> Pagination(PaginationPageAuthorModel paginationPageAuthorModel);
-        IEnumerable<Author> FindName(GetNameAuthorModel getNameAuthorModel);
-        string Create(CreateAuthorModel createAuthorModel);
-        string Update(UpdateAuthorModel updateAuthorModel);
-        void Delete(DeleteAuthorModel deleteAuthorModel);
+        Task<AuthorResponseModel> GetAllIsDeleted();
+        Task<AuthorResponseModel> GetAll();
+        AuthorResponseModel Pagination(PaginationPageAuthorModel paginationPageAuthorModel);
+        Task<AuthorResponseModel> FindName(GetNameAuthorModel getNameAuthorModel);
+        Task<AuthorResponseModel> Create(CreateAuthorModel createAuthorModel);
+        Task<AuthorResponseModel> Update(UpdateAuthorModel updateAuthorModel);
+        Task<AuthorResponseModel> Delete(DeleteAuthorModel deleteAuthorModel);
     }
 }

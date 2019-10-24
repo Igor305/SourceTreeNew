@@ -2,6 +2,7 @@
 using EducationApp.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Threading.Tasks;
 
 namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
 {
@@ -15,26 +16,28 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
             _applicationContext = applicationContext;
             _dbSet = applicationContext.Set<T>();
         }
-        public T GetById(Guid id)
+        public async Task<T> GetById(Guid id)
         {
-            return _dbSet.Find(id);
+            T find = await _dbSet.FindAsync(id);
+            return find;
+                
         }
-        public void Create(T entity)
+        public async Task Create(T entity)
         {
-            _dbSet.Add(entity);
-            _applicationContext.SaveChanges();
+            await _dbSet.AddAsync(entity);
+            await _applicationContext.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
             _dbSet.Update(entity);
-            _applicationContext.SaveChanges();
+            await _applicationContext.SaveChangesAsync();
         }
 
-        public void Delete(T entity)
+        public async Task Delete(T entity)
         {
             _dbSet.Remove(entity);
-            _applicationContext.SaveChanges();
+            await _applicationContext.SaveChangesAsync();
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
 using EducationApp.BusinessLogicLayer.Models.User;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using EducationApp.DataAccessLayer.Entities;
 using EducationApp.DataAccessLayer.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EducationApp.BusinessLogicLayer.Services
 {
@@ -18,44 +20,74 @@ namespace EducationApp.BusinessLogicLayer.Services
             _userRepository = userRepository;
             _mapper = mapper;
         }
-        public List<User> GetAllIsDeleted()
+        public async Task<UserResponseModel> GetAllIsDeleted()
         {
-            var allIsDeleted = _userRepository.GetAllIsDeleted();
-            return allIsDeleted;
+            List<User> allIsDeleted = await _userRepository.GetAllIsDeleted();
+            List<UserModel> userModels = _mapper.Map<List<User>, List<UserModel>>(allIsDeleted);
+            UserResponseModel userResponseModel = new UserResponseModel();
+            userResponseModel.Messege = "Successfully";
+            userResponseModel.Status = true;
+            userResponseModel.UserModels = userModels;
+            return userResponseModel;
         }
-        public List<User> GetAll()
+        public async Task<UserResponseModel> GetAll()
         {
-            var all = _userRepository.GetAll();
-            return all;
+            List<User> all = await _userRepository.GetAll();
+            List<UserModel> userModels = _mapper.Map <List<User>, List<UserModel>> (all);
+            UserResponseModel userResponseModel = new UserResponseModel();
+            userResponseModel.Messege = "Successfully";
+            userResponseModel.Status = true;
+            userResponseModel.UserModels = userModels;
+            return userResponseModel;
         }
-        public void Create(CreateModel createModel)
-        {
-            User user = new User();
-            user = _mapper.Map<UserModel, User>(createModel);
+        public async Task<UserResponseModel> Create(CreateUserModel createUserModel)
+        { 
+            User user = _mapper.Map<CreateUserModel, User>(createUserModel);
             user.CreateDateTime = DateTime.Now;
             user.UpdateDateTime = user.CreateDateTime;
-            _userRepository.Create(user);
+            await _userRepository.Create(user);
+            UserModel userModel = _mapper.Map<User, UserModel>(user);
+            UserResponseModel userResponseModel = new UserResponseModel();
+            userResponseModel.Messege = "Successfully";
+            userResponseModel.Status = true;
+            userResponseModel.UserModels.Add(userModel);
+            return userResponseModel;
         }
-        public void Update(EditModel editModel)
+        public async Task<UserResponseModel> Update(UpdateUserModel updateUserModel)
         {
-            var all = _userRepository.GetAll();
-            var findUser = all.Find(x => x.Id == editModel.Id);
-            findUser = _mapper.Map<UserModel, User>(editModel);
+            User findUser = await _userRepository.GetById(updateUserModel.Id);
+            _mapper.Map<UpdateUserModel, User>(updateUserModel);
             findUser.UpdateDateTime = DateTime.Now;
-            _userRepository.Update(findUser);
+            await _userRepository.Update(findUser);
+            UserModel userModel = _mapper.Map<User, UserModel>(findUser);
+            UserResponseModel userResponseModel = new UserResponseModel();
+            userResponseModel.Messege = "Successfully";
+            userResponseModel.Status = true;
+            userResponseModel.UserModels.Add(userModel);
+            return userResponseModel;
         }
-        public void Delete(DeleteModel deleteModel)
+        public async Task<UserResponseModel> Delete(DeleteModel deleteModel)
         {
-            var all = _userRepository.GetAll();
-            var findUser = all.Find(x => x.Id == deleteModel.Id);
+            User findUser = await _userRepository.GetById(deleteModel.Id);
             findUser.IsDeleted = true;
-            _userRepository.Update(findUser);
+            await _userRepository.Update(findUser);
+            UserModel userModel = _mapper.Map<User, UserModel>(findUser);
+            UserResponseModel userResponseModel = new UserResponseModel();
+            userResponseModel.Messege = "Successfully";
+            userResponseModel.Status = true;
+            userResponseModel.UserModels.Add(userModel);
+            return userResponseModel;
         }
-        public void FinalRemoval(DeleteModel deleteModel)
+        public async Task<UserResponseModel> FinalRemoval(DeleteModel deleteModel)
         {
-            var allFinalRemoval = _userRepository.GetAllIsDeleted();
-            var findUser = allFinalRemoval.Find(x => x.Id == deleteModel.Id);
-            _userRepository.Delete(findUser);
+            User findUser = await _userRepository.GetByIdAllIsDeleted(deleteModel.Id);
+            await _userRepository.Delete(findUser);
+            UserModel userModel = _mapper.Map<User, UserModel>(findUser);
+            UserResponseModel userResponseModel = new UserResponseModel();
+            userResponseModel.Messege = "Successfully";
+            userResponseModel.Status = true;
+            userResponseModel.UserModels.Add(userModel);
+            return userResponseModel;
         }
     }
 }

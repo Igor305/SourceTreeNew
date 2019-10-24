@@ -1,6 +1,8 @@
-﻿using EducationApp.BusinessLogicLayer.Models.User;
+﻿using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
+using EducationApp.BusinessLogicLayer.Models.User;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace EducationApp.PresentationLayer.Controllers
 {
@@ -23,10 +25,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAllIsDeleted")]
-        public object GetAllIsDeleted()
+        public async Task<UserResponseModel> GetAllIsDeleted()
         {
-            var all = _userService.GetAllIsDeleted();
-            return all;
+            UserResponseModel userResponseModel = await _userService.GetAllIsDeleted();
+            return userResponseModel;
         }
         /// <summary>
         /// Get all User 
@@ -38,10 +40,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAll")]
-        public object GetAll()
+        public async Task<UserResponseModel> GetAll()
         {
-            var all = _userService.GetAll();
-            return all;
+            UserResponseModel userResponseModel = await _userService.GetAll();
+            return userResponseModel;
         }
         /// <summary>
         /// Create new PrintingEdition
@@ -59,14 +61,18 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpPost("Create")]
-        public string Create([FromBody]CreateModel createmodel)
+        public async Task<UserResponseModel> Create([FromBody]CreateUserModel createmodel)
         {
+            UserResponseModel userResponseModel = new UserResponseModel();
             if (ModelState.IsValid)
             {
-                _userService.Create(createmodel);
-                return "Данные внесены ";
+               userResponseModel = await _userService.Create(createmodel);
+               return userResponseModel;
             }
-            return "Что-то не так";
+            userResponseModel.Messege = "Error";
+            userResponseModel.Status = false;
+            userResponseModel.Error.Add("Post, not valide");
+            return userResponseModel;
         }
         /// <summary>
         /// Update User for Id
@@ -85,14 +91,18 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpPut("Update")]
-        public string Update([FromBody]EditModel model)
+        public async Task<UserResponseModel> Update([FromBody]UpdateUserModel model)
         {
+            UserResponseModel userResponseModel = new UserResponseModel();
             if (ModelState.IsValid)
             {
-                _userService.Update(model);
-                return "Данные изменены ";
+                userResponseModel = await _userService.Update(model);
+                return userResponseModel;
             }
-            return "Что-то не так";
+            userResponseModel.Messege = "Error";
+            userResponseModel.Status = false;
+            userResponseModel.Error.Add("Post, not valide");
+            return userResponseModel;
         }
         /// <summary>
         /// Delete User for Id
@@ -107,10 +117,18 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpDelete("Delete")]
-        public string Delete([FromBody]DeleteModel deleteModel)
+        public async Task<UserResponseModel> Delete([FromBody]DeleteModel deleteModel)
         {
-            _userService.Delete(deleteModel);
-            return "Пользователь под номером " + deleteModel.Id + " был удачно удалён";
+            UserResponseModel userResponseModel = new UserResponseModel();
+            if (ModelState.IsValid)
+            {
+                userResponseModel = await _userService.Delete(deleteModel);
+                return userResponseModel;
+            }
+            userResponseModel.Messege = "Error";
+            userResponseModel.Status = false;
+            userResponseModel.Error.Add("Post, not valide");
+            return userResponseModel;
         }
         /// <summary>
         /// Final Removal User for Id
@@ -125,10 +143,18 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpDelete("FinalRemoval")]
-        public string FinalRemoval([FromBody]DeleteModel deleteModel)
+        public async Task<UserResponseModel> FinalRemoval([FromBody]DeleteModel deleteModel)
         {
-            _userService.FinalRemoval(deleteModel);
-            return "Пользователь под номером " + deleteModel.Id + " был окончательно удалён";
+            UserResponseModel userResponseModel = new UserResponseModel();
+            if (ModelState.IsValid)
+            {
+                userResponseModel = await _userService.FinalRemoval(deleteModel);
+                return userResponseModel;
+            }
+            userResponseModel.Messege = "Error";
+            userResponseModel.Status = false;
+            userResponseModel.Error.Add("Post, not valide");
+            return userResponseModel;
         }
     }
 }

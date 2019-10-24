@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using EducationApp.BusinessLogicLayer.Models.Authors;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using EducationApp.DataAccessLayer.Entities;
 using EducationApp.DataAccessLayer.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EducationApp.BusinessLogicLayer.Services
 {
@@ -19,105 +21,173 @@ namespace EducationApp.BusinessLogicLayer.Services
             _mapper = mapper;
         }
 
-        public List<Author> GetAllIsDeleted()
+        public async Task<AuthorResponseModel> GetAllIsDeleted()
         {
-            var allIsDeleted = _authorRepository.GetAllIsDeleted();
-            return allIsDeleted;
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            List<Author> allIsDeleted = await _authorRepository.GetAllIsDeleted();
+            List<AuthorModel> authorModel = _mapper.Map<List<Author>, List<AuthorModel>>(allIsDeleted);
+            authorResponseModel.Messege = "Successfully";
+            authorResponseModel.Status = true;
+            authorResponseModel.AuthorModel = authorModel;
+            return authorResponseModel;
         }
-        public List<Author> GetAll()
+        public async Task<AuthorResponseModel> GetAll()
         {
-            var all = _authorRepository.GetAll();
-            return all;
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            List<Author> all = await _authorRepository.GetAll();
+            List<AuthorModel> authorModel = _mapper.Map<List<Author>, List<AuthorModel>>(all);
+            authorResponseModel.Messege = "Successfully";
+            authorResponseModel.Status = true;
+            authorResponseModel.AuthorModel = authorModel;
+            return authorResponseModel;
         }
-        public List<Author> Pagination(PaginationPageAuthorModel paginationPageAuthorModel)
+        public AuthorResponseModel Pagination(PaginationPageAuthorModel paginationPageAuthorModel)
         {
-            if (paginationPageAuthorModel.Skip < 1)
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            if (paginationPageAuthorModel.Skip < 0)
             {
-                paginationPageAuthorModel.Skip = 1;
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("Skip < 0");
             }
-            var pagination = _authorRepository.Pagination();
-            var count = pagination.Count();
-            var items = pagination.Skip(paginationPageAuthorModel.Skip).Take(paginationPageAuthorModel.Take).ToList();
+            if (paginationPageAuthorModel.Take < 0)
+            {
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("Take < 0");
+            }
+            if (authorResponseModel.Messege == null)
+            {
+                IQueryable<Author> pagination = _authorRepository.Pagination();
+                int count = pagination.Count();
+                List<Author> items = pagination.Skip(paginationPageAuthorModel.Skip).Take(paginationPageAuthorModel.Take).ToList();
 
-            PaginationAuthorModel paginationAuthorModel = new PaginationAuthorModel(count, paginationPageAuthorModel.Skip, paginationPageAuthorModel.Take);
-            IndexViewModel viewModel = new IndexViewModel
-            {
-                PaginationAuthorModel = paginationAuthorModel,
-                Authors = items
-            };
-            return items;
+                PaginationAuthorModel paginationAuthorModel = new PaginationAuthorModel(count, paginationPageAuthorModel.Skip, paginationPageAuthorModel.Take);
+                IndexViewModel viewModel = new IndexViewModel
+                {
+                    PaginationAuthorModel = paginationAuthorModel,
+                    Authors = items
+                };
+                List<AuthorModel> authorModel = _mapper.Map<List<Author>, List<AuthorModel>>(items);
+                authorResponseModel.Messege = "Successfully";
+                authorResponseModel.Status = true;
+                authorResponseModel.AuthorModel = authorModel;
+            }
+            return authorResponseModel;
         }
-        public IEnumerable<Author> FindName(GetNameAuthorModel getNameAuthorModel)
+        public async Task<AuthorResponseModel> FindName(GetNameAuthorModel getNameAuthorModel)
         {
-            var all = _authorRepository.GetAll();
-            var findNameAuthor = all.Where(x => x.Name == getNameAuthorModel.Name);
-            return findNameAuthor;
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            Author findNameAuthor = await _authorRepository.GetName(getNameAuthorModel.FirstName, getNameAuthorModel.LastName);
+            if (findNameAuthor == null)
+            {
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("No such name");
+            }
+            if (authorResponseModel.Messege == null)
+            {
+                AuthorModel authorModel = _mapper.Map<Author, AuthorModel>(findNameAuthor);
+                authorResponseModel.Messege = "Successfully";
+                authorResponseModel.Status = true;
+                authorResponseModel.AuthorModel.Add(authorModel);
+            }
+            return authorResponseModel;
         }
-        public string Create(CreateAuthorModel createAuthorModel)
+        public async Task<AuthorResponseModel> Create(CreateAuthorModel createAuthorModel)
         {
-            if (createAuthorModel.Name == null)
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            if ((createAuthorModel.FirstName == null) && (createAuthorModel.LastName == null))
             {
-                string noNull = "Name not null";
-                return noNull;
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("Name not null");
             }
-            var all = _authorRepository.GetAll();
-            var cloneauthor = all.Any(x => x.Name == createAuthorModel.Name);
-            if (cloneauthor == true)
+            Author findNameAuthor = await _authorRepository.GetName(createAuthorModel.FirstName,createAuthorModel.LastName);
+            if (findNameAuthor != null)
             {
-                string noNull = "There is such a name";
-                return noNull;
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("There is such a name");
             }
-            Author author = new Author();
-            author.Name = createAuthorModel.Name;
-            if (createAuthorModel.DateBirth > createAuthorModel.DataDeath)
+            if (createAuthorModel.DataBirth > createAuthorModel.DataDeath)
             {
-                string dateNotValide = "Date vot valide";
-                return dateNotValide;
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("Date vot valide");
             }
-            if ((createAuthorModel.DateBirth > DateTime.Now) || (createAuthorModel.DataDeath > DateTime.Now))
+            if (createAuthorModel.DataBirth > DateTime.Now)
             {
-                string dateNotVanga = "The future has not come yet";
-                return dateNotVanga;
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("The author has not yet been born");
             }
-            author = _mapper.Map<AuthorsModel,Author>(createAuthorModel);
-            author.CreateDateTime = DateTime.Now;
-            author.UpdateDateTime = DateTime.Now;
-            _authorRepository.Create(author);
-            string status = "Добавлена новая запись";
-            return status;
+            if (createAuthorModel.DataDeath > DateTime.Now)
+            {
+                createAuthorModel.DataDeath = null;
+            }
+            if (authorResponseModel.Messege == null)
+            {
+                Author author = _mapper.Map<CreateAuthorModel, Author>(createAuthorModel);
+                author.CreateDateTime = DateTime.Now;
+                author.UpdateDateTime = DateTime.Now;
+                await _authorRepository.Create(author);
+                AuthorModel authorModel = _mapper.Map<Author, AuthorModel>(author);
+                authorResponseModel.Messege = "Successfully";
+                authorResponseModel.Status = true;
+                authorResponseModel.AuthorModel.Add(authorModel);
+            }
+            return authorResponseModel;
         }
-        public string Update(UpdateAuthorModel updateAuthorModel)
+        public async Task<AuthorResponseModel> Update(UpdateAuthorModel updateAuthorModel)
         {
-            var all = _authorRepository.GetAll();
-            var findauthor = all.Find(x => x.Id == updateAuthorModel.Id);
-            if (updateAuthorModel.Name == null)
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            if ((updateAuthorModel.FirstName == null) && (updateAuthorModel.LastName == null))
             {
-                string noNull = "Name not null";
-                return noNull;
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("Name not null");
             }
-            findauthor.Name = updateAuthorModel.Name;
-            if (updateAuthorModel.DateBirth > updateAuthorModel.DataDeath)
+            if (updateAuthorModel.DataBirth > updateAuthorModel.DataDeath)
             {
-                string dateNotValide = "Date vot valide";
-                return dateNotValide;
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("Date vot valide");
             }
-            if ((updateAuthorModel.DateBirth > DateTime.Now) || (updateAuthorModel.DataDeath > DateTime.Now))
+            if (updateAuthorModel.DataBirth > DateTime.Now)
             {
-                string dateNotVanga = "The future has not come yet";
-                return dateNotVanga;
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("The author has not yet been born");
             }
-            findauthor = _mapper.Map<AuthorsModel, Author>(updateAuthorModel);
-            findauthor.UpdateDateTime = DateTime.Now;
-            _authorRepository.Update(findauthor);
-            string status = "Добавлена новая запись";
-            return status;
+            if (updateAuthorModel.DataDeath > DateTime.Now)
+            {
+                updateAuthorModel.DataDeath = null;
+            }
+            if (authorResponseModel.Messege == null)
+            {
+                Author findauthor = await _authorRepository.GetById(updateAuthorModel.Id);
+                _mapper.Map(updateAuthorModel, findauthor);
+                findauthor.UpdateDateTime = DateTime.Now;
+                await _authorRepository.Update(findauthor);
+                AuthorModel authorModel = _mapper.Map<Author, AuthorModel>(findauthor);
+                authorResponseModel.Messege = "Successfully";
+                authorResponseModel.Status = true;
+                authorResponseModel.AuthorModel.Add(authorModel);
+            }
+            return authorResponseModel;
         }
-        public void Delete(DeleteAuthorModel deleteAuthorModel)
+        public async Task<AuthorResponseModel> Delete(DeleteAuthorModel deleteAuthorModel)
         {
-            var all = _authorRepository.GetAll();
-            var findauthor = all.Find(x => x.Id == deleteAuthorModel.Id);
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            Author findauthor = await _authorRepository.GetById(deleteAuthorModel.Id);
             findauthor.IsDeleted = true;
-            _authorRepository.Update(findauthor);
+            await _authorRepository.Update(findauthor);
+            AuthorModel authorModel = _mapper.Map<Author, AuthorModel>(findauthor);
+            authorResponseModel.Messege = "Successfully";
+            authorResponseModel.Status = true;
+            authorResponseModel.AuthorModel.Add(authorModel);
+            return authorResponseModel;
         }
     }
 }

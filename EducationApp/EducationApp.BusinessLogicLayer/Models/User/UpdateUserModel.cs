@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using EducationApp.BusinessLogicLayer.Models.Base;
 
 namespace EducationApp.BusinessLogicLayer.Models.User
 {
-    public class UserModel
+    public class UpdateUserModel : BaseModel
     {
         public string Email { get; set; }
         public string FirstName { get; set; }

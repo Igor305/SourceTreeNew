@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace EducationApp.DataAccessLayer.Repositories.Interfaces
 {
     public interface IGenericRepository<T>
     {
-        T GetById(Guid id);
-        void Create(T entity);
-        void Update(T entity);
-        void Delete(T entity);
+        Task<T> GetById(Guid id);
+        Task Create(T entity);
+        Task Update(T entity);
+        Task Delete(T entity);
     }
 }

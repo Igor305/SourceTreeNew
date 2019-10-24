@@ -1,10 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EducationApp.BusinessLogicLayer.Models.Authors
+﻿namespace EducationApp.BusinessLogicLayer.Models.Authors
 {
     public class GetNameAuthorModel
     {
-        [Required]
-        public string Name { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

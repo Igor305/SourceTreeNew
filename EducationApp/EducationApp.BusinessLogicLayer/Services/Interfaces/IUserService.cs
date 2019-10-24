@@ -1,16 +1,16 @@
-﻿using EducationApp.BusinessLogicLayer.Models.User;
-using EducationApp.DataAccessLayer.Entities;
-using System.Collections.Generic;
+﻿using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
+using EducationApp.BusinessLogicLayer.Models.User;
+using System.Threading.Tasks;
 
 namespace EducationApp.BusinessLogicLayer.Services.Interfaces
 {
     public interface IUserService
     {
-        List<User> GetAllIsDeleted();
-        List<User> GetAll();
-        void Create(CreateModel createModel);
-        void Update(EditModel editModel);
-        void Delete(DeleteModel deleteModel);
-        void FinalRemoval(DeleteModel deleteModel);
+        Task<UserResponseModel> GetAllIsDeleted();
+        Task<UserResponseModel> GetAll();
+        Task<UserResponseModel> Create(CreateUserModel createUserModel);
+        Task<UserResponseModel> Update(UpdateUserModel updateUserModel);
+        Task<UserResponseModel> Delete(DeleteModel deleteModel);
+        Task<UserResponseModel> FinalRemoval(DeleteModel deleteModel);
     }
 }
