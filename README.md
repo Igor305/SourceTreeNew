@@ -1,2 +1,2 @@
 # SourceTreeNew
-New SourceTree
+Рабочая версия в разработке, ближайшие исправления лежат в ветке development
