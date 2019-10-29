@@ -2,8 +2,10 @@
 using EducationApp.DataAccessLayer.Entities;
 using EducationApp.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
 {
@@ -12,14 +14,14 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
         public OrderRepository(ApplicationContext aplicationContext) : base(aplicationContext)
         {
         }
-        public List<Order> GetAllIsDeleted()
+        public async Task<List<Order>> GetAllIsDeleted()
         {
-            var allIsDeleted = _applicationContext.Orders.IgnoreQueryFilters().ToList();
+            List<Order> allIsDeleted = await _applicationContext.Orders.IgnoreQueryFilters().ToListAsync();
             return allIsDeleted;
         }
-        public List<Order> GetAll()
+        public async Task<List<Order>> GetAll()
         {
-            var all = _applicationContext.Orders.ToList();
+            List<Order> all = await _applicationContext.Orders.ToListAsync();
             return all;
         }
         public IQueryable<Order> Pagination()

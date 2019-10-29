@@ -4,6 +4,7 @@ using EducationApp.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
 {
@@ -11,17 +12,16 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
     {
         public OrderItemRepository(ApplicationContext applicationContext) : base(applicationContext)
         {
-
         }
-        public List<OrderItem> GetAllIsDeleted()
+        public async Task<List<OrderItem>> GetAllIsDeleted()
         {
-            var allIsDeleted = _applicationContext.OrderItems.IgnoreQueryFilters().ToList();
-            return allIsDeleted;
+            List<OrderItem> orderItems = await _applicationContext.OrderItems.IgnoreQueryFilters().ToListAsync();
+            return orderItems;
         }
-        public List<OrderItem> GetAll()
+        public async Task<List<OrderItem>> GetAll()
         {
-            var all = _applicationContext.OrderItems.ToList();
-            return all;
+            List<OrderItem> orderItems = await _applicationContext.OrderItems.ToListAsync();
+            return orderItems;
         }
     }
 }

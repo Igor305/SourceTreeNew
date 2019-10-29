@@ -10,6 +10,7 @@ using EducationApp.DataAccessLayer.Repositories.EFRepositories;
 using EducationApp.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,16 @@ namespace EducationApp.PresentationLayer
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, BusinessLogicLayer.Services.OrderService>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddLogging(loggingBuilder =>
+            {
+                //  IConfiguration loggingSection = Configuration.GetSection("Logging");
+                //  loggingBuilder.AddFile(loggingSection);
+                loggingBuilder.AddConfiguration(Configuration.GetSection("Logging"));
+                loggingBuilder.AddFile(o => o.RootPath = AppContext.BaseDirectory);
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+            });
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -114,25 +125,32 @@ namespace EducationApp.PresentationLayer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseMiddleware<LogService>();
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
             if (env.IsDevelopment())
             {
+                app.UseStatusCodePages();
+                app.UseDatabaseErrorPage();
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                app.UseExceptionHandler("/error");
                 app.UseHsts();
             }
+
+            app.UseHttpsRedirection();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Education V1");
             });
+
             app.UseAuthentication();
-            app.UseHttpsRedirection();
             app.UseMvc();
+
         }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EducationApp.DataAccessLayer.Migrations
 {
-    public partial class First : Migration
+    public partial class D : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -60,9 +60,10 @@ namespace EducationApp.DataAccessLayer.Migrations
                     CreateDateTime = table.Column<DateTime>(nullable: false),
                     UpdateDateTime = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    DataBirth = table.Column<DateTime>(nullable: true),
-                    DataDeath = table.Column<DateTime>(nullable: true)
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    DateBirth = table.Column<DateTime>(nullable: true),
+                    DateDeath = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -94,7 +95,7 @@ namespace EducationApp.DataAccessLayer.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    Price = table.Column<string>(nullable: true),
+                    Price = table.Column<decimal>(nullable: false),
                     Type = table.Column<string>(nullable: true),
                     Status = table.Column<int>(nullable: false),
                     Currency = table.Column<int>(nullable: false)

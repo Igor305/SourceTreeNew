@@ -44,6 +44,12 @@ namespace EducationApp.BusinessLogicLayer.Services
         public PrintingEditionResponseModel Pagination(PaginationPagePrintingEditionModel paginationPagePrintingEditionModel)
         {
             PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
+            if (paginationPagePrintingEditionModel.Take == 0)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Take is null");
+            }
             if (paginationPagePrintingEditionModel.Skip < 0)
             {
                 printingEditionResponseModel.Messege = "Error";
@@ -75,6 +81,25 @@ namespace EducationApp.BusinessLogicLayer.Services
             }
             return printingEditionResponseModel;
         }
+        public async Task<PrintingEditionResponseModel> GetById(GetByIdPrintingEditionModel getByIdPrintingEditionModel)
+        {
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
+            PrintingEdition findPrintingEdition = await _printingEditionsRepository.GetById(getByIdPrintingEditionModel.Id);
+            if (findPrintingEdition == null)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("This Id is not in database");
+            }
+            if (printingEditionResponseModel.Messege == null)
+            {
+                PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(findPrintingEdition);
+                printingEditionResponseModel.Messege = "Successfully";
+                printingEditionResponseModel.Status = true;
+                printingEditionResponseModel.PrintingEditionModel.Add(printingEditionModel);
+            }
+            return printingEditionResponseModel;
+        }
         public async Task<PrintingEditionResponseModel> Buy(BuyPrintingEditionModel buyPrintingEditionModel)
         {
             PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
@@ -83,7 +108,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             {
                 printingEditionResponseModel.Messege = "Error";
                 printingEditionResponseModel.Status = false;
-                printingEditionResponseModel.Error.Add("No print with this id");
+                printingEditionResponseModel.Error.Add("This Id is not in database");
             }
             if (printingEditionResponseModel.Messege == null)
             {
@@ -97,33 +122,111 @@ namespace EducationApp.BusinessLogicLayer.Services
         public async Task<PrintingEditionResponseModel> Create(CreatePrintingEditionModel createPrintingEditionModel)
         {
             PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            PrintingEdition printingEdition = _mapper.Map<CreatePrintingEditionModel, PrintingEdition>(createPrintingEditionModel);
-            printingEdition.CreateDateTime = DateTime.Now;
-            printingEdition.UpdateDateTime = DateTime.Now;
-            await _printingEditionsRepository.Create(printingEdition);
-            PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(printingEdition);
-            printingEditionResponseModel.Messege = "Successfully";
-            printingEditionResponseModel.Status = true;
-            printingEditionResponseModel.PrintingEditionModel.Add(printingEditionModel);
+            if (createPrintingEditionModel.Name == null)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Name not null");
+            }
+            if (createPrintingEditionModel.Description == null)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Description not null");
+            }
+            if (createPrintingEditionModel.Price <= 0)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Price not null");
+            }
+            if (createPrintingEditionModel.Type == null)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Type not null");
+            }
+            if (createPrintingEditionModel.Currency == 0)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Currency not null");
+            }
+            if (printingEditionResponseModel.Messege == null)
+            {
+                PrintingEdition printingEdition = _mapper.Map<CreatePrintingEditionModel, PrintingEdition>(createPrintingEditionModel);
+                printingEdition.CreateDateTime = DateTime.Now;
+                printingEdition.UpdateDateTime = DateTime.Now;
+                await _printingEditionsRepository.Create(printingEdition);
+                PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(printingEdition);
+                printingEditionResponseModel.Messege = "Successfully";
+                printingEditionResponseModel.Status = true;
+                printingEditionResponseModel.PrintingEditionModel.Add(printingEditionModel);
+            }
             return printingEditionResponseModel;
         }
         public async Task<PrintingEditionResponseModel> Update(UpdatePrintingEditionModel updatePrintingEditionModel)
         {
             PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
             PrintingEdition findPrintingEdition = await _printingEditionsRepository.GetById(updatePrintingEditionModel.Id);
-            _mapper.Map(updatePrintingEditionModel, findPrintingEdition);
-            findPrintingEdition.UpdateDateTime = DateTime.Now;
-            await _printingEditionsRepository.Update(findPrintingEdition);
-            PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(findPrintingEdition);
-            printingEditionResponseModel.Messege = "Successfully";
-            printingEditionResponseModel.Status = true;
-            printingEditionResponseModel.PrintingEditionModel.Add(printingEditionModel);
+            if (findPrintingEdition == null)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("This Id is not in database");
+            }
+            if (updatePrintingEditionModel.Name == null)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Name not null");
+            }
+            if (updatePrintingEditionModel.Description == null)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Description not null");
+            }
+            if (updatePrintingEditionModel.Price <= 0)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Price not null");
+            }
+            if (updatePrintingEditionModel.Type == null)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Type not null");
+            }
+            if (updatePrintingEditionModel.Currency == 0)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Currency not null");
+            }
+            if (printingEditionResponseModel.Messege == null)
+            {
+                _mapper.Map(updatePrintingEditionModel, findPrintingEdition);
+                findPrintingEdition.UpdateDateTime = DateTime.Now;
+                await _printingEditionsRepository.Update(findPrintingEdition);
+                PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(findPrintingEdition);
+                printingEditionResponseModel.Messege = "Successfully";
+                printingEditionResponseModel.Status = true;
+                printingEditionResponseModel.PrintingEditionModel.Add(printingEditionModel);
+            }
             return printingEditionResponseModel;
         }
         public async Task<PrintingEditionResponseModel> Delete(DeletePrintingEditionModel deletePrintingEditionModel)
         {
             PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
             PrintingEdition findPrintingEdition = await _printingEditionsRepository.GetById(deletePrintingEditionModel.Id);
+            if (findPrintingEdition == null)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("This Id is not in database");
+            }
             findPrintingEdition.IsDeleted = true;
             await _printingEditionsRepository.Update(findPrintingEdition);
             PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(findPrintingEdition);
@@ -139,6 +242,10 @@ namespace EducationApp.BusinessLogicLayer.Services
             List<PrintingEdition> all = await _printingEditionsRepository.GetAll();
             switch (sortPrintingEditionModel.NameSort)
             {
+                case PrintingEditionNameSort.None:
+                    List<PrintingEdition> printingEditions = all;
+                    printingEditionModel = _mapper.Map<List<PrintingEdition>, List<PrintingEditionModel>>(all);
+                    break;
                 case PrintingEditionNameSort.Id:
                     List<PrintingEdition> sortId = all.OrderBy(x => x.Id).ToList();
                     printingEditionModel = _mapper.Map<List<PrintingEdition>, List<PrintingEditionModel>>(sortId);
@@ -164,13 +271,34 @@ namespace EducationApp.BusinessLogicLayer.Services
         }
         public async Task<PrintingEditionResponseModel> Filter(FiltrationPrintingEditionModel filtrationPrintingEditionModel)
         {
-            List<PrintingEdition> all = await _printingEditionsRepository.GetAll();
-            List<PrintingEdition> filter = all.Where(x => x.Name == filtrationPrintingEditionModel.Name).Where(x => x.Price == filtrationPrintingEditionModel.Price).Where(x => x.Status == filtrationPrintingEditionModel.Status).ToList();
-            List<PrintingEditionModel> printingEditionModel = _mapper.Map<List<PrintingEdition>, List<PrintingEditionModel>>(filter);
-            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            printingEditionResponseModel.Messege = "Successfully";
-            printingEditionResponseModel.Status = true;
-            printingEditionResponseModel.PrintingEditionModel = printingEditionModel;
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();           
+            if (filtrationPrintingEditionModel.Name == null)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Name not null");
+            }
+            if (filtrationPrintingEditionModel.Price == 0)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Price not null");
+            }
+            if (filtrationPrintingEditionModel.Status == 0)
+            {
+                printingEditionResponseModel.Messege = "Error";
+                printingEditionResponseModel.Status = false;
+                printingEditionResponseModel.Error.Add("Status not null");
+            }
+            if (printingEditionResponseModel.Messege == null)
+            {
+                List<PrintingEdition> all = await _printingEditionsRepository.GetAll();
+                List<PrintingEdition> filter = all.Where(x => x.Name == filtrationPrintingEditionModel.Name).Where(x => x.Price == filtrationPrintingEditionModel.Price).Where(x => x.Status == filtrationPrintingEditionModel.Status).ToList();
+                List<PrintingEditionModel> printingEditionModel = _mapper.Map<List<PrintingEdition>, List<PrintingEditionModel>>(filter);
+                printingEditionResponseModel.Messege = "Successfully";
+                printingEditionResponseModel.Status = true;
+                printingEditionResponseModel.PrintingEditionModel = printingEditionModel;
+            }
             return printingEditionResponseModel;
         }
     }

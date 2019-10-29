@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EducationApp.BusinessLogicLayer.Models.Authors;
+using EducationApp.BusinessLogicLayer.Models.Enums;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using EducationApp.DataAccessLayer.Entities;
@@ -44,6 +45,12 @@ namespace EducationApp.BusinessLogicLayer.Services
         public AuthorResponseModel Pagination(PaginationPageAuthorModel paginationPageAuthorModel)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            if (paginationPageAuthorModel.Take == 0)
+            {
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("Take is null");
+            }
             if (paginationPageAuthorModel.Skip < 0)
             {
                 authorResponseModel.Messege = "Error";
@@ -75,11 +82,30 @@ namespace EducationApp.BusinessLogicLayer.Services
             }
             return authorResponseModel;
         }
+        public async Task<AuthorResponseModel> GetById(GetByIdAuthorModel getByIdAuthorModel)
+        {
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            Author findAuthor = await _authorRepository.GetById(getByIdAuthorModel.Id);
+            if (findAuthor == null)
+            {
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("This Id is not in database");
+            }
+            if (authorResponseModel.Messege == null)
+            {
+                AuthorModel authorModel = _mapper.Map<Author, AuthorModel>(findAuthor);
+                authorResponseModel.Messege = "Successfully";
+                authorResponseModel.Status = true;
+                authorResponseModel.AuthorModel.Add(authorModel);
+            }
+            return authorResponseModel;
+        }
         public async Task<AuthorResponseModel> FindName(GetNameAuthorModel getNameAuthorModel)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             Author findNameAuthor = await _authorRepository.GetName(getNameAuthorModel.FirstName, getNameAuthorModel.LastName);
-            if (findNameAuthor == null)
+            if ((getNameAuthorModel.FirstName == null) || (getNameAuthorModel.LastName == null))
             {
                 authorResponseModel.Messege = "Error";
                 authorResponseModel.Status = false;
@@ -94,10 +120,58 @@ namespace EducationApp.BusinessLogicLayer.Services
             }
             return authorResponseModel;
         }
+        public async Task<AuthorResponseModel> Filter(FiltrationAuthorModel filtrationAuthorModel)
+        {
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            if ((filtrationAuthorModel.DateBirthFirst == null)||(filtrationAuthorModel.DateBirthLast == null))
+            {
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("Indicate DateBirth");
+            }
+            if ((filtrationAuthorModel.DateDeathFirst == null)||(filtrationAuthorModel.DateDeathLast == null))
+            {
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("Indicate DateDeath");
+            }
+            if (authorResponseModel.Messege == null)
+            {
+                List<AuthorModel> authorModels = new List<AuthorModel>();
+                switch (filtrationAuthorModel.NameFiltration)
+                {            
+                    case AuthorNameFilter.None:
+                        List<Author> authors = await _authorRepository.GetAll();
+                        authorModels = _mapper.Map<List<Author>,List<AuthorModel>>(authors);
+                        break;
+                    case AuthorNameFilter.DateBirth:
+                        authors = _authorRepository.FiltrDateBirth(filtrationAuthorModel.DateBirthFirst, filtrationAuthorModel.DateBirthLast);
+                        authorModels = _mapper.Map<List<Author>, List<AuthorModel>>(authors);
+                        break;
+                    case AuthorNameFilter.DateDeath:
+                        authors = _authorRepository.FiltrDateDeath(filtrationAuthorModel.DateDeathFirst, filtrationAuthorModel.DateDeathLast);
+                        authorModels = _mapper.Map<List<Author>, List<AuthorModel>>(authors);
+                        break;
+                    case AuthorNameFilter.DateBirthDateDeath:
+                        authors = _authorRepository.FiltrDateBirthDateDeath(filtrationAuthorModel.DateBirthFirst, filtrationAuthorModel.DateBirthLast,filtrationAuthorModel.DateDeathFirst, filtrationAuthorModel.DateDeathLast);
+                        authorModels = _mapper.Map<List<Author>, List<AuthorModel>>(authors);
+                        break;
+                    default:
+                        authorResponseModel.Messege = "Error";
+                        authorResponseModel.Status = false;
+                        authorResponseModel.Error.Add("Invalid filtr type");
+                        break;
+                }
+                authorResponseModel.Messege = "Successfully";
+                authorResponseModel.Status = true;
+                authorResponseModel.AuthorModel = authorModels;
+            }
+            return authorResponseModel;
+        }
         public async Task<AuthorResponseModel> Create(CreateAuthorModel createAuthorModel)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            if ((createAuthorModel.FirstName == null) && (createAuthorModel.LastName == null))
+            if ((createAuthorModel.FirstName == null) || (createAuthorModel.LastName == null))
             {
                 authorResponseModel.Messege = "Error";
                 authorResponseModel.Status = false;
@@ -110,21 +184,27 @@ namespace EducationApp.BusinessLogicLayer.Services
                 authorResponseModel.Status = false;
                 authorResponseModel.Error.Add("There is such a name");
             }
-            if (createAuthorModel.DataBirth > createAuthorModel.DataDeath)
+            if (createAuthorModel.DateBirth == null)
+            {
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("DateBirth not null");
+            }
+            if (createAuthorModel.DateBirth > createAuthorModel.DateDeath)
             {
                 authorResponseModel.Messege = "Error";
                 authorResponseModel.Status = false;
                 authorResponseModel.Error.Add("Date vot valide");
             }
-            if (createAuthorModel.DataBirth > DateTime.Now)
+            if (createAuthorModel.DateBirth > DateTime.Now)
             {
                 authorResponseModel.Messege = "Error";
                 authorResponseModel.Status = false;
                 authorResponseModel.Error.Add("The author has not yet been born");
             }
-            if (createAuthorModel.DataDeath > DateTime.Now)
+            if (createAuthorModel.DateDeath >= DateTime.Now)
             {
-                createAuthorModel.DataDeath = null;
+                createAuthorModel.DateDeath = null;
             }
             if (authorResponseModel.Messege == null)
             {
@@ -142,31 +222,43 @@ namespace EducationApp.BusinessLogicLayer.Services
         public async Task<AuthorResponseModel> Update(UpdateAuthorModel updateAuthorModel)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            if ((updateAuthorModel.FirstName == null) && (updateAuthorModel.LastName == null))
+            Author findauthor = await _authorRepository.GetById(updateAuthorModel.Id);
+            if (findauthor == null)
+            {
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("This Id is not in database");
+            }
+            if ((updateAuthorModel.FirstName == null) || (updateAuthorModel.LastName == null))
             {
                 authorResponseModel.Messege = "Error";
                 authorResponseModel.Status = false;
                 authorResponseModel.Error.Add("Name not null");
             }
-            if (updateAuthorModel.DataBirth > updateAuthorModel.DataDeath)
+            if (updateAuthorModel.DateBirth == null)
+            {
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("DateBirth not null");
+            }
+            if (updateAuthorModel.DateBirth > updateAuthorModel.DateDeath)
             {
                 authorResponseModel.Messege = "Error";
                 authorResponseModel.Status = false;
                 authorResponseModel.Error.Add("Date vot valide");
             }
-            if (updateAuthorModel.DataBirth > DateTime.Now)
+            if (updateAuthorModel.DateBirth > DateTime.Now)
             {
                 authorResponseModel.Messege = "Error";
                 authorResponseModel.Status = false;
                 authorResponseModel.Error.Add("The author has not yet been born");
             }
-            if (updateAuthorModel.DataDeath > DateTime.Now)
+            if (updateAuthorModel.DateDeath >= DateTime.Now)
             {
-                updateAuthorModel.DataDeath = null;
-            }
+                updateAuthorModel.DateDeath = null;
+            }          
             if (authorResponseModel.Messege == null)
             {
-                Author findauthor = await _authorRepository.GetById(updateAuthorModel.Id);
                 _mapper.Map(updateAuthorModel, findauthor);
                 findauthor.UpdateDateTime = DateTime.Now;
                 await _authorRepository.Update(findauthor);
@@ -181,12 +273,21 @@ namespace EducationApp.BusinessLogicLayer.Services
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             Author findauthor = await _authorRepository.GetById(deleteAuthorModel.Id);
-            findauthor.IsDeleted = true;
-            await _authorRepository.Update(findauthor);
-            AuthorModel authorModel = _mapper.Map<Author, AuthorModel>(findauthor);
-            authorResponseModel.Messege = "Successfully";
-            authorResponseModel.Status = true;
-            authorResponseModel.AuthorModel.Add(authorModel);
+            if (findauthor == null)
+            {
+                authorResponseModel.Messege = "Error";
+                authorResponseModel.Status = false;
+                authorResponseModel.Error.Add("This Id is not in database");
+            }
+            if (authorResponseModel.Messege == null)
+            {
+                findauthor.IsDeleted = true;
+                await _authorRepository.Update(findauthor);
+                AuthorModel authorModel = _mapper.Map<Author, AuthorModel>(findauthor);
+                authorResponseModel.Messege = "Successfully";
+                authorResponseModel.Status = true;
+                authorResponseModel.AuthorModel.Add(authorModel);
+            }
             return authorResponseModel;
         }
     }

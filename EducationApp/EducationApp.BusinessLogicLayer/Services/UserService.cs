@@ -41,52 +41,130 @@ namespace EducationApp.BusinessLogicLayer.Services
             return userResponseModel;
         }
         public async Task<UserResponseModel> Create(CreateUserModel createUserModel)
-        { 
-            User user = _mapper.Map<CreateUserModel, User>(createUserModel);
-            user.CreateDateTime = DateTime.Now;
-            user.UpdateDateTime = user.CreateDateTime;
-            await _userRepository.Create(user);
-            UserModel userModel = _mapper.Map<User, UserModel>(user);
+        {
             UserResponseModel userResponseModel = new UserResponseModel();
-            userResponseModel.Messege = "Successfully";
-            userResponseModel.Status = true;
-            userResponseModel.UserModels.Add(userModel);
+            if (createUserModel.Email == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("Email not null");
+            }
+            if (createUserModel.FirstName == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("FirstName not null");
+            }
+            if (createUserModel.LastName == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("LastName not null");
+            }
+            if (createUserModel.PhoneNumber == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("PhoneNumber not null");
+            }
+            if (userResponseModel.Messege == null)
+            {
+                User user = _mapper.Map<CreateUserModel, User>(createUserModel);
+                user.CreateDateTime = DateTime.Now;
+                user.UpdateDateTime = user.CreateDateTime;
+                await _userRepository.Create(user);
+                UserModel userModel = _mapper.Map<User, UserModel>(user);
+                userResponseModel.Messege = "Successfully";
+                userResponseModel.Status = true;
+                userResponseModel.UserModels.Add(userModel);
+            }
             return userResponseModel;
         }
         public async Task<UserResponseModel> Update(UpdateUserModel updateUserModel)
         {
-            User findUser = await _userRepository.GetById(updateUserModel.Id);
-            _mapper.Map<UpdateUserModel, User>(updateUserModel);
-            findUser.UpdateDateTime = DateTime.Now;
-            await _userRepository.Update(findUser);
-            UserModel userModel = _mapper.Map<User, UserModel>(findUser);
             UserResponseModel userResponseModel = new UserResponseModel();
-            userResponseModel.Messege = "Successfully";
-            userResponseModel.Status = true;
-            userResponseModel.UserModels.Add(userModel);
+            User findUser = await _userRepository.GetById(updateUserModel.Id);
+            if (findUser == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("This Id is not in database");
+            }
+            if (updateUserModel.Email == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("Email not null");
+            }
+            if (updateUserModel.FirstName == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("FirstName not null");
+            }
+            if (updateUserModel.LastName == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("LastName not null");
+            }
+            if (updateUserModel.PhoneNumber == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("PhoneNumber not null");
+            }
+            if (userResponseModel.Messege == null)
+            {
+                _mapper.Map(updateUserModel,findUser);
+                findUser.UpdateDateTime = DateTime.Now;
+                await _userRepository.Update(findUser);
+                UserModel userModel = _mapper.Map<User, UserModel>(findUser);
+                userResponseModel.Messege = "Successfully";
+                userResponseModel.Status = true;
+                userResponseModel.UserModels.Add(userModel);
+            }
             return userResponseModel;
         }
         public async Task<UserResponseModel> Delete(DeleteModel deleteModel)
         {
-            User findUser = await _userRepository.GetById(deleteModel.Id);
-            findUser.IsDeleted = true;
-            await _userRepository.Update(findUser);
-            UserModel userModel = _mapper.Map<User, UserModel>(findUser);
             UserResponseModel userResponseModel = new UserResponseModel();
-            userResponseModel.Messege = "Successfully";
-            userResponseModel.Status = true;
-            userResponseModel.UserModels.Add(userModel);
+            User findUser = await _userRepository.GetById(deleteModel.Id);
+            if (findUser == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("This Id is not in database");
+            }
+            if (userResponseModel.Messege == null)
+            {
+                findUser.IsDeleted = true;
+                await _userRepository.Update(findUser);
+                UserModel userModel = _mapper.Map<User, UserModel>(findUser);
+                userResponseModel.Messege = "Successfully";
+                userResponseModel.Status = true;
+                userResponseModel.UserModels.Add(userModel);
+            }
             return userResponseModel;
         }
         public async Task<UserResponseModel> FinalRemoval(DeleteModel deleteModel)
         {
-            User findUser = await _userRepository.GetByIdAllIsDeleted(deleteModel.Id);
-            await _userRepository.Delete(findUser);
-            UserModel userModel = _mapper.Map<User, UserModel>(findUser);
             UserResponseModel userResponseModel = new UserResponseModel();
-            userResponseModel.Messege = "Successfully";
-            userResponseModel.Status = true;
-            userResponseModel.UserModels.Add(userModel);
+            User findUser = await _userRepository.GetByIdAllIsDeleted(deleteModel.Id);
+            if (findUser == null)
+            {
+                userResponseModel.Messege = "Error";
+                userResponseModel.Status = false;
+                userResponseModel.Error.Add("This Id is not in database");
+            }
+            if (userResponseModel.Messege == null)
+            {
+                await _userRepository.Delete(findUser);
+                UserModel userModel = _mapper.Map<User, UserModel>(findUser);
+                userResponseModel.Messege = "Successfully";
+                userResponseModel.Status = true;
+                userResponseModel.UserModels.Add(userModel);
+            }
             return userResponseModel;
         }
     }

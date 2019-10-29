@@ -1,4 +1,5 @@
 ﻿using EducationApp.BusinessLogicLayer.Models.Account;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.Account;
 using EducationApp.DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,17 +9,16 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
 {
     public interface IAccountService
     {
-        ActionResult<IEnumerable<string>> GetAuth();
-        Task<ActionResult<string>> PostAuth(LoginModel loginModel, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh);
-        Task<ActionResult<string>> Register(RegisterModel reg);
-        Task<ActionResult<string>> ForgotPassword(ForgotPassword forgotPassword);
-        Task<ActionResult<string>> ConfirmEmail(string userId, string code);
-        Task<ActionResult<string>> ResetPassword(ResetPasswordModel reset);
-        Task<ActionResult<string>> LogOut(LogOutModel logOutModel);
-        Task<ActionResult<string>> RefreshToken(RefreshTokenModel refreshTokenModel, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh);
-        ICollection<Role> GetAllRoleUsers();
-        Task<ActionResult<string>> CreateRoleUsers(CreateRoleModel createRoleModel);
-        Task<ActionResult<string>> DeleteRoleUsers(DeleteRoleModel deleteRoleModel);
+        Task<AuthAccountResponseModel> GetAuth();
+        Task<LoginAccountResponseModel> PostAuth(LoginModel login, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh);
+        Task<RegisterAccountResponseModel> Register(RegisterModel reg);
+        Task<ForgotPasswordResponseModel> ForgotPassword(ForgotPassword forgotPassword);
+        Task<ConfirmEmailAccountResponseModel> ConfirmEmail(string userId, string code);
+        Task<ResetPasswordAccountResponseModel> ResetPassword(ResetPasswordModel reset);
+        Task<RefreshTokenAccountResponseModel> RefreshToken(RefreshTokenModel refreshTokenModel, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh);
+        Task<RoleAccountResponseModel> GetAllRoleUsers();
+        Task<RoleAccountResponseModel> CreateRoleUsers(CreateRoleModel createRoleModel);
+        Task<RoleAccountResponseModel> DeleteRoleUsers(DeleteRoleModel deleteRoleModel);
         Task<ActionResult<string>> ChangeRoleUser(ChangeRoleUserModel changeRoleUserModel);
     }
 }

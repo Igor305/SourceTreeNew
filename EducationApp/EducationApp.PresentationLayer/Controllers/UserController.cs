@@ -53,10 +53,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     Post/Create
         ///     {
-        ///         "Email": "",
-        ///         "First Name": "",
-        ///         "Last Name": "",
-        ///         "PhoneNumber": ""
+        ///         "Email": "karamba@gmail.com",
+        ///         "FirstName": "Олег",
+        ///         "LastName": "Петрович",
+        ///         "PhoneNumber": "096453453455"
         ///     }
         ///
         /// </remarks>
@@ -82,11 +82,11 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     PUT/Update
         ///     {
-        ///         "Id": "",
-        ///         "Email": "",
-        ///         "First Name": "",
-        ///         "Last Name": "",
-        ///         "PhoneNumber": ""
+        ///         "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d",
+        ///         "Email": "karamba@gmail.com",
+        ///         "FirstName": "Олег",
+        ///         "LastName": "Петрович",
+        ///         "PhoneNumber": "096453453455"
         ///     }
         ///
         /// </remarks>
@@ -112,7 +112,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     DELETE/Delete
         ///     {
-        ///         "Id": ""
+        ///         "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d"
         ///     }
         ///
         /// </remarks>
@@ -138,7 +138,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     DELETE/FinalRemoval
         ///     {
-        ///         "Id": ""
+        ///         "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d"
         ///     }
         ///
         /// </remarks>

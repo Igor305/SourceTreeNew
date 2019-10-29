@@ -9,7 +9,9 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
         Task<AuthorResponseModel> GetAllIsDeleted();
         Task<AuthorResponseModel> GetAll();
         AuthorResponseModel Pagination(PaginationPageAuthorModel paginationPageAuthorModel);
+        Task<AuthorResponseModel> GetById(GetByIdAuthorModel getByIdAuthorModel);
         Task<AuthorResponseModel> FindName(GetNameAuthorModel getNameAuthorModel);
+        Task<AuthorResponseModel> Filter(FiltrationAuthorModel filtrationAuthorModel);
         Task<AuthorResponseModel> Create(CreateAuthorModel createAuthorModel);
         Task<AuthorResponseModel> Update(UpdateAuthorModel updateAuthorModel);
         Task<AuthorResponseModel> Delete(DeleteAuthorModel deleteAuthorModel);

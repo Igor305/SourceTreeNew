@@ -1,11 +1,12 @@
 ﻿using EducationApp.DataAccessLayer.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EducationApp.DataAccessLayer.Repositories.Interfaces
 {
     public interface IOrderItemRepository : IGenericRepository<OrderItem>
     {
-        List<OrderItem> GetAllIsDeleted();
-        List<OrderItem> GetAll();
+        Task<List<OrderItem>> GetAllIsDeleted();
+        Task<List<OrderItem>> GetAll();
     }
 }

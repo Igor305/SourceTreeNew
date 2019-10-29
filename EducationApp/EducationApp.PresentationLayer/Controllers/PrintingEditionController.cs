@@ -1,10 +1,7 @@
 ﻿using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
-using EducationApp.BusinessLogicLayer.Models.ResponseModels;
-using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EducationApp.PresentationLayer.Controllers
@@ -76,6 +73,58 @@ namespace EducationApp.PresentationLayer.Controllers
             return printingEditionResponseModel;
         }
         /// <summary>
+        /// Get by Id PrintingEdition
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Get/GetById
+        ///     {
+        ///         "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
+        ///     }
+        ///
+        /// </remarks>
+        [HttpGet("GetById")]
+        public async Task<PrintingEditionResponseModel> GetById([FromQuery]GetByIdPrintingEditionModel getByIdPrintingEditionModel)
+        {
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
+            if (ModelState.IsValid)
+            {
+                printingEditionResponseModel = await _printingEditionService.GetById(getByIdPrintingEditionModel);
+                return printingEditionResponseModel;
+            }
+            printingEditionResponseModel.Messege = "Error";
+            printingEditionResponseModel.Status = false;
+            printingEditionResponseModel.Error.Add("Post, not valide");
+            return printingEditionResponseModel;
+        }
+        /// <summary>
+        /// Buy PrintingEdition
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Get/Buy
+        ///     {
+        ///         "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
+        ///     }
+        ///
+        /// </remarks>
+        [HttpGet("Buy")]
+        public async Task<PrintingEditionResponseModel> Buy([FromQuery]BuyPrintingEditionModel buyPrintingEditionModel)
+        {
+            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
+            if (ModelState.IsValid)
+            {
+                printingEditionResponseModel = await _printingEditionService.Buy(buyPrintingEditionModel);
+                return printingEditionResponseModel;
+            }
+            printingEditionResponseModel.Messege = "Error";
+            printingEditionResponseModel.Status = false;
+            printingEditionResponseModel.Error.Add("Post, not valide");
+            return printingEditionResponseModel;
+        }
+        /// <summary>
         /// Sort Order
         /// </summary>
         /// <remarks>
@@ -83,7 +132,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     Get/Sort
         ///     {
-        ///         "NameSort": ""
+        ///         "NameSort": "1"
         ///     }
         ///
         /// </remarks>
@@ -109,10 +158,9 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     Get/Filter
         ///     {
-        ///         "NameFilter": "",
-        ///         "Name":"",
-        ///         "Price":"",
-        ///         "Status":"",
+        ///         "Name":"Козак",
+        ///         "Price":"15000",
+        ///         "Status":"1",
         ///     }
         ///
         /// </remarks>
@@ -131,32 +179,6 @@ namespace EducationApp.PresentationLayer.Controllers
             return printingEditionResponseModel;
         }
         /// <summary>
-        /// Buy PrintingEdition
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     Post/Buy
-        ///     {
-        ///         "Id": "",
-        ///     }
-        ///
-        /// </remarks>
-        [HttpGet("Buy")]
-        public async Task<PrintingEditionResponseModel> Buy([FromQuery]BuyPrintingEditionModel buyPrintingEditionModel)
-        {
-            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            if (ModelState.IsValid)
-            {
-                printingEditionResponseModel = await _printingEditionService.Buy(buyPrintingEditionModel);
-                return printingEditionResponseModel;
-            }
-            printingEditionResponseModel.Messege = "Error";
-            printingEditionResponseModel.Status = false;
-            printingEditionResponseModel.Error.Add("Post, not valide");
-            return printingEditionResponseModel;
-        }
-        /// <summary>
         /// Create new PrintingEdition
         /// </summary>
         /// <remarks>
@@ -164,12 +186,12 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     Post/Create
         ///     {
-        ///         "Name": "",
-        ///         "Description": "",
-        ///         "Price": "",
-        ///         "Type": "",
-        ///         "Status": "",
-        ///         "Currency": ""
+        ///         "Name": "Козак",
+        ///         "Description": "Терпи козак, атаманом станешь",
+        ///         "Price": "15000",
+        ///         "Type": "Книга",
+        ///         "Status": "1",
+        ///         "Currency": "56"
         ///     }
         ///
         /// </remarks>
@@ -195,13 +217,13 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     PUT/Update
         ///     {
-        ///         "Id": "",
-        ///         "Name": "",
-        ///         "Description": "",
-        ///         "Price": "",
-        ///         "Type": "",
-        ///         "Status": "",
-        ///         "Currency": ""
+        ///         "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
+        ///         "Name": "Козак",
+        ///         "Description": "Терпи козак, атаманом станешь",
+        ///         "Price": "15000",
+        ///         "Type": "Книга",
+        ///         "Status": "1",
+        ///         "Currency": "56"
         ///     }
         ///
         /// </remarks>
@@ -227,7 +249,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     DELETE/Delete
         ///     {
-        ///         "Id": ""
+        ///         "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9"
         ///     }
         ///
         /// </remarks>

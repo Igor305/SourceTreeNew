@@ -8,8 +8,8 @@ namespace EducationApp.DataAccessLayer.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime? DataBirth { get; set; }
-        public DateTime? DataDeath { get; set; }
+        public DateTime? DateBirth { get; set; }
+        public DateTime? DateDeath { get; set; }
 
         private ICollection<AuthorInPrintingEdition> _autorInPrintingEditions;
         public virtual ICollection<AuthorInPrintingEdition> AutorInPrintingEdition

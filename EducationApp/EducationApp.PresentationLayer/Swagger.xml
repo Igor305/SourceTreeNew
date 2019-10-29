@@ -4,6 +4,112 @@
         <name>EducationApp.PresentationLayer</name>
     </assembly>
     <members>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAuth">
+             <summary>
+             Authentication
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Get/GetAuth
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAllRoleUsers">
+             <summary>
+             Get All Role
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Get/GetAllRole
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.ConfirmEmail(EducationApp.BusinessLogicLayer.Models.Account.ConfirmEmail)">
+             <summary>
+              Confirm Password
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Get/ConfirmEmail
+             
+                 "Email":"karakymba@gmail.com",
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.PostAuth(EducationApp.BusinessLogicLayer.Models.Account.LoginModel,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtPrivateKey,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtRefresh)">
+             <summary>
+              Log In
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/PostAuth
+                 
+                 "Email":"karakymba@gmail.com",
+                 "Password":"karaganda"
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Register(EducationApp.BusinessLogicLayer.Models.Account.RegisterModel)">
+             <summary>
+              Register
+             </summary>
+             <remarks>
+             Sample request:
+             
+                 Post/Register
+            
+                 "Email":"karakymba@gmail.com",
+                 "Password":"karaganda",
+                 "PasswordConfirm":"karaganda"
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.ForgotPassword(EducationApp.BusinessLogicLayer.Models.Account.ForgotPassword)">
+             <summary>
+              Forgot Password
+             </summary>
+             <remarks>
+             Sample request:
+             
+                 Post/ForgotPassword
+            
+                 "Email":"karakymba@gmail.com"
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.ResetPassword(EducationApp.BusinessLogicLayer.Models.Account.ResetPasswordModel)">
+             <summary>
+              Reset Password
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/ResetPassword
+             
+                 "Email":"karakymba@gmail.com",
+                 "Password":"karaganda",
+                 "PasswordConfirm":"karaganda",
+                 "Code":"ioprewthjypoiwreyortpo"
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.RefreshToken(EducationApp.BusinessLogicLayer.Models.Account.RefreshTokenModel,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtPrivateKey,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtRefresh)">
+             <summary>
+              Refresh Token
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Get/RefreshToken
+             
+                 "token":"karakymba@gmail.com",
+                 
+             </remarks>
+        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.GetAllIsDeleted">
              <summary>
              Get all Author (IsDeleted = true)
@@ -41,6 +147,20 @@
             
              </remarks>
         </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.GetById(EducationApp.BusinessLogicLayer.Models.Authors.GetByIdAuthorModel)">
+             <summary>
+             Get by Id Author
+             </summary>
+            <remarks>
+             Sample request:
+            
+                 Get/GetById
+                 {
+                    "Id":"1a99d355-922a-42b1-51b8-08d759984c87"
+                 }
+            
+             </remarks>
+        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.FindName(EducationApp.BusinessLogicLayer.Models.Authors.GetNameAuthorModel)">
              <summary>
              Get Name Author
@@ -50,8 +170,23 @@
             
                  Get/Find Name
                  {
-                    "First Name": "Сергей",
-                    "Last Name": "Конушенко"
+                    "FirstName": "Сергей",
+                    "LastName": "Конушенко"
+                 }
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Filtr(EducationApp.BusinessLogicLayer.Models.Authors.FiltrationAuthorModel)">
+             <summary>
+             Filtr Author
+             </summary>
+            <remarks>
+             Sample request:
+            
+                 Get/Filtr
+                 {
+                    "FirstName": "Сергей",
+                    "LastName": "Конушенко"
                  }
             
              </remarks>
@@ -65,9 +200,9 @@
             
                  POST/Create
                  {
-                    "First Name": "Сергей",
-                    "Last Name": "Конушенко",
-                    "DataBirth":"1805-10-09T08:38:40.163Z",
+                    "FirstName": "Сергей",
+                    "LastName": "Конушенко",
+                    "DateBirth":"1805-10-09T08:38:40.163Z",
                     "DatadDeath": "1855-10-09T08:38:40.163Z",
                  }
             
@@ -82,10 +217,10 @@
             
                  PUT/Update
                  {
-                     "Id": "",
-                     "First Name": "Сергей",
-                     "Last Name": "Конушенко",
-                     "DataBirth":"1805-10-09T08:38:40.163Z",
+                     "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
+                     "FirstName": "Сергей",
+                     "LastName": "Конушенко",
+                     "DateBirth":"1805-10-09T08:38:40.163Z",
                      "DatadDeath": "1855-10-09T08:38:40.163Z",
                  }
             
@@ -100,7 +235,7 @@
             
                  DELETE/Delete
                  {
-                     "Id": ""
+                     "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9"
                  }
             
              </remarks>
@@ -169,76 +304,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.Delete(EducationApp.BusinessLogicLayer.Models.Orders.DeleteOderModel)">
-             <summary>
-             Delete Order for Id
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 DELETE/Delete
-                 {
-                     "Id": ""
-                 }
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PaymentController.GetAllIsDeleted">
-             <summary>
-             Get all Payment (IsDeleted = true)
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Get/GetAllIsDeleted
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PaymentController.GetAll">
-             <summary>
-             Get all Payment 
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Get/GetAll
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PaymentController.Create(EducationApp.BusinessLogicLayer.Models.Payments.PaymentModel)">
-             <summary>
-             Create new Payment
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Post/Create
-                 {
-                     "Email": "",
-                     "Source": "",
-                     "Description": "Выгодный товар",
-                     "Currency": "",
-                     "Amount": ""
-                 }
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PaymentController.Update(EducationApp.BusinessLogicLayer.Models.Payments.UpdatePaymentModel)">
-             <summary>
-             Update Order for Id
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 PUT/Update
-                 {
-                     "Id": "",
-                     "TransactionId": "",
-                 }
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PaymentController.Delete(EducationApp.BusinessLogicLayer.Models.Payments.DeletePaymentModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.Delete(EducationApp.BusinessLogicLayer.Models.Orders.DeleteOrderModel)">
              <summary>
              Delete Order for Id
              </summary>
@@ -289,6 +355,34 @@
             
              </remarks>
         </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.GetById(EducationApp.BusinessLogicLayer.Models.PrintingEditions.GetByIdPrintingEditionModel)">
+             <summary>
+             Get by Id PrintingEdition
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Get/GetById
+                 {
+                     "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
+                 }
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Buy(EducationApp.BusinessLogicLayer.Models.PrintingEditions.BuyPrintingEditionModel)">
+             <summary>
+             Buy PrintingEdition
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Get/Buy
+                 {
+                     "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
+                 }
+            
+             </remarks>
+        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Sort(EducationApp.BusinessLogicLayer.Models.PrintingEditions.SortPrintingEditionModel)">
              <summary>
              Sort Order
@@ -298,7 +392,7 @@
             
                  Get/Sort
                  {
-                     "NameSort": ""
+                     "NameSort": "1"
                  }
             
              </remarks>
@@ -312,24 +406,9 @@
             
                  Get/Filter
                  {
-                     "NameFilter": "",
-                     "Name":"",
-                     "Price":"",
-                     "Status":"",
-                 }
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Buy(EducationApp.BusinessLogicLayer.Models.PrintingEditions.BuyPrintingEditionModel)">
-             <summary>
-             Buy PrintingEdition
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Post/Buy
-                 {
-                     "Id": "",
+                     "Name":"Козак",
+                     "Price":"15000",
+                     "Status":"1",
                  }
             
              </remarks>
@@ -343,12 +422,12 @@
             
                  Post/Create
                  {
-                     "Name": "",
-                     "Description": "",
-                     "Price": "",
-                     "Type": "",
-                     "Status": "",
-                     "Currency": ""
+                     "Name": "Козак",
+                     "Description": "Терпи козак, атаманом станешь",
+                     "Price": "15000",
+                     "Type": "Книга",
+                     "Status": "1",
+                     "Currency": "56"
                  }
             
              </remarks>
@@ -362,13 +441,13 @@
             
                  PUT/Update
                  {
-                     "Id": "",
-                     "Name": "",
-                     "Description": "",
-                     "Price": "",
-                     "Type": "",
-                     "Status": "",
-                     "Currency": ""
+                     "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
+                     "Name": "Козак",
+                     "Description": "Терпи козак, атаманом станешь",
+                     "Price": "15000",
+                     "Type": "Книга",
+                     "Status": "1",
+                     "Currency": "56"
                  }
             
              </remarks>
@@ -382,7 +461,7 @@
             
                  DELETE/Delete
                  {
-                     "Id": ""
+                     "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9"
                  }
             
              </remarks>
@@ -418,10 +497,10 @@
             
                  Post/Create
                  {
-                     "Email": "",
-                     "First Name": "",
-                     "Last Name": "",
-                     "PhoneNumber": ""
+                     "Email": "karamba@gmail.com",
+                     "FirstName": "Олег",
+                     "LastName": "Петрович",
+                     "PhoneNumber": "096453453455"
                  }
             
              </remarks>
@@ -435,11 +514,11 @@
             
                  PUT/Update
                  {
-                     "Id": "",
-                     "Email": "",
-                     "First Name": "",
-                     "Last Name": "",
-                     "PhoneNumber": ""
+                     "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d",
+                     "Email": "karamba@gmail.com",
+                     "FirstName": "Олег",
+                     "LastName": "Петрович",
+                     "PhoneNumber": "096453453455"
                  }
             
              </remarks>
@@ -453,7 +532,7 @@
             
                  DELETE/Delete
                  {
-                     "Id": ""
+                     "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d"
                  }
             
              </remarks>
@@ -467,7 +546,7 @@
             
                  DELETE/FinalRemoval
                  {
-                     "Id": ""
+                     "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d"
                  }
             
              </remarks>

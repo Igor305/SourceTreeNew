@@ -26,9 +26,9 @@ namespace EducationApp.DataAccessLayer.Migrations
 
                     b.Property<DateTime>("CreateDateTime");
 
-                    b.Property<DateTime?>("DataBirth");
+                    b.Property<DateTime?>("DateBirth");
 
-                    b.Property<DateTime?>("DataDeath");
+                    b.Property<DateTime?>("DateDeath");
 
                     b.Property<string>("FirstName");
 

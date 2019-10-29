@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducationApp.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20191024073407_FirstLastName")]
-    partial class FirstLastName
+    [Migration("20191025200142_D")]
+    partial class D
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,9 +28,9 @@ namespace EducationApp.DataAccessLayer.Migrations
 
                     b.Property<DateTime>("CreateDateTime");
 
-                    b.Property<DateTime?>("DataBirth");
+                    b.Property<DateTime?>("DateBirth");
 
-                    b.Property<DateTime?>("DataDeath");
+                    b.Property<DateTime?>("DateDeath");
 
                     b.Property<string>("FirstName");
 

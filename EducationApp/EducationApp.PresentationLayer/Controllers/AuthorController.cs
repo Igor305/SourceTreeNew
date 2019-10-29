@@ -27,8 +27,8 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpGet("GetAllIsDeleted")]
         public async Task<AuthorResponseModel> GetAllIsDeleted()
         {
-            AuthorResponseModel allIsDeleted = await _authorService.GetAllIsDeleted();
-            return allIsDeleted;
+            AuthorResponseModel authorResponseModel = await _authorService.GetAllIsDeleted();
+            return authorResponseModel;
         }
         /// <summary>
         /// Get All Author
@@ -42,8 +42,8 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpGet("GetAll")]
         public async Task<AuthorResponseModel> GetAll()
         {
-            AuthorResponseModel all = await _authorService.GetAll();
-            return all;
+            AuthorResponseModel authorResponseModel = await _authorService.GetAll();
+            return authorResponseModel;
         }
         /// <summary>
         /// Get Pagination Author
@@ -73,6 +73,32 @@ namespace EducationApp.PresentationLayer.Controllers
             return authorResponseModel;
         }
         /// <summary>
+        /// Get by Id Author
+        /// </summary>
+        ///<remarks>
+        /// Sample request:
+        ///
+        ///     Get/GetById
+        ///     {
+        ///        "Id":"1a99d355-922a-42b1-51b8-08d759984c87"
+        ///     }
+        ///
+        /// </remarks>
+        [HttpGet("GetById")]
+        public async Task<AuthorResponseModel> GetById([FromQuery] GetByIdAuthorModel getByIdAuthorModel)
+        {
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            if (ModelState.IsValid)
+            {
+                authorResponseModel = await _authorService.GetById(getByIdAuthorModel);
+                return authorResponseModel;
+            }
+            authorResponseModel.Messege = "Error";
+            authorResponseModel.Status = false;
+            authorResponseModel.Error.Add("Post, not valide");
+            return authorResponseModel;
+        }
+        /// <summary>
         /// Get Name Author
         /// </summary>
         ///<remarks>
@@ -80,8 +106,8 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     Get/Find Name
         ///     {
-        ///        "First Name": "Сергей",
-        ///        "Last Name": "Конушенко"
+        ///        "FirstName": "Сергей",
+        ///        "LastName": "Конушенко"
         ///     }
         ///
         /// </remarks>
@@ -100,6 +126,33 @@ namespace EducationApp.PresentationLayer.Controllers
             return authorResponseModel;
         }
         /// <summary>
+        /// Filtr Author
+        /// </summary>
+        ///<remarks>
+        /// Sample request:
+        ///
+        ///     Get/Filtr
+        ///     {
+        ///        "FirstName": "Сергей",
+        ///        "LastName": "Конушенко"
+        ///     }
+        ///
+        /// </remarks>
+        [HttpGet("Filtr")]
+        public async Task<AuthorResponseModel> Filtr([FromQuery] FiltrationAuthorModel filtrationAuthorModel)
+        {
+            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
+            if (ModelState.IsValid)
+            {
+                authorResponseModel = await _authorService.Filter(filtrationAuthorModel);
+                return authorResponseModel;
+            }
+            authorResponseModel.Messege = "Error";
+            authorResponseModel.Status = false;
+            authorResponseModel.Error.Add("Post, not valide");
+            return authorResponseModel;
+        }
+        /// <summary>
         /// Create new Author
         /// </summary>
         /// <remarks>
@@ -107,9 +160,9 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     POST/Create
         ///     {
-        ///        "First Name": "Сергей",
-        ///        "Last Name": "Конушенко",
-        ///        "DataBirth":"1805-10-09T08:38:40.163Z",
+        ///        "FirstName": "Сергей",
+        ///        "LastName": "Конушенко",
+        ///        "DateBirth":"1805-10-09T08:38:40.163Z",
         ///        "DatadDeath": "1855-10-09T08:38:40.163Z",
         ///     }
         ///
@@ -137,10 +190,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     PUT/Update
         ///     {
-        ///         "Id": "",
-        ///         "First Name": "Сергей",
-        ///         "Last Name": "Конушенко",
-        ///         "DataBirth":"1805-10-09T08:38:40.163Z",
+        ///         "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
+        ///         "FirstName": "Сергей",
+        ///         "LastName": "Конушенко",
+        ///         "DateBirth":"1805-10-09T08:38:40.163Z",
         ///         "DatadDeath": "1855-10-09T08:38:40.163Z",
         ///     }
         ///
@@ -166,7 +219,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         ///     DELETE/Delete
         ///     {
-        ///         "Id": ""
+        ///         "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9"
         ///     }
         ///
         /// </remarks>

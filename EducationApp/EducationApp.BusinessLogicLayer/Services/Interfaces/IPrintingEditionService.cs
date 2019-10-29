@@ -10,6 +10,7 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
         Task<PrintingEditionResponseModel> GetAllIsDeleted();
         Task<PrintingEditionResponseModel> GetAll();
         PrintingEditionResponseModel Pagination(PaginationPagePrintingEditionModel paginationPagePrintingEditionModel);
+        Task<PrintingEditionResponseModel> GetById(GetByIdPrintingEditionModel getByIdPrintingEditionModel);
         Task<PrintingEditionResponseModel> Buy(BuyPrintingEditionModel buyPrintingEditionModel);
         Task<PrintingEditionResponseModel> Create(CreatePrintingEditionModel createPrintingEditionModel);
         Task<PrintingEditionResponseModel> Update(UpdatePrintingEditionModel updatePrintingEditionModel);
