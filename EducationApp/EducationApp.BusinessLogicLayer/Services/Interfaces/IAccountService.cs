@@ -9,16 +9,17 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
 {
     public interface IAccountService
     {
-        Task<AuthAccountResponseModel> GetAuth();
+        AuthAccountResponseModel GetAuth();
         Task<LoginAccountResponseModel> PostAuth(LoginModel login, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh);
         Task<RegisterAccountResponseModel> Register(RegisterModel reg);
         Task<ForgotPasswordResponseModel> ForgotPassword(ForgotPassword forgotPassword);
         Task<ConfirmEmailAccountResponseModel> ConfirmEmail(string userId, string code);
         Task<ResetPasswordAccountResponseModel> ResetPassword(ResetPasswordModel reset);
         Task<RefreshTokenAccountResponseModel> RefreshToken(RefreshTokenModel refreshTokenModel, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh);
-        Task<RoleAccountResponseModel> GetAllRoleUsers();
-        Task<RoleAccountResponseModel> CreateRoleUsers(CreateRoleModel createRoleModel);
-        Task<RoleAccountResponseModel> DeleteRoleUsers(DeleteRoleModel deleteRoleModel);
-        Task<ActionResult<string>> ChangeRoleUser(ChangeRoleUserModel changeRoleUserModel);
+        RoleAccountResponseModel GetAllRoleUsers();
+        Task<RoleAccountResponseModel> CreateRoleUser(CreateRoleModel createRoleModel);
+        Task<RoleAccountResponseModel> UpdateRoleUser(UpdateRoleModel updateRoleModel);
+        Task<RoleAccountResponseModel> DeleteRoleUser(DeleteRoleModel deleteRoleModel);
+        ActionResult<string> ChangeRoleUser(ChangeRoleUserModel changeRoleUserModel);
     }
 }

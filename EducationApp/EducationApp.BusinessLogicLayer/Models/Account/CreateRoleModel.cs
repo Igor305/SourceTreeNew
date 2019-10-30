@@ -2,6 +2,6 @@
 {
     public class CreateRoleModel
     {
-        public string NameRole { get; set; }
+        public string Name { get; set; }
     }
 }

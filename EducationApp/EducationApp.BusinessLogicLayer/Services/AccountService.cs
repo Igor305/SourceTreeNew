@@ -39,7 +39,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             _actionContextAccessor = actionContextAccessor;
             _mapper = mapper;
         }
-        public async Task<AuthAccountResponseModel> GetAuth()                                                                                                       //GetAuth
+        public AuthAccountResponseModel GetAuth()                                                                                                       //GetAuth
         {
             AuthAccountResponseModel authAccountResponseModel = new AuthAccountResponseModel();
             Claim id = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
@@ -281,7 +281,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             refreshTokenAccountResponseModel.Status = true;
             return refreshTokenAccountResponseModel;
         }
-        public async Task<RoleAccountResponseModel> GetAllRoleUsers()                                                                                                                          //GetAllRoleUsers
+        public RoleAccountResponseModel GetAllRoleUsers()                                                                                                                          //GetAllRoleUsers
         {
             RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
             List<Role> roles = _roleManager.Roles.ToList();
@@ -291,9 +291,16 @@ namespace EducationApp.BusinessLogicLayer.Services
             roleAccountResponseModel.Status = true;
             return roleAccountResponseModel;
         }
-        public async Task<RoleAccountResponseModel> CreateRoleUsers(CreateRoleModel createRoleModel)                                                                            //CreateRoleUsers
+        public async Task<RoleAccountResponseModel> CreateRoleUser(CreateRoleModel createRoleModel)                                                                            //CreateRoleUser
         {
             RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
+            if (createRoleModel.Name == null)
+            {
+                roleAccountResponseModel.Messege = "Error";
+                roleAccountResponseModel.Status = false;
+                roleAccountResponseModel.Error.Add("Name not null");
+                return roleAccountResponseModel;
+            }
             Role role = new Role();
             bool x = await _roleManager.RoleExistsAsync("Admin");
             if (!x)
@@ -304,7 +311,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 User user = new User();
                 user.UserName = "God";
                 user.Email = "igortalavuria@gmail.com";
-                string userPWD = "Igor12345";
+                string userPWD = "Igor12345"; 
                 IdentityResult Admin = await _userManager.CreateAsync(user, userPWD);
 
                 if (Admin.Succeeded)
@@ -312,7 +319,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                     IdentityResult result = await _userManager.AddToRoleAsync(user, "Admin");
                 }
             }
-            role.Name = createRoleModel.NameRole;
+            role.Name = createRoleModel.Name;
             await _roleManager.CreateAsync(role);
             RoleAccountModel roleAccountModel = _mapper.Map<Role,RoleAccountModel>(role);
             roleAccountResponseModel.roleAccountModels.Add(roleAccountModel);
@@ -320,10 +327,31 @@ namespace EducationApp.BusinessLogicLayer.Services
             roleAccountResponseModel.Status = true;
             return roleAccountResponseModel;
         }
-        public async Task<RoleAccountResponseModel> DeleteRoleUsers(DeleteRoleModel deleteRoleModel)                                                                              //DeleteRoleUsers
+        public async Task<RoleAccountResponseModel> UpdateRoleUser(UpdateRoleModel updateRoleModel)                                                                                    //UpdateRoleUser
         {
             RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
-            Role role = await _roleManager.FindByNameAsync(deleteRoleModel.NameRole);
+            Role role = await _roleManager.FindByNameAsync(updateRoleModel.Name);
+            if (role == null)
+            {
+                roleAccountResponseModel.Messege = "Error";
+                roleAccountResponseModel.Status = false;
+                roleAccountResponseModel.Error.Add("This Name not is database");
+            }
+            if (roleAccountResponseModel.Messege == null)
+            {
+                role.Name = updateRoleModel.NewName;
+                await _roleManager.UpdateAsync(role);
+                RoleAccountModel roleAccountModel = _mapper.Map<Role, RoleAccountModel>(role);
+                roleAccountResponseModel.roleAccountModels.Add(roleAccountModel);
+                roleAccountResponseModel.Messege = "Successfully";
+                roleAccountResponseModel.Status = true;
+            }
+            return roleAccountResponseModel;
+        }
+            public async Task<RoleAccountResponseModel> DeleteRoleUser(DeleteRoleModel deleteRoleModel)                                                                              //DeleteRoleUser
+        {
+            RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
+            Role role = await _roleManager.FindByNameAsync(deleteRoleModel.Name);
             if (role == null)
             {
                 roleAccountResponseModel.Messege = "Error";
@@ -340,7 +368,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             }
             return roleAccountResponseModel;
         }
-        public async Task<ActionResult<string>> ChangeRoleUser(ChangeRoleUserModel changeRoleUserModel)                                                                        //ChangeRoleUser
+        public ActionResult<string> ChangeRoleUser(ChangeRoleUserModel changeRoleUserModel)                                                                        //ChangeRoleUser
         {
             User findUser = _userManager.Users.FirstOrDefault(x => x.Email == changeRoleUserModel.Email);
             Role findRole = _roleManager.Roles.FirstOrDefault(x => x.Name == changeRoleUserModel.NameRole);

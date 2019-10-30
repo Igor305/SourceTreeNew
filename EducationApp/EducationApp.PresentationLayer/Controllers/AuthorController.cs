@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 
 namespace EducationApp.PresentationLayer.Controllers
 {
+    /// <summary>
+    /// AuthorController
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthorController : ControllerBase
     {
         private readonly IAuthorService _authorService;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="authorService"></param>
         public AuthorController(IAuthorService authorService)
         {
             _authorService = authorService;

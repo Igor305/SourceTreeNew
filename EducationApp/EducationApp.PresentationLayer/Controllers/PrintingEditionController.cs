@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 
 namespace EducationApp.PresentationLayer.Controllers
 {
+    /// <summary>
+    /// PrintingEditionController
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class PrintingEditionController : ControllerBase
     {
         private readonly IPrintingEditionService _printingEditionService;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="printingEditionService"></param>
         public PrintingEditionController(IPrintingEditionService printingEditionService)
         {
             _printingEditionService = printingEditionService;

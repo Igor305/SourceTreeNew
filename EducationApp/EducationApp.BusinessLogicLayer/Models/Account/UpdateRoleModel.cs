@@ -2,6 +2,7 @@
 {
     public class UpdateRoleModel
     {
-        public string NameRole { get; set; }
+        public string Name { get; set; }
+        public string NewName { get; set; }
     }
 }

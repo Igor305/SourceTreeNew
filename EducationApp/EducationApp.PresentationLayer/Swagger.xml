@@ -4,6 +4,17 @@
         <name>EducationApp.PresentationLayer</name>
     </assembly>
     <members>
+        <member name="T:EducationApp.PresentationLayer.Controllers.AccountController">
+            <summary>
+            AccountController
+            </summary>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IAccountService)">
+            <summary>
+            
+            </summary>
+            <param name="accountService"></param>
+        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAuth">
              <summary>
              Authentication
@@ -104,11 +115,61 @@
              <remarks>
              Sample request:
             
-                 Get/RefreshToken
+                 Post/RefreshToken
              
-                 "token":"karakymba@gmail.com",
+                 "token":"karakymba@gmail.com"
                  
              </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.CreateRoleUsers(EducationApp.BusinessLogicLayer.Models.Account.CreateRoleModel)">
+             <summary>
+              Create Roles
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/CreateRoleUsers
+             
+                 "NameRole":"Slave"
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.UpdateRoleUser(EducationApp.BusinessLogicLayer.Models.Account.UpdateRoleModel)">
+             <summary>
+              Update Role
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Put/UpdateRoleUser
+             
+                 "Name":"Slave"
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.DeleteRoleUser(EducationApp.BusinessLogicLayer.Models.Account.DeleteRoleModel)">
+             <summary>
+              DeleteRoleUsers
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Delete/DeleteRoleUsers
+             
+                 "Name":"Slave"
+                 
+             </remarks>
+        </member>
+        <member name="T:EducationApp.PresentationLayer.Controllers.AuthorController">
+            <summary>
+            AuthorController
+            </summary>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IAuthorService)">
+            <summary>
+            
+            </summary>
+            <param name="authorService"></param>
         </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.GetAllIsDeleted">
              <summary>
@@ -240,6 +301,17 @@
             
              </remarks>
         </member>
+        <member name="T:EducationApp.PresentationLayer.Controllers.OrderController">
+            <summary>
+            OrderController
+            </summary>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IOrderService)">
+            <summary>
+            
+            </summary>
+            <param name="orderService"></param>
+        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.GetAllIsDeleted">
              <summary>
              Get all Order (IsDeleted = true)
@@ -317,6 +389,17 @@
                  }
             
              </remarks>
+        </member>
+        <member name="T:EducationApp.PresentationLayer.Controllers.PrintingEditionController">
+            <summary>
+            PrintingEditionController
+            </summary>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IPrintingEditionService)">
+            <summary>
+            
+            </summary>
+            <param name="printingEditionService"></param>
         </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.GetAllIsDeleted">
              <summary>
@@ -466,6 +549,17 @@
             
              </remarks>
         </member>
+        <member name="T:EducationApp.PresentationLayer.Controllers.UserController">
+            <summary>
+             UserController
+            </summary>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.UserController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IUserService)">
+            <summary>
+            
+            </summary>
+            <param name="userService"></param>
+        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.UserController.GetAllIsDeleted">
              <summary>
              Get all User (IsDeleted = true)
@@ -550,6 +644,53 @@
                  }
             
              </remarks>
+        </member>
+        <member name="T:EducationApp.PresentationLayer.Program">
+            <summary>
+            Program
+            </summary>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Program.CreateWebHostBuilder(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EducationApp.PresentationLayer.Startup">
+            <summary>
+             Startup
+            </summary>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:EducationApp.PresentationLayer.Startup.Configuration">
+            <summary>
+            Configuration
+            </summary>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
         </member>
     </members>
 </doc>

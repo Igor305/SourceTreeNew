@@ -2,6 +2,6 @@
 {
     public class DeleteRoleModel
     {
-        public string NameRole { get; set; }
+        public string Name { get; set; }
     }
 }

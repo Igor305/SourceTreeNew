@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using EducationApp.BusinessLogicLayer.Models.Account;
 using EducationApp.BusinessLogicLayer.Models.Authors;
 using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.Account;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
@@ -31,6 +33,8 @@ namespace EducationApp.BusinessLogicLayer.AutoMapper
             CreateMap<User, CreateUserModel>();
             CreateMap<UpdateUserModel, User>();
             CreateMap<User, UpdateUserModel>();
+            CreateMap<Role, RoleAccountModel>();
+            CreateMap<RoleAccountModel,Role>();
         }
     }
 }
