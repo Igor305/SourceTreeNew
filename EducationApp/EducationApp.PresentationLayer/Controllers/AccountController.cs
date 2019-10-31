@@ -94,13 +94,13 @@ namespace EducationApp.PresentationLayer.Controllers
         /// </remarks>
         [HttpPost("Auth")]
         [AllowAnonymous]
-        public async Task<LoginAccountResponseModel> PostAuth([FromBody] LoginModel login, [FromServices] IJwtPrivateKey jwtPrivateKey, [FromServices] IJwtRefresh jwtRefresh)
+        public async Task<LoginAccountResponseModel> Login([FromBody] LoginModel login, [FromServices] IJwtPrivateKey jwtPrivateKey, [FromServices] IJwtRefresh jwtRefresh)
         {
             LoginAccountResponseModel loginAccountResponseModel = new LoginAccountResponseModel();
             if (ModelState.IsValid)
             {
 
-                loginAccountResponseModel = await _accountService.PostAuth(login, jwtPrivateKey, jwtRefresh);
+                loginAccountResponseModel = await _accountService.Login(login, jwtPrivateKey, jwtRefresh);
                 return loginAccountResponseModel; 
             }
             loginAccountResponseModel.Messege = "Error";

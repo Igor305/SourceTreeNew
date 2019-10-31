@@ -10,7 +10,7 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
     public interface IAccountService
     {
         AuthAccountResponseModel GetAuth();
-        Task<LoginAccountResponseModel> PostAuth(LoginModel login, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh);
+        Task<LoginAccountResponseModel> Login(LoginModel login, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh);
         Task<RegisterAccountResponseModel> Register(RegisterModel reg);
         Task<ForgotPasswordResponseModel> ForgotPassword(ForgotPassword forgotPassword);
         Task<ConfirmEmailAccountResponseModel> ConfirmEmail(string userId, string code);

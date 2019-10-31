@@ -66,12 +66,12 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("Pagination")]
-        public AuthorResponseModel Pagination([FromQuery] PaginationPageAuthorModel paginationPageAuthorModel)
+        public async Task <AuthorResponseModel> Pagination([FromQuery] PaginationAuthorModel paginationAuthorModel)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                authorResponseModel = _authorService.Pagination(paginationPageAuthorModel);
+                authorResponseModel = await _authorService.Pagination(paginationAuthorModel);
                 return authorResponseModel;
             }
             authorResponseModel.Messege = "Error";
@@ -146,12 +146,12 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("Filtr")]
-        public async Task<AuthorResponseModel> Filtr([FromQuery] FiltrationAuthorModel filtrationAuthorModel)
+        public AuthorResponseModel Filter([FromQuery] FiltrationAuthorModel filtrationAuthorModel)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                authorResponseModel = await _authorService.Filter(filtrationAuthorModel);
+                authorResponseModel = _authorService.Filter(filtrationAuthorModel);
                 return authorResponseModel;
             }
             authorResponseModel.Messege = "Error";

@@ -6,12 +6,12 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
 {
     public interface IAuthorService
     {
-        Task<AuthorResponseModel> GetAllIsDeleted();
         Task<AuthorResponseModel> GetAll();
-        AuthorResponseModel Pagination(PaginationPageAuthorModel paginationPageAuthorModel);
+        Task<AuthorResponseModel> GetAllWithoutRemove();
+        Task<AuthorResponseModel> Pagination(PaginationAuthorModel paginationAuthorModel);
         Task<AuthorResponseModel> GetById(GetByIdAuthorModel getByIdAuthorModel);
-        Task<AuthorResponseModel> FindName(GetNameAuthorModel getNameAuthorModel);
-        Task<AuthorResponseModel> Filter(FiltrationAuthorModel filtrationAuthorModel);
+        Task<AuthorResponseModel> GetByFullName(GetNameAuthorModel getNameAuthorModel);
+        AuthorResponseModel Filter(FiltrationAuthorModel filtrationAuthorModel);
         Task<AuthorResponseModel> Create(CreateAuthorModel createAuthorModel);
         Task<AuthorResponseModel> Update(UpdateAuthorModel updateAuthorModel);
         Task<AuthorResponseModel> Delete(DeleteAuthorModel deleteAuthorModel);

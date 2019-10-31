@@ -50,7 +50,7 @@
                  
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.PostAuth(EducationApp.BusinessLogicLayer.Models.Account.LoginModel,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtPrivateKey,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtRefresh)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Login(EducationApp.BusinessLogicLayer.Models.Account.LoginModel,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtPrivateKey,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtRefresh)">
              <summary>
               Log In
              </summary>
@@ -130,7 +130,7 @@
             
                  Post/CreateRoleUsers
              
-                 "NameRole":"Slave"
+                 "Name":"Slave"
                  
              </remarks>
         </member>
@@ -159,6 +159,17 @@
                  "Name":"Slave"
                  
              </remarks>
+        </member>
+        <member name="T:EducationApp.PresentationLayer.Controllers.AuthController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IUserService)">
+            <summary>
+            
+            </summary>
+            <param name="userService"></param>
         </member>
         <member name="T:EducationApp.PresentationLayer.Controllers.AuthorController">
             <summary>
@@ -193,7 +204,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Pagination(EducationApp.BusinessLogicLayer.Models.Authors.PaginationPageAuthorModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Pagination(EducationApp.BusinessLogicLayer.Models.Authors.PaginationAuthorModel)">
              <summary>
              Get Pagination Author
              </summary>
@@ -237,7 +248,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Filtr(EducationApp.BusinessLogicLayer.Models.Authors.FiltrationAuthorModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Filter(EducationApp.BusinessLogicLayer.Models.Authors.FiltrationAuthorModel)">
              <summary>
              Filtr Author
              </summary>

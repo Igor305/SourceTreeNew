@@ -64,19 +64,19 @@ namespace EducationApp.BusinessLogicLayer.Services
             authAccountResponseModel.Status = true;
             return authAccountResponseModel;
         }
-        public async Task<LoginAccountResponseModel> PostAuth(LoginModel login, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh)                                //PostAuth
+        public async Task<LoginAccountResponseModel> Login(LoginModel login, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh)                                //PostAuth
         {
             LoginAccountResponseModel loginAccountResponseModel = new LoginAccountResponseModel();
             // Validate email
-            User userX = await _userManager.FindByEmailAsync(login.Email);
-            if (userX == null)
+            User user = await _userManager.FindByEmailAsync(login.Email);
+            if (user == null)
             {
                 loginAccountResponseModel.Messege = "Error";
                 loginAccountResponseModel.Status = false;
                 loginAccountResponseModel.Error.Add("The email address you entered is not valid. Perhaps you have not registered yet. Run, become our 1000th visitor!");
                 return loginAccountResponseModel;
             }
-            bool confirmpass = await _userManager.CheckPasswordAsync(userX, login.Password);
+            bool confirmpass = await _userManager.CheckPasswordAsync(user, login.Password);
             if (!confirmpass)
             {
                 loginAccountResponseModel.Messege = "Error";
@@ -84,13 +84,13 @@ namespace EducationApp.BusinessLogicLayer.Services
                 loginAccountResponseModel.Error.Add("You entered the wrong password");
                 return loginAccountResponseModel;
             }
-            await _userManager.AddToRoleAsync(userX, "User");
+            await _userManager.AddToRoleAsync(user, "User");
             // Token.    
             List<Claim> claims = new List<Claim>()
             {
-            new Claim(ClaimTypes.NameIdentifier, userX.Id.ToString()),
-            new Claim(ClaimTypes.Email,userX.Email),
-            new Claim(ClaimTypes.Hash, userX.PasswordHash),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email,user.Email),
+            new Claim(ClaimTypes.Hash, user.PasswordHash),
             new Claim(ClaimTypes.Role, "User"),
             };
             // JWT.
@@ -107,7 +107,7 @@ namespace EducationApp.BusinessLogicLayer.Services
 
             List<Claim> claimsref = new List<Claim>()
             {
-            new Claim("Refresh", userX.Email)
+            new Claim("Refresh", user.Email)
             };
             // JWT.
             JwtSecurityToken refreshtoken = new JwtSecurityToken(
