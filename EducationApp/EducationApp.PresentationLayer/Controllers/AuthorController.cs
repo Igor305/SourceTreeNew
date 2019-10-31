@@ -2,6 +2,7 @@
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace EducationApp.PresentationLayer.Controllers
@@ -31,10 +32,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     Get/GetAllIsDeleted
         ///
         /// </remarks>
-        [HttpGet("GetAllIsDeleted")]
-        public async Task<AuthorResponseModel> GetAllIsDeleted()
+        [HttpGet("GetAll")]
+        public async Task<AuthorResponseModel> GetAll()
         {
-            AuthorResponseModel authorResponseModel = await _authorService.GetAllIsDeleted();
+            AuthorResponseModel authorResponseModel = await _authorService.GetAll();
             return authorResponseModel;
         }
         /// <summary>
@@ -46,10 +47,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     Get/GetAll
         ///
         /// </remarks>
-        [HttpGet("GetAll")]
-        public async Task<AuthorResponseModel> GetAll()
+        [HttpGet("GetAllWithoutRemove")]
+        public async Task<AuthorResponseModel> GetAllWithoutRemove()
         {
-            AuthorResponseModel authorResponseModel = await _authorService.GetAll();
+            AuthorResponseModel authorResponseModel = await _authorService.GetAllWithoutRemove();
             return authorResponseModel;
         }
         /// <summary>
@@ -91,13 +92,13 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpGet("GetById")]
-        public async Task<AuthorResponseModel> GetById([FromQuery] GetByIdAuthorModel getByIdAuthorModel)
+        [HttpGet("{id}")]
+        public async Task<AuthorResponseModel> GetById(Guid id)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                authorResponseModel = await _authorService.GetById(getByIdAuthorModel);
+                authorResponseModel = await _authorService.GetById(id);
                 return authorResponseModel;
             }
             authorResponseModel.Messege = "Error";
@@ -119,12 +120,12 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("FindName")]
-        public async Task<AuthorResponseModel> FindName([FromQuery] GetNameAuthorModel getNameAuthorModel)
+        public async Task<AuthorResponseModel> GetByFullName([FromQuery] GetNameAuthorModel getNameAuthorModel)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                authorResponseModel = await _authorService.FindName(getNameAuthorModel);
+                authorResponseModel = await _authorService.GetByFullName(getNameAuthorModel);
                 return authorResponseModel;
             }
             authorResponseModel.Messege = "Error";
@@ -206,13 +207,13 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [Produces("application/json")]
-        [HttpPut("Update")]
-        public async Task<AuthorResponseModel> Update([FromBody]UpdateAuthorModel updateAuthorModel)
+        [HttpPut("{id}")]
+        public async Task<AuthorResponseModel> Update(Guid id, [FromBody]UpdateAuthorModel updateAuthorModel)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                authorResponseModel = await _authorService.Update(updateAuthorModel);
+                authorResponseModel = await _authorService.Update(id, updateAuthorModel);
                 return authorResponseModel;
             }
             authorResponseModel.Messege = "Post, not valide";
@@ -231,13 +232,13 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [Produces("application/json")]
-        [HttpDelete("Delete")]
-        public async Task<AuthorResponseModel> Delete([FromBody]DeleteAuthorModel deleteAuthorModel)
+        [HttpDelete("{id}")]
+        public async Task<AuthorResponseModel> Delete(Guid id)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
             if (ModelState.IsValid)
             {
-                authorResponseModel = await _authorService.Delete(deleteAuthorModel);
+                authorResponseModel = await _authorService.Delete(id);
                 return authorResponseModel;
             }
             authorResponseModel.Messege = "Post, not valide";

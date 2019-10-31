@@ -160,17 +160,6 @@
                  
              </remarks>
         </member>
-        <member name="T:EducationApp.PresentationLayer.Controllers.AuthController">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IUserService)">
-            <summary>
-            
-            </summary>
-            <param name="userService"></param>
-        </member>
         <member name="T:EducationApp.PresentationLayer.Controllers.AuthorController">
             <summary>
             AuthorController
@@ -182,7 +171,7 @@
             </summary>
             <param name="authorService"></param>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.GetAllIsDeleted">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.GetAll">
              <summary>
              Get all Author (IsDeleted = true)
              </summary>
@@ -193,7 +182,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.GetAll">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.GetAllWithoutRemove">
              <summary>
              Get All Author
              </summary>
@@ -219,7 +208,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.GetById(EducationApp.BusinessLogicLayer.Models.Authors.GetByIdAuthorModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.GetById(System.Guid)">
              <summary>
              Get by Id Author
              </summary>
@@ -233,7 +222,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.FindName(EducationApp.BusinessLogicLayer.Models.Authors.GetNameAuthorModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.GetByFullName(EducationApp.BusinessLogicLayer.Models.Authors.GetNameAuthorModel)">
              <summary>
              Get Name Author
              </summary>
@@ -280,7 +269,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Update(EducationApp.BusinessLogicLayer.Models.Authors.UpdateAuthorModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Update(System.Guid,EducationApp.BusinessLogicLayer.Models.Authors.UpdateAuthorModel)">
              <summary>
              Update Author for Id
              </summary>
@@ -298,7 +287,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Delete(EducationApp.BusinessLogicLayer.Models.Authors.DeleteAuthorModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Delete(System.Guid)">
              <summary>
              Delete  Author for Id
              </summary>

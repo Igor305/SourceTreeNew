@@ -3,7 +3,7 @@ using System;
 
 namespace EducationApp.BusinessLogicLayer.Models.Authors
 {
-    public class UpdateAuthorModel : BaseModel
+    public class UpdateAuthorModel
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

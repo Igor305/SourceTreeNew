@@ -1,5 +1,6 @@
 ﻿using EducationApp.BusinessLogicLayer.Models.Authors;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
+using System;
 using System.Threading.Tasks;
 
 namespace EducationApp.BusinessLogicLayer.Services.Interfaces
@@ -9,11 +10,11 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
         Task<AuthorResponseModel> GetAll();
         Task<AuthorResponseModel> GetAllWithoutRemove();
         Task<AuthorResponseModel> Pagination(PaginationAuthorModel paginationAuthorModel);
-        Task<AuthorResponseModel> GetById(GetByIdAuthorModel getByIdAuthorModel);
+        Task<AuthorResponseModel> GetById(Guid id);
         Task<AuthorResponseModel> GetByFullName(GetNameAuthorModel getNameAuthorModel);
         AuthorResponseModel Filter(FiltrationAuthorModel filtrationAuthorModel);
         Task<AuthorResponseModel> Create(CreateAuthorModel createAuthorModel);
-        Task<AuthorResponseModel> Update(UpdateAuthorModel updateAuthorModel);
-        Task<AuthorResponseModel> Delete(DeleteAuthorModel deleteAuthorModel);
+        Task<AuthorResponseModel> Update(Guid id, UpdateAuthorModel updateAuthorModel);
+        Task<AuthorResponseModel> Delete(Guid id);
     }
 }

@@ -16,12 +16,13 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
             _applicationContext = applicationContext;
             _dbSet = applicationContext.Set<T>();
         }
+
         public async Task<T> GetById(Guid id)
         {
             T find = await _dbSet.FindAsync(id);
-            return find;
-                
+            return find;              
         }
+
         public async Task Create(T entity)
         {
             await _dbSet.AddAsync(entity);

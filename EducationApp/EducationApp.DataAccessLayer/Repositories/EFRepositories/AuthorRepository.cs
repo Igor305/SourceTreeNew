@@ -25,6 +25,22 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
             List<Author> all = await _applicationContext.Authors.ToListAsync();
             return all;
         }
+        public async Task<bool> CheckById(Guid id)
+        {
+            bool author = await _applicationContext.Authors.AnyAsync(x => x.Id == id);
+            return author;
+        }
+        public async Task<bool> CheckByName(string FirstName, string LastName)
+        {
+            bool author = false;
+            bool authorFirstName = await _applicationContext.Authors.AnyAsync(x => x.FirstName == FirstName);
+            bool authorLastName = await _applicationContext.Authors.AnyAsync(x => x.LastName == LastName);
+            if (authorFirstName && authorLastName)
+            {
+                author = true;
+            }
+            return author;
+        }
         public async Task<Author> GetByFullName(string FirstName, string LastName)
         {
             IQueryable<Author> listgetname = _applicationContext.Authors.Where(x => x.LastName == LastName);
@@ -38,9 +54,11 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
             List<Author> paginationAuthors = authors.Skip(Skip).Take(Take).ToList();
             return paginationAuthors;
         }
-        public List<Author> Filter(string FirstName, string LastName, DateTime? DateBirthFirst, DateTime? DateBirthLast, DateTime? DateDeathFirst, DateTime? DateDeathLast)
+        public List<Author> Filter(string FirstName, string LastName, DateTime? DateBirthFrom, DateTime? DateBirthTo, DateTime? DateDeathFrom, DateTime? DateDeathTo)
         {
-            List<Author> filtrauthor = _applicationContext.Authors.Where(x=>x.FirstName == FirstName).Where(x=>x.LastName == LastName).Where(x => x.DateBirth >= DateBirthFirst).Where(x => x.DateBirth <= DateBirthLast).Where(x => x.DateBirth >= DateDeathFirst).Where(x => x.DateBirth <= DateDeathLast).ToList();
+            List<Author> filtrauthor = _applicationContext.Authors.Where(x => x.FirstName == FirstName || string.IsNullOrEmpty(FirstName)).Where(x => x.LastName == LastName || string.IsNullOrEmpty(LastName))
+                .Where(x => x.DateBirth >= DateBirthFrom || DateBirthFrom == null).Where(x => x.DateBirth <= DateBirthTo || DateBirthTo == null)
+                .Where(x => x.DateBirth >= DateDeathFrom || DateDeathFrom == null).Where(x => x.DateBirth <= DateDeathTo || DateDeathTo == null).ToList();
             return filtrauthor;
         }
     }

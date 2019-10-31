@@ -7,9 +7,9 @@ namespace EducationApp.BusinessLogicLayer.Models.Authors
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime? DateBirthFirst { get; set; }
-        public DateTime? DateBirthLast { get; set; }
-        public DateTime? DateDeathFirst { get; set; }
-        public DateTime? DateDeathLast { get; set; }
+        public DateTime? DateBirthFrom { get; set; }
+        public DateTime? DateBirthTo { get; set; }
+        public DateTime? DateDeathFrom { get; set; }
+        public DateTime? DateDeathTo { get; set; }
     }
 }
