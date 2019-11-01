@@ -20,7 +20,7 @@ namespace EducationApp.BusinessLogicLayer.Helpers
                 Amount = amount,
                 Description = Description,
                 Currency = currency,
-               // CustomerId = customer.Id
+                Customer = customer.Id
             });
             if (charge.Status == "succeeded")
             {

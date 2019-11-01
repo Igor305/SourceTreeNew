@@ -1,5 +1,6 @@
 ﻿using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -18,19 +19,19 @@ namespace EducationApp.BusinessLogicLayer.Helpers
             using (var client = new SmtpClient())
             {
                 var credential = new NetworkCredential();
-                credential.UserName = "xlamarx66@gmail.com";
-                credential.Password = "kloyn5655396";
+                credential.UserName = _configuration.GetSection("SMTP")["Email"];
+                credential.Password = _configuration.GetSection("SMTP")["Password"];
 
                 client.Credentials = credential;
-                client.Host = "smtp.gmail.com";
-                client.Port = 587;
+                client.Host = _configuration.GetSection("SMTP")["Host"];
+                client.Port = Int32.Parse(_configuration.GetSection("SMTP")["Port"]);
                 client.EnableSsl = true;
 
                 using (var emailMessage = new MailMessage())
                 {
                     var mailAddress = new MailAddress(email);
                     emailMessage.To.Add(mailAddress);
-                    emailMessage.From = new MailAddress("xlamarx66@gmail.com");
+                    emailMessage.From = new MailAddress(_configuration.GetSection("SMTP")["Email"]);
                     emailMessage.Subject = subject;
                     emailMessage.IsBodyHtml = true;
                     emailMessage.Body = body;

@@ -9,22 +9,12 @@
             AccountController
             </summary>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IAccountService)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IAccountService,EducationApp.BusinessLogicLayer.Services.Interfaces.IUserService)">
             <summary>
             
             </summary>
             <param name="accountService"></param>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAuth">
-             <summary>
-             Authentication
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Get/GetAuth
-            
-             </remarks>
+            <param name="userService"></param>
         </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAllRoleUsers">
              <summary>
@@ -37,88 +27,26 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.ConfirmEmail(EducationApp.BusinessLogicLayer.Models.Account.ConfirmEmail)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAllIsDeleted">
              <summary>
-              Confirm Password
+             Get all User (IsDeleted = true)
              </summary>
              <remarks>
              Sample request:
             
-                 Get/ConfirmEmail
-             
-                 "Email":"karakymba@gmail.com",
-                 
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Login(EducationApp.BusinessLogicLayer.Models.Account.LoginModel,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtPrivateKey,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtRefresh)">
-             <summary>
-              Log In
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Post/PostAuth
-                 
-                 "Email":"karakymba@gmail.com",
-                 "Password":"karaganda"
+                 Get/GetAllIsDeleted
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Register(EducationApp.BusinessLogicLayer.Models.Account.RegisterModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAll">
              <summary>
-              Register
-             </summary>
-             <remarks>
-             Sample request:
-             
-                 Post/Register
-            
-                 "Email":"karakymba@gmail.com",
-                 "Password":"karaganda",
-                 "PasswordConfirm":"karaganda"
-                 
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.ForgotPassword(EducationApp.BusinessLogicLayer.Models.Account.ForgotPassword)">
-             <summary>
-              Forgot Password
-             </summary>
-             <remarks>
-             Sample request:
-             
-                 Post/ForgotPassword
-            
-                 "Email":"karakymba@gmail.com"
-                 
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.ResetPassword(EducationApp.BusinessLogicLayer.Models.Account.ResetPasswordModel)">
-             <summary>
-              Reset Password
+             Get all User 
              </summary>
              <remarks>
              Sample request:
             
-                 Post/ResetPassword
-             
-                 "Email":"karakymba@gmail.com",
-                 "Password":"karaganda",
-                 "PasswordConfirm":"karaganda",
-                 "Code":"ioprewthjypoiwreyortpo"
-                 
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.RefreshToken(EducationApp.BusinessLogicLayer.Models.Account.RefreshTokenModel,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtPrivateKey,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtRefresh)">
-             <summary>
-              Refresh Token
-             </summary>
-             <remarks>
-             Sample request:
+                 Get/GetAll
             
-                 Post/RefreshToken
-             
-                 "token":"karakymba@gmail.com"
-                 
              </remarks>
         </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.CreateRoleUsers(EducationApp.BusinessLogicLayer.Models.Account.CreateRoleModel)">
@@ -134,6 +62,23 @@
                  
              </remarks>
         </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Create(EducationApp.BusinessLogicLayer.Models.User.CreateUserModel)">
+             <summary>
+             Create new PrintingEdition
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/Create
+                 {
+                     "Email": "karamba@gmail.com",
+                     "FirstName": "Олег",
+                     "LastName": "Петрович",
+                     "PhoneNumber": "096453453455"
+                 }
+            
+             </remarks>
+        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.UpdateRoleUser(EducationApp.BusinessLogicLayer.Models.Account.UpdateRoleModel)">
              <summary>
               Update Role
@@ -147,6 +92,24 @@
                  
              </remarks>
         </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Update(EducationApp.BusinessLogicLayer.Models.User.UpdateUserModel)">
+             <summary>
+             Update User for Id
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 PUT/Update
+                 {
+                     "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d",
+                     "Email": "karamba@gmail.com",
+                     "FirstName": "Олег",
+                     "LastName": "Петрович",
+                     "PhoneNumber": "096453453455"
+                 }
+            
+             </remarks>
+        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.DeleteRoleUser(EducationApp.BusinessLogicLayer.Models.Account.DeleteRoleModel)">
              <summary>
               DeleteRoleUsers
@@ -157,6 +120,129 @@
                  Delete/DeleteRoleUsers
              
                  "Name":"Slave"
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Delete(EducationApp.BusinessLogicLayer.Models.User.DeleteModel)">
+             <summary>
+             Delete User for Id
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 DELETE/Delete
+                 {
+                     "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d"
+                 }
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.FinalRemoval(EducationApp.BusinessLogicLayer.Models.User.DeleteModel)">
+             <summary>
+             Final Removal User for Id
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 DELETE/FinalRemoval
+                 {
+                     "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d"
+                 }
+            
+             </remarks>
+        </member>
+        <member name="T:EducationApp.PresentationLayer.Controllers.AuthController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IAccountService)">
+            <summary>
+            
+            </summary>
+            <param name="accountService"></param>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.ConfirmEmail(EducationApp.BusinessLogicLayer.Models.Account.ConfirmEmail)">
+             <summary>
+              Confirm Password
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Get/ConfirmEmail
+             
+                 "Email":"karakymba@gmail.com",
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.Login(EducationApp.BusinessLogicLayer.Models.Account.LoginModel,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtPrivateKey,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtRefresh)">
+             <summary>
+              Log In
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/PostAuth
+                 
+                 "Email":"karakymba@gmail.com",
+                 "Password":"karaganda"
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.Register(EducationApp.BusinessLogicLayer.Models.Account.RegisterModel)">
+             <summary>
+              Register
+             </summary>
+             <remarks>
+             Sample request:
+             
+                 Post/Register
+            
+                 "Email":"karakymba@gmail.com",
+                 "Password":"karaganda",
+                 "PasswordConfirm":"karaganda"
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.ForgotPassword(EducationApp.BusinessLogicLayer.Models.Account.ForgotPassword)">
+             <summary>
+              Forgot Password
+             </summary>
+             <remarks>
+             Sample request:
+             
+                 Post/ForgotPassword
+            
+                 "Email":"karakymba@gmail.com"
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.ResetPassword(EducationApp.BusinessLogicLayer.Models.Account.ResetPasswordModel)">
+             <summary>
+              Reset Password
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/ResetPassword
+             
+                 "Email":"karakymba@gmail.com",
+                 "Password":"karaganda",
+                 "PasswordConfirm":"karaganda",
+                 "Code":"ioprewthjypoiwreyortpo"
+                 
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.RefreshToken(EducationApp.BusinessLogicLayer.Models.Account.RefreshTokenModel,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtPrivateKey,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtRefresh)">
+             <summary>
+              Refresh Token
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/RefreshToken
+             
+                 "token":"karakymba@gmail.com"
                  
              </remarks>
         </member>
@@ -545,102 +631,6 @@
                  DELETE/Delete
                  {
                      "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9"
-                 }
-            
-             </remarks>
-        </member>
-        <member name="T:EducationApp.PresentationLayer.Controllers.UserController">
-            <summary>
-             UserController
-            </summary>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.UserController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IUserService)">
-            <summary>
-            
-            </summary>
-            <param name="userService"></param>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.UserController.GetAllIsDeleted">
-             <summary>
-             Get all User (IsDeleted = true)
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Get/GetAllIsDeleted
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.UserController.GetAll">
-             <summary>
-             Get all User 
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Get/GetAll
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.UserController.Create(EducationApp.BusinessLogicLayer.Models.User.CreateUserModel)">
-             <summary>
-             Create new PrintingEdition
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Post/Create
-                 {
-                     "Email": "karamba@gmail.com",
-                     "FirstName": "Олег",
-                     "LastName": "Петрович",
-                     "PhoneNumber": "096453453455"
-                 }
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.UserController.Update(EducationApp.BusinessLogicLayer.Models.User.UpdateUserModel)">
-             <summary>
-             Update User for Id
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 PUT/Update
-                 {
-                     "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d",
-                     "Email": "karamba@gmail.com",
-                     "FirstName": "Олег",
-                     "LastName": "Петрович",
-                     "PhoneNumber": "096453453455"
-                 }
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.UserController.Delete(EducationApp.BusinessLogicLayer.Models.User.DeleteModel)">
-             <summary>
-             Delete User for Id
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 DELETE/Delete
-                 {
-                     "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d"
-                 }
-            
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.UserController.FinalRemoval(EducationApp.BusinessLogicLayer.Models.User.DeleteModel)">
-             <summary>
-             Final Removal User for Id
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 DELETE/FinalRemoval
-                 {
-                     "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d"
                  }
             
              </remarks>

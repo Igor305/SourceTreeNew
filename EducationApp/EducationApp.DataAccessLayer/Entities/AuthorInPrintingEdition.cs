@@ -5,8 +5,6 @@ namespace EducationApp.DataAccessLayer.Entities
 {
     public class AuthorInPrintingEdition
     {
-        private Author _author;
-        private PrintingEdition _printingEdition;
         private readonly ILazyLoader _lazyLoader;
         public AuthorInPrintingEdition()
         {

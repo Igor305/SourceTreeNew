@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using EducationApp.BusinessLogicLayer.Models.Account;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Account;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
+using EducationApp.BusinessLogicLayer.Models.User;
 
 namespace EducationApp.PresentationLayer.Controllers
 {
@@ -15,29 +16,16 @@ namespace EducationApp.PresentationLayer.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
+        private readonly IUserService _userService;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="accountService"></param>
-        public AccountController(IAccountService accountService)
+        /// <param name="userService"></param>
+        public AccountController(IAccountService accountService, IUserService userService)
         {
             _accountService = accountService;
-        }
-        /// <summary>
-        /// Authentication
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     Get/GetAuth
-        ///
-        /// </remarks>
-        [HttpGet("Auth")]
-        [Authorize]
-        public AuthAccountResponseModel GetAuth()
-        {
-            AuthAccountResponseModel authAccountResponseModel = _accountService.GetAuth();
-            return authAccountResponseModel;
+            _userService = userService;
         }
         /// <summary>
         /// Get All Role
@@ -55,166 +43,34 @@ namespace EducationApp.PresentationLayer.Controllers
             return roleAccountResponseModel;
         }
         /// <summary>
-        ///  Confirm Password
+        /// Get all User (IsDeleted = true)
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     Get/ConfirmEmail
-        /// 
-        ///     "Email":"karakymba@gmail.com",
-        ///     
+        ///     Get/GetAllIsDeleted
+        ///
         /// </remarks>
-        [HttpGet("ConfirmEmail")]
-        [AllowAnonymous]
-        public async Task<ConfirmEmailAccountResponseModel> ConfirmEmail([FromQuery]ConfirmEmail confirmEmail)
+        [HttpGet("GetAllIsDeletedUsers")]
+        public async Task<UserResponseModel> GetAllIsDeleted()
         {
-            ConfirmEmailAccountResponseModel confirmEmailAccountResponseModel = new ConfirmEmailAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                confirmEmailAccountResponseModel = await _accountService.ConfirmEmail(confirmEmail.userId, confirmEmail.code);
-                return confirmEmailAccountResponseModel;
-            }
-            confirmEmailAccountResponseModel.Messege = "Error";
-            confirmEmailAccountResponseModel.Status = false;
-            confirmEmailAccountResponseModel.Error.Add("Not IsValid");
-            return confirmEmailAccountResponseModel;
+            UserResponseModel userResponseModel = await _userService.GetAllIsDeleted();
+            return userResponseModel;
         }
         /// <summary>
-        ///  Log In
+        /// Get all User 
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     Post/PostAuth
-        ///     
-        ///     "Email":"karakymba@gmail.com",
-        ///     "Password":"karaganda"
+        ///     Get/GetAll
         ///
         /// </remarks>
-        [HttpPost("Auth")]
-        [AllowAnonymous]
-        public async Task<LoginAccountResponseModel> Login([FromBody] LoginModel login, [FromServices] IJwtPrivateKey jwtPrivateKey, [FromServices] IJwtRefresh jwtRefresh)
+        [HttpGet("GetAllUsers")]
+        public async Task<UserResponseModel> GetAll()
         {
-            LoginAccountResponseModel loginAccountResponseModel = new LoginAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-
-                loginAccountResponseModel = await _accountService.Login(login, jwtPrivateKey, jwtRefresh);
-                return loginAccountResponseModel; 
-            }
-            loginAccountResponseModel.Messege = "Error";
-            loginAccountResponseModel.Status = false;
-            loginAccountResponseModel.Error.Add("Not IsValid");
-            return loginAccountResponseModel;
-        }
-        /// <summary>
-        ///  Register
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        /// 
-        ///     Post/Register
-        ///
-        ///     "Email":"karakymba@gmail.com",
-        ///     "Password":"karaganda",
-        ///     "PasswordConfirm":"karaganda"
-        ///     
-        /// </remarks>
-        [HttpPost("Register")]
-        public async Task<RegisterAccountResponseModel> Register([FromBody]RegisterModel reg)
-        {
-            RegisterAccountResponseModel registerAccountResponseModel = new RegisterAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                registerAccountResponseModel = await _accountService.Register(reg);
-                return registerAccountResponseModel;
-            }
-            registerAccountResponseModel.Messege = "Error";
-            registerAccountResponseModel.Status = false;
-            registerAccountResponseModel.Error.Add("Not IsValid");
-            return registerAccountResponseModel;
-        }
-        /// <summary>
-        ///  Forgot Password
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        /// 
-        ///     Post/ForgotPassword
-        ///
-        ///     "Email":"karakymba@gmail.com"
-        ///     
-        /// </remarks>
-        [HttpPost("ForgotPassword")]
-        [AllowAnonymous]
-        public async Task<ForgotPasswordResponseModel> ForgotPassword([FromBody]ForgotPassword forgotPassword)
-        {
-            ForgotPasswordResponseModel forgotPasswordResponseModel = new ForgotPasswordResponseModel();
-            if (ModelState.IsValid)
-            {
-                forgotPasswordResponseModel = await _accountService.ForgotPassword(forgotPassword);
-                return forgotPasswordResponseModel; 
-            }
-            forgotPasswordResponseModel.Messege = "Error";
-            forgotPasswordResponseModel.Status = false;
-            forgotPasswordResponseModel.Error.Add("Not IsValid");
-            return forgotPasswordResponseModel;
-        }
-      
-        /// <summary>
-        ///  Reset Password
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     Post/ResetPassword
-        /// 
-        ///     "Email":"karakymba@gmail.com",
-        ///     "Password":"karaganda",
-        ///     "PasswordConfirm":"karaganda",
-        ///     "Code":"ioprewthjypoiwreyortpo"
-        ///     
-        /// </remarks>
-        [HttpPost("ResetPassword")]
-        [AllowAnonymous]
-        public async Task<ResetPasswordAccountResponseModel> ResetPassword([FromBody] ResetPasswordModel reset)
-        {
-            ResetPasswordAccountResponseModel resetPasswordAccountResponseModel = new ResetPasswordAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                resetPasswordAccountResponseModel = await _accountService.ResetPassword(reset);
-                return resetPasswordAccountResponseModel; 
-            }
-            resetPasswordAccountResponseModel.Messege = "Error";
-            resetPasswordAccountResponseModel.Status = false;
-            resetPasswordAccountResponseModel.Error.Add("Not IsValid");
-            return resetPasswordAccountResponseModel;
-        }
-        /// <summary>
-        ///  Refresh Token
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     Post/RefreshToken
-        /// 
-        ///     "token":"karakymba@gmail.com"
-        ///     
-        /// </remarks>
-        [HttpPost("RefreshToken")]
-        public async Task<RefreshTokenAccountResponseModel> RefreshToken([FromBody] RefreshTokenModel refreshTokenModel, [FromServices] IJwtPrivateKey jwtPrivateKey, [FromServices] IJwtRefresh jwtRefresh)
-        {
-            RefreshTokenAccountResponseModel refreshTokenAccountResponseModel = new RefreshTokenAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                refreshTokenAccountResponseModel = await _accountService.RefreshToken(refreshTokenModel, jwtPrivateKey, jwtRefresh);
-                return refreshTokenAccountResponseModel;
-            }
-            refreshTokenAccountResponseModel.Messege = "Error";
-            refreshTokenAccountResponseModel.Status = false;
-            refreshTokenAccountResponseModel.Error.Add("Not IsValid");
-            return refreshTokenAccountResponseModel;
+            UserResponseModel userResponseModel = await _userService.GetAll();
+            return userResponseModel;
         }
         /// <summary>
         ///  Create Roles
@@ -242,6 +98,35 @@ namespace EducationApp.PresentationLayer.Controllers
             return roleAccountResponseModel;
         }
         /// <summary>
+        /// Create new PrintingEdition
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Post/Create
+        ///     {
+        ///         "Email": "karamba@gmail.com",
+        ///         "FirstName": "Олег",
+        ///         "LastName": "Петрович",
+        ///         "PhoneNumber": "096453453455"
+        ///     }
+        ///
+        /// </remarks>
+        [HttpPost("CreateUser")]
+        public async Task<UserResponseModel> Create([FromBody]CreateUserModel createmodel)
+        {
+            UserResponseModel userResponseModel = new UserResponseModel();
+            if (ModelState.IsValid)
+            {
+                userResponseModel = await _userService.Create(createmodel);
+                return userResponseModel;
+            }
+            userResponseModel.Messege = "Error";
+            userResponseModel.Status = false;
+            userResponseModel.Error.Add("Post, not valide");
+            return userResponseModel;
+        }
+        /// <summary>
         ///  Update Role
         /// </summary>
         /// <remarks>
@@ -267,6 +152,36 @@ namespace EducationApp.PresentationLayer.Controllers
             return roleAccountResponseModel;
         }
         /// <summary>
+        /// Update User for Id
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT/Update
+        ///     {
+        ///         "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d",
+        ///         "Email": "karamba@gmail.com",
+        ///         "FirstName": "Олег",
+        ///         "LastName": "Петрович",
+        ///         "PhoneNumber": "096453453455"
+        ///     }
+        ///
+        /// </remarks>
+        [HttpPut("UpdateUser")]
+        public async Task<UserResponseModel> Update([FromBody]UpdateUserModel model)
+        {
+            UserResponseModel userResponseModel = new UserResponseModel();
+            if (ModelState.IsValid)
+            {
+                userResponseModel = await _userService.Update(model);
+                return userResponseModel;
+            }
+            userResponseModel.Messege = "Error";
+            userResponseModel.Status = false;
+            userResponseModel.Error.Add("Post, not valide");
+            return userResponseModel;
+        }
+        /// <summary>
         ///  DeleteRoleUsers
         /// </summary>
         /// <remarks>
@@ -290,6 +205,58 @@ namespace EducationApp.PresentationLayer.Controllers
             roleAccountResponseModel.Status = false;
             roleAccountResponseModel.Error.Add("Not IsValid");
             return roleAccountResponseModel;
+        }
+        /// <summary>
+        /// Delete User for Id
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE/Delete
+        ///     {
+        ///         "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d"
+        ///     }
+        ///
+        /// </remarks>
+        [HttpDelete("DeleteUser")]
+        public async Task<UserResponseModel> Delete([FromBody]DeleteModel deleteModel)
+        {
+            UserResponseModel userResponseModel = new UserResponseModel();
+            if (ModelState.IsValid)
+            {
+                userResponseModel = await _userService.Delete(deleteModel);
+                return userResponseModel;
+            }
+            userResponseModel.Messege = "Error";
+            userResponseModel.Status = false;
+            userResponseModel.Error.Add("Post, not valide");
+            return userResponseModel;
+        }
+        /// <summary>
+        /// Final Removal User for Id
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE/FinalRemoval
+        ///     {
+        ///         "Id": "90b75db0-1daf-4790-db0a-08d75c6f078d"
+        ///     }
+        ///
+        /// </remarks>
+        [HttpDelete("FinalRemovalUser")]
+        public async Task<UserResponseModel> FinalRemoval([FromBody]DeleteModel deleteModel)
+        {
+            UserResponseModel userResponseModel = new UserResponseModel();
+            if (ModelState.IsValid)
+            {
+                userResponseModel = await _userService.FinalRemoval(deleteModel);
+                return userResponseModel;
+            }
+            userResponseModel.Messege = "Error";
+            userResponseModel.Status = false;
+            userResponseModel.Error.Add("Post, not valide");
+            return userResponseModel;
         }
     }
 }

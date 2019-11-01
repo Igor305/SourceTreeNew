@@ -111,7 +111,7 @@ namespace EducationApp.PresentationLayer
             services.AddSingleton<IJwtRefresh>(refreshKey);
             //Jwt Token
             string accessSecurityKey = Configuration.GetSection("JWT")["AccesSecretKey"];
-            var accessKey = new JwtHelper(accessSecurityKey);
+            var accessKey = new JwtHelper(accessSecurityKey, Configuration);
             services.AddSingleton<IJwtPrivateKey>(accessKey);
             const string jwtSchemeName = "JwtBearer";
             var signingDecodingKey = (IJwtPrivateKey)accessKey;
@@ -126,9 +126,9 @@ namespace EducationApp.PresentationLayer
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = signingDecodingKey.GetKey(),
                     ValidateIssuer = true,
-                    ValidIssuer = "MyJwt",
+                    ValidIssuer = Configuration.GetSection("JWT")["Issuer"],
                     ValidateAudience = true,
-                    ValidAudience = "TheBestClient",
+                    ValidAudience = Configuration.GetSection("JWT")["Audience"],
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromSeconds(5)
                 };
