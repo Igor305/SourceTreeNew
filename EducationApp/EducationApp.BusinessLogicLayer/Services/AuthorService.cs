@@ -60,7 +60,9 @@ namespace EducationApp.BusinessLogicLayer.Services
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
 
-            if (paginationAuthorModel.Skip < 0 || paginationAuthorModel.Take < 0)
+            bool IsWarning = (paginationAuthorModel.Skip < 0 || paginationAuthorModel.Take < 0);
+
+            if (IsWarning)
             {
                 authorResponseModel.Warning.Add(ResponseConstants.WaringlessThanZero);
             }
@@ -87,7 +89,6 @@ namespace EducationApp.BusinessLogicLayer.Services
         private async Task<AuthorResponseModel> ValidateGetById(Guid id)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-
             bool isExistAuthor = await _authorRepository.CheckById(id);
             if (!isExistAuthor)
             {
@@ -116,14 +117,12 @@ namespace EducationApp.BusinessLogicLayer.Services
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
 
-            if (string.IsNullOrEmpty(getNameAuthorModel.FirstName) || string.IsNullOrEmpty(getNameAuthorModel.LastName))
+            bool IsError = (string.IsNullOrEmpty(getNameAuthorModel.FirstName) || string.IsNullOrEmpty(getNameAuthorModel.LastName));
+            if (IsError)
             {
                 authorResponseModel.Error.Add(ResponseConstants.Null);
             }
-            if (authorResponseModel.Error.Count == 0)
-            {
-                authorResponseModel.Status = true;
-            }
+            authorResponseModel.Status = !IsError;
             authorResponseModel.Messege = authorResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return authorResponseModel;
@@ -147,8 +146,9 @@ namespace EducationApp.BusinessLogicLayer.Services
             bool FullName = (!string.IsNullOrEmpty(filtrationAuthorModel.FirstName) || !string.IsNullOrEmpty(filtrationAuthorModel.LastName));
             bool DateBirth = (filtrationAuthorModel.DateBirthFrom != null || filtrationAuthorModel.DateBirthTo != null);
             bool DateDeath = (filtrationAuthorModel.DateDeathFrom != null || filtrationAuthorModel.DateDeathTo != null);
+            bool IsWarning = FullName && DateBirth && DateDeath;
 
-            if (FullName && DateBirth && DateDeath)
+            if (IsWarning)
             {
                 authorResponseModel.Warning.Add(ResponseConstants.Null);
             }
@@ -179,32 +179,31 @@ namespace EducationApp.BusinessLogicLayer.Services
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
 
-            if (string.IsNullOrEmpty(createAuthorModel.FirstName) || string.IsNullOrEmpty(createAuthorModel.LastName))
+            bool nameAuthorIsExist = await _authorRepository.CheckByName(createAuthorModel.FirstName, createAuthorModel.LastName);
+            bool isErrorOfNull = string.IsNullOrEmpty(createAuthorModel.FirstName) || string.IsNullOrEmpty(createAuthorModel.LastName);
+            bool isErrorOfDate = createAuthorModel.DateBirth > createAuthorModel.DateDeath || createAuthorModel.DateBirth > DateTime.Now || (createAuthorModel.DateDeath >= DateTime.Now);
+
+            bool isError = isErrorOfNull || isErrorOfDate || nameAuthorIsExist;
+            bool isWarning = createAuthorModel.DateBirth == null;
+
+            if (isErrorOfNull)
             {
                 authorResponseModel.Error.Add(ResponseConstants.Null);
             }
-            if (createAuthorModel.DateBirth == null)
-            {
-                authorResponseModel.Warning.Add(ResponseConstants.Null);
-            }
-            if ((createAuthorModel.DateBirth > createAuthorModel.DateDeath) || (createAuthorModel.DateBirth > DateTime.Now))
+            if (isErrorOfDate)
             {
                 authorResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
-            if (createAuthorModel.DateDeath >= DateTime.Now)
-            {
-                createAuthorModel.DateDeath = null;
-            }
-
-            bool isExistNameAuthor = await _authorRepository.CheckByName(createAuthorModel.FirstName, createAuthorModel.LastName);
-            if (isExistNameAuthor)
+            if (nameAuthorIsExist)
             {
                 authorResponseModel.Error.Add(ResponseConstants.ErrorClone);
             }
-            if (authorResponseModel.Error.Count == 0)
+            if (isWarning)
             {
-                authorResponseModel.Status = true;
+                authorResponseModel.Warning.Add(ResponseConstants.Null);
             }
+
+            authorResponseModel.Status = !isError;
             authorResponseModel.Messege = authorResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return authorResponseModel;
