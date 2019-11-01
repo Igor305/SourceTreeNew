@@ -175,20 +175,6 @@
                  
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.Login(EducationApp.BusinessLogicLayer.Models.Account.LoginModel,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtPrivateKey,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtRefresh)">
-             <summary>
-              Log In
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Post/PostAuth
-                 
-                 "Email":"karakymba@gmail.com",
-                 "Password":"karaganda"
-            
-             </remarks>
-        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.Register(EducationApp.BusinessLogicLayer.Models.Account.RegisterModel)">
              <summary>
               Register
@@ -202,6 +188,20 @@
                  "Password":"karaganda",
                  "PasswordConfirm":"karaganda"
                  
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.Login(EducationApp.BusinessLogicLayer.Models.Account.LoginModel)">
+             <summary>
+              Log In
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/PostAuth
+                 
+                 "Email":"karakymba@gmail.com",
+                 "Password":"karaganda"
+            
              </remarks>
         </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.ForgotPassword(EducationApp.BusinessLogicLayer.Models.Account.ForgotPassword)">

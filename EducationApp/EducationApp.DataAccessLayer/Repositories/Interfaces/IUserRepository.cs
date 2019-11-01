@@ -7,8 +7,8 @@ namespace EducationApp.DataAccessLayer.Repositories.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        Task<List<User>> GetAllIsDeleted();
         Task<List<User>> GetAll();
-        Task<User> GetByIdAllIsDeleted(Guid Id);
+        Task<List<User>> GetAllWithoutRemove();
+        Task<User> GetByIdAll(Guid Id);
     }
 }

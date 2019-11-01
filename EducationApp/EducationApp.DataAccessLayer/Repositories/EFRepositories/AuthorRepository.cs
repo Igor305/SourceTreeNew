@@ -43,9 +43,9 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
         }
         public async Task<Author> GetByFullName(string FirstName, string LastName)
         {
-            IQueryable<Author> listgetname = _applicationContext.Authors.Where(x => x.LastName == LastName);
-            Author getname = await listgetname.FirstOrDefaultAsync(x => x.FirstName == FirstName);
-            return getname;
+            List<Author> authors = await _applicationContext.Authors.Where(x =>x.LastName == LastName).ToListAsync();
+            Author author = authors.FirstOrDefault(x =>x.FirstName == FirstName);
+            return author;
         }
         public async Task<List<Author>> Pagination(int Skip, int Take)
         {
@@ -56,9 +56,10 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
         }
         public List<Author> Filter(string FirstName, string LastName, DateTime? DateBirthFrom, DateTime? DateBirthTo, DateTime? DateDeathFrom, DateTime? DateDeathTo)
         {
-            List<Author> filtrauthor = _applicationContext.Authors.Where(x => x.FirstName == FirstName || string.IsNullOrEmpty(FirstName)).Where(x => x.LastName == LastName || string.IsNullOrEmpty(LastName))
-                .Where(x => x.DateBirth >= DateBirthFrom || DateBirthFrom == null).Where(x => x.DateBirth <= DateBirthTo || DateBirthTo == null)
-                .Where(x => x.DateBirth >= DateDeathFrom || DateDeathFrom == null).Where(x => x.DateBirth <= DateDeathTo || DateDeathTo == null).ToList();
+            List<Author> filtrauthor = _applicationContext.Authors.Where(x => x.FirstName == FirstName || string.IsNullOrEmpty(FirstName) 
+            && x.LastName == LastName || string.IsNullOrEmpty(LastName)
+            && x.DateBirth >= DateBirthFrom || DateBirthFrom == null && x.DateBirth <= DateBirthTo || DateBirthTo == null
+            && x.DateBirth >= DateDeathFrom || DateDeathFrom == null && x.DateBirth <= DateDeathTo || DateDeathTo == null).ToList();
             return filtrauthor;
         }
     }

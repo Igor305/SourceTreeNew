@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
 using EducationApp.BusinessLogicLayer.Models.User;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
@@ -20,22 +21,22 @@ namespace EducationApp.BusinessLogicLayer.Services
             _userRepository = userRepository;
             _mapper = mapper;
         }
-        public async Task<UserResponseModel> GetAllIsDeleted()
+        public async Task<UserResponseModel> GetAll()
         {
-            List<User> allIsDeleted = await _userRepository.GetAllIsDeleted();
+            List<User> allIsDeleted = await _userRepository.GetAll();
             List<UserModel> userModels = _mapper.Map<List<User>, List<UserModel>>(allIsDeleted);
             UserResponseModel userResponseModel = new UserResponseModel();
-            userResponseModel.Messege = "Successfully";
+            userResponseModel.Messege = ResponseConstants.Successfully;
             userResponseModel.Status = true;
             userResponseModel.UserModels = userModels;
             return userResponseModel;
         }
-        public async Task<UserResponseModel> GetAll()
+        public async Task<UserResponseModel> GetAllWithoutRemove()
         {
-            List<User> all = await _userRepository.GetAll();
+            List<User> all = await _userRepository.GetAllWithoutRemove();
             List<UserModel> userModels = _mapper.Map <List<User>, List<UserModel>> (all);
             UserResponseModel userResponseModel = new UserResponseModel();
-            userResponseModel.Messege = "Successfully";
+            userResponseModel.Messege = ResponseConstants.Successfully;
             userResponseModel.Status = true;
             userResponseModel.UserModels = userModels;
             return userResponseModel;
@@ -74,10 +75,26 @@ namespace EducationApp.BusinessLogicLayer.Services
                 user.UpdateDateTime = user.CreateDateTime;
                 await _userRepository.Create(user);
                 UserModel userModel = _mapper.Map<User, UserModel>(user);
-                userResponseModel.Messege = "Successfully";
-                userResponseModel.Status = true;
                 userResponseModel.UserModels.Add(userModel);
             }
+            return userResponseModel;
+        }
+        private async Task<UserResponseModel> ValidateCreate(CreateUserModel createUserModel)
+        {
+            UserResponseModel userResponseModel = new UserResponseModel();
+            if (string.IsNullOrEmpty(createUserModel.Email) || string.IsNullOrEmpty(createUserModel.FirstName) || string.IsNullOrEmpty(createUserModel.LastName)) 
+            {
+                userResponseModel.Error.Add(ResponseConstants.Null);
+            }
+            if (string.IsNullOrEmpty(createUserModel.PhoneNumber))
+            {
+                userResponseModel.Warning.Add(ResponseConstants.Null);
+            }
+            if (userResponseModel.Error.Count == 0)
+            {             
+                userResponseModel.Status = true;
+            }
+            userResponseModel.Messege = userResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
             return userResponseModel;
         }
         public async Task<UserResponseModel> Update(UpdateUserModel updateUserModel)

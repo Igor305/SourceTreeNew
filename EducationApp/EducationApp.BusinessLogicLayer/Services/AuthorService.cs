@@ -88,15 +88,12 @@ namespace EducationApp.BusinessLogicLayer.Services
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
 
-            bool checkById = await _authorRepository.CheckById(id);
-            if (!checkById)
+            bool isExistAuthor = await _authorRepository.CheckById(id);
+            if (!isExistAuthor)
             {
                 authorResponseModel.Error.Add(ResponseConstants.ErrorId);
             }
-            if (authorResponseModel.Error.Count == 0)
-            {
-                authorResponseModel.Status = true;
-            }
+            authorResponseModel.Status = isExistAuthor;
             authorResponseModel.Messege = authorResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return authorResponseModel;
@@ -155,8 +152,8 @@ namespace EducationApp.BusinessLogicLayer.Services
             {
                 authorResponseModel.Warning.Add(ResponseConstants.Null);
             }
-            authorResponseModel.Messege = ResponseConstants.Successfully;
             authorResponseModel.Status = true;
+            authorResponseModel.Messege = ResponseConstants.Successfully;
 
             return authorResponseModel;
         }
@@ -192,15 +189,15 @@ namespace EducationApp.BusinessLogicLayer.Services
             }
             if ((createAuthorModel.DateBirth > createAuthorModel.DateDeath) || (createAuthorModel.DateBirth > DateTime.Now))
             {
-                authorResponseModel.Error.Add(ResponseConstants.ErrorDate);
+                authorResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
             if (createAuthorModel.DateDeath >= DateTime.Now)
             {
                 createAuthorModel.DateDeath = null;
             }
 
-            bool checkByName = await _authorRepository.CheckByName(createAuthorModel.FirstName, createAuthorModel.LastName);
-            if (checkByName)
+            bool isExistNameAuthor = await _authorRepository.CheckByName(createAuthorModel.FirstName, createAuthorModel.LastName);
+            if (isExistNameAuthor)
             {
                 authorResponseModel.Error.Add(ResponseConstants.ErrorClone);
             }
@@ -241,20 +238,20 @@ namespace EducationApp.BusinessLogicLayer.Services
             }
             if ((updateAuthorModel.DateBirth > updateAuthorModel.DateDeath) || (updateAuthorModel.DateBirth > DateTime.Now))
             {
-                authorResponseModel.Error.Add(ResponseConstants.ErrorDate);
+                authorResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
             if (updateAuthorModel.DateDeath >= DateTime.Now)
             {
                 updateAuthorModel.DateDeath = null;
             }
 
-            bool checkById = await _authorRepository.CheckById(id);
-            if (!checkById)
+            bool isExistAuthor = await _authorRepository.CheckById(id);
+            if (!isExistAuthor)
             {
                 authorResponseModel.Error.Add(ResponseConstants.ErrorId);
             }
-            bool checkByName = await _authorRepository.CheckByName(updateAuthorModel.FirstName, updateAuthorModel.LastName);
-            if (checkByName)
+            bool isExistNameAuthor = await _authorRepository.CheckByName(updateAuthorModel.FirstName, updateAuthorModel.LastName);
+            if (isExistNameAuthor)
             {
                 authorResponseModel.Error.Add(ResponseConstants.ErrorClone);
             }
@@ -285,15 +282,12 @@ namespace EducationApp.BusinessLogicLayer.Services
         private async Task<AuthorResponseModel> ValidateDelete(Guid id)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            bool checkById = await _authorRepository.CheckById(id);
-            if (!checkById)
+            bool isExistNameAuthor = await _authorRepository.CheckById(id);
+            if (!isExistNameAuthor)
             {
                 authorResponseModel.Error.Add(ResponseConstants.ErrorId);
             }
-            if (authorResponseModel.Error?.Count  == 0)
-            {
-                authorResponseModel.Status = true;
-            }
+            authorResponseModel.Status = isExistNameAuthor;
             authorResponseModel.Messege = authorResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return authorResponseModel;

@@ -23,17 +23,15 @@ namespace EducationApp.BusinessLogicLayer.Services
     public class AccountService : IAccountService
     {
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly IEmailService _emailService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IMapper _mapper;
-        public AccountService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IEmailService emailService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor, IMapper mapper)
+        private readonly IMapper _mapper; 
+        public AccountService(UserManager<User> userManager, RoleManager<Role> roleManager, IEmailService emailService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor, IMapper mapper)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _roleManager = roleManager;
             _emailService = emailService;
             _httpContextAccessor = httpContextAccessor;
@@ -41,32 +39,8 @@ namespace EducationApp.BusinessLogicLayer.Services
             _actionContextAccessor = actionContextAccessor;
             _mapper = mapper;
         }
+        private readonly string ConfirmRegister = "Confirm register";
 
-        /*public AuthAccountResponseModel GetAuth()                                                                                                       
-        {
-            AuthAccountResponseModel authAccountResponseModel = new AuthAccountResponseModel();
-            Claim id = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            Claim email = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email);
-            Claim passHash = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Hash);
-            Claim role = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role);
-            if (_httpContextAccessor.HttpContext.Response.StatusCode == 401)
-            {
-                _httpContextAccessor.HttpContext.Response.StatusCode = 200;
-                Claim refresh = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Refresh");
-                authAccountResponseModel.Messege = "Error 401";
-                authAccountResponseModel.Status = false;
-                authAccountResponseModel.Error.Add("Unauthorized");
-                return authAccountResponseModel;
-            }
-            Guid Id = Guid.Parse(id.Value);
-            authAccountResponseModel.Id = Id;
-            authAccountResponseModel.Email = email.Value;
-            authAccountResponseModel.PassHash = passHash.Value;
-            authAccountResponseModel.Role = role.Value;
-            authAccountResponseModel.Messege = "Successfully";
-            authAccountResponseModel.Status = true;
-            return authAccountResponseModel;
-        }*/
         public async Task<RegisterAccountResponseModel> Register(RegisterModel reg)
         {
             User user = new User();
@@ -81,9 +55,9 @@ namespace EducationApp.BusinessLogicLayer.Services
                 string regurl = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).Action(
                     "ConfirmEmail",
                     "Account",
-                    new { userId = user.Id, code = code },
+                    new { userId = user.Id, code },
                     protocol: _httpContextAccessor.HttpContext.Request.Scheme);
-                string subject = "Confirm register";
+                string subject = ConfirmRegister;
                 string message = $"Confirm registration by clicking on the link: <a href={regurl}>Confirm email</a>";
                 await _emailService.SendEmail(reg.Email, subject, message);
             }
@@ -92,15 +66,14 @@ namespace EducationApp.BusinessLogicLayer.Services
         private RegisterAccountResponseModel ValidateRegister(IdentityResult result)
         {
             RegisterAccountResponseModel registerAccountResponseModel = new RegisterAccountResponseModel();
+           
             if (!result.Succeeded)
             {
                 registerAccountResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
-            if (registerAccountResponseModel.Error.Count == 0)
-            {
-                registerAccountResponseModel.Status = true;
-            }
+            registerAccountResponseModel.Status = result.Succeeded;
             registerAccountResponseModel.Messege = registerAccountResponseModel.Status ? ResponseConstants.ConfirmEmail : ResponseConstants.Error;
+
             return registerAccountResponseModel;
         }
         public async Task<LoginAccountResponseModel> Login(LoginModel login)

@@ -6,8 +6,8 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<UserResponseModel> GetAllIsDeleted();
         Task<UserResponseModel> GetAll();
+        Task<UserResponseModel> GetAllWithoutRemove();
         Task<UserResponseModel> Create(CreateUserModel createUserModel);
         Task<UserResponseModel> Update(UpdateUserModel updateUserModel);
         Task<UserResponseModel> Delete(DeleteModel deleteModel);
