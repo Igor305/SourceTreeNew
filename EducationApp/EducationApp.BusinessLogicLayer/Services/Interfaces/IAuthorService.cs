@@ -14,7 +14,7 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
         Task<AuthorResponseModel> GetByFullName(GetNameAuthorModel getNameAuthorModel);
         AuthorResponseModel Filter(FiltrationAuthorModel filtrationAuthorModel);
         Task<AuthorResponseModel> Create(CreateAuthorModel createAuthorModel);
-        Task<AuthorResponseModel> Update(Guid id, UpdateAuthorModel updateAuthorModel);
+        Task<AuthorResponseModel> Update(Guid id, CreateAuthorModel createAuthorModel);
         Task<AuthorResponseModel> Delete(Guid id);
     }
 }

@@ -16,7 +16,12 @@ using EducationApp.BusinessLogicLayer.Models.Account;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Account;
 using AutoMapper;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels;
-using EducationApp.BusinessLogicLayer.Helpers;
+using Microsoft.Extensions.Configuration;
+using System.Text;
+using System.Net.Mail;
+using System.Net;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.UserInRole;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EducationApp.BusinessLogicLayer.Services
 {
@@ -24,22 +29,60 @@ namespace EducationApp.BusinessLogicLayer.Services
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
-        private readonly IEmailService _emailService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IMapper _mapper; 
-        public AccountService(UserManager<User> userManager, RoleManager<Role> roleManager, IEmailService emailService, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor, IMapper mapper)
+        private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
+        private readonly SymmetricSecurityKey _token;
+        public AccountService(UserManager<User> userManager, RoleManager<Role> roleManager, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor, IMapper mapper, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _emailService = emailService;
             _httpContextAccessor = httpContextAccessor;
             _urlHelperFactory = urlHelperFactory;
             _actionContextAccessor = actionContextAccessor;
             _mapper = mapper;
+            _configuration = configuration;
+            _token = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("JWT")["SecretKey"]));
         }
-        private readonly string ConfirmRegister = "Confirm register";
+
+        private readonly string confirmRegister = "Confirm register";
+        private readonly string changePassword = "Change password";
+
+        public async Task<ConfirmEmailAccountResponseModel> ConfirmEmail(ConfirmEmail confirmEmail)
+        {
+            ConfirmEmailAccountResponseModel confirmEmailAccountResponseModel = await ValidateConfirmEmail(confirmEmail.UserId, confirmEmail.Code);
+            if (confirmEmailAccountResponseModel.Status)
+            {
+                User user = await _userManager.FindByIdAsync(confirmEmail.UserId);
+                IdentityResult result = await _userManager.ConfirmEmailAsync(user, confirmEmail.Code);
+            }
+            return confirmEmailAccountResponseModel;
+        }
+
+        private async Task<ConfirmEmailAccountResponseModel> ValidateConfirmEmail(string userId, string code)
+        {
+            ConfirmEmailAccountResponseModel confirmEmailAccountResponseModel = new ConfirmEmailAccountResponseModel();
+            User user = await _userManager.FindByIdAsync(userId);
+
+            bool isErrorOfNull = string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code);
+            bool isErrorOfNotFound = user == null;
+            bool isError = isErrorOfNull || isErrorOfNotFound;
+
+            if (isErrorOfNull)
+            {
+                confirmEmailAccountResponseModel.Error.Add(ResponseConstants.Null);
+            }
+            if (isErrorOfNotFound)
+            {
+                confirmEmailAccountResponseModel.Error.Add(ResponseConstants.ErrorNotFoundUser);
+            }
+            confirmEmailAccountResponseModel.Status = !isError;
+            confirmEmailAccountResponseModel.Messege = confirmEmailAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+
+            return confirmEmailAccountResponseModel;
+        }
 
         public async Task<RegisterAccountResponseModel> Register(RegisterModel reg)
         {
@@ -54,91 +97,90 @@ namespace EducationApp.BusinessLogicLayer.Services
                 string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 string regurl = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).Action(
                     "ConfirmEmail",
-                    "Account",
+                    "Auth",
                     new { userId = user.Id, code },
                     protocol: _httpContextAccessor.HttpContext.Request.Scheme);
-                string subject = ConfirmRegister;
+                string subject = confirmRegister;
                 string message = $"Confirm registration by clicking on the link: <a href={regurl}>Confirm email</a>";
-                await _emailService.SendEmail(reg.Email, subject, message);
+                registerAccountResponseModel.Messege = await SendEmail(reg.Email, subject, message);
             }
             return registerAccountResponseModel;
         }
+
         private RegisterAccountResponseModel ValidateRegister(IdentityResult result)
         {
             RegisterAccountResponseModel registerAccountResponseModel = new RegisterAccountResponseModel();
-           
+
             if (!result.Succeeded)
             {
+                registerAccountResponseModel.Messege = ResponseConstants.Error;
                 registerAccountResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
             registerAccountResponseModel.Status = result.Succeeded;
-            registerAccountResponseModel.Messege = registerAccountResponseModel.Status ? ResponseConstants.ConfirmEmail : ResponseConstants.Error;
 
             return registerAccountResponseModel;
         }
+
         public async Task<LoginAccountResponseModel> Login(LoginModel login)
-        {    
+        {
             User user = await _userManager.FindByEmailAsync(login.Email);
-            bool confirmpass = await _userManager.CheckPasswordAsync(user, login.Password);
+            bool confirmPassword = await _userManager.CheckPasswordAsync(user, login.Password);
             LoginAccountResponseModel loginAccountResponseModel = await ValidateLogin(login);
-            if (confirmpass)
+
+            if (confirmPassword)
             {
+                await _userManager.AddToRoleAsync(user, _configuration.GetSection("Role")["Client"]);
+
                 List<Claim> claimsAccessToken = new List<Claim>();
                 claimsAccessToken.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
                 claimsAccessToken.Add(new Claim(ClaimTypes.Email, user.Email));
                 claimsAccessToken.Add(new Claim(ClaimTypes.Hash, user.PasswordHash));
-                claimsAccessToken.Add(new Claim(ClaimTypes.Role, "User"));
 
-                JwtHelper jwtHelper = new JwtHelper();
-                string accessToken = jwtHelper.GenerateToken(claimsAccessToken, 30);
+                string accessToken = GenerateToken(claimsAccessToken, int.Parse(_configuration.GetSection("JWT")["LifeTimeAccessToken"]));
 
                 List<Claim> claimsRefeshToken = new List<Claim>();
                 claimsRefeshToken.Add(new Claim(ClaimTypes.Authentication, accessToken));
                 claimsRefeshToken.Add(new Claim(ClaimTypes.Email, user.Email));
 
-                string refreshToken = jwtHelper.GenerateToken(claimsRefeshToken, 50000);
+                string refreshToken = GenerateToken(claimsRefeshToken, int.Parse(_configuration.GetSection("JWT")["LifeTimeRefreshToken"]));
                 loginAccountResponseModel.AccessToken = accessToken;
                 loginAccountResponseModel.RefreshToken = refreshToken;
             }
             return loginAccountResponseModel;
         }
-
-        private async Task<LoginAccountResponseModel> ValidateLogin (LoginModel login)
+        private async Task<LoginAccountResponseModel> ValidateLogin(LoginModel login)
         {
             LoginAccountResponseModel loginAccountResponseModel = new LoginAccountResponseModel();
 
             User user = await _userManager.FindByEmailAsync(login.Email);
             bool confirmpass = await _userManager.CheckPasswordAsync(user, login.Password);
+
             if (!confirmpass)
             {
                 loginAccountResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
-            if (loginAccountResponseModel.Error.Count == 0)
-            {
-                loginAccountResponseModel.Status = true;
-            }
+            loginAccountResponseModel.Status = confirmpass;
             loginAccountResponseModel.Messege = loginAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return loginAccountResponseModel;
         }
 
-        public async Task<ForgotPasswordResponseModel> ForgotPassword(ForgotPassword forgotPassword)                                                                                 
+        public async Task<ForgotPasswordResponseModel> ForgotPassword(ForgotPassword forgotPassword)
         {
             User user = await _userManager.FindByNameAsync(forgotPassword.Email);
             ForgotPasswordResponseModel forgotPasswordResponseModel = await ValidateForgotPassword(forgotPassword);
+
             if (user != null || (await _userManager.IsEmailConfirmedAsync(user)))
             {
                 string code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 string callbackUrl = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext).Action(
                     "ResetPassword",
-                    "Account",
+                    "Auth",
                 new { userEmail = user.Email, code = code },
                 protocol: _httpContextAccessor.HttpContext.Request.Scheme);
-                string subject = "Change password";
+                string subject = changePassword;
                 string message = $"To reset your password, follow the link: <a href='{callbackUrl}'>Change password</a>";
-                await _emailService.SendEmail(forgotPassword.Email, subject, message);
-                forgotPasswordResponseModel.Messege = $"Confirm account from email {forgotPassword.Email}";
-                forgotPasswordResponseModel.Status = true;
+                forgotPasswordResponseModel.Messege = await SendEmail(forgotPassword.Email, subject, message);
             }
             return forgotPasswordResponseModel;
         }
@@ -147,213 +189,312 @@ namespace EducationApp.BusinessLogicLayer.Services
         {
             ForgotPasswordResponseModel forgotPasswordResponseModel = new ForgotPasswordResponseModel();
             User user = await _userManager.FindByNameAsync(forgotPassword.Email);
-            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+
+            bool isSuccessfully = user != null || await _userManager.IsEmailConfirmedAsync(user);
+
+            if (!isSuccessfully)
             {
                 forgotPasswordResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
-            if (forgotPasswordResponseModel.Error.Count == 0)
-            {
-                forgotPasswordResponseModel.Status = true;
-            }
+            forgotPasswordResponseModel.Status = isSuccessfully;
             forgotPasswordResponseModel.Messege = forgotPasswordResponseModel.Status ? ResponseConstants.ConfirmEmail : ResponseConstants.Error;
+
             return forgotPasswordResponseModel;
         }
-        public async Task<ConfirmEmailAccountResponseModel> ConfirmEmail(string userId, string code)                                                                           
+
+        public async Task<ResetPasswordAccountResponseModel> ResetPassword(ResetPasswordModel reset)
         {
-            ConfirmEmailAccountResponseModel confirmEmailAccountResponseModel = new ConfirmEmailAccountResponseModel();
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
+            ResetPasswordAccountResponseModel resetPasswordAccountResponseModel = await ValidateResetPassword(reset);
+
+            if (resetPasswordAccountResponseModel.Status)
             {
-                confirmEmailAccountResponseModel.Error.Add(ResponseConstants.Null);
+                User user = await _userManager.FindByEmailAsync(reset.Email);
+                await _userManager.CheckPasswordAsync(user, reset.Password);
+                IdentityResult result = await _userManager.ResetPasswordAsync(user, reset.Code, reset.Password);
             }
-            User user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                confirmEmailAccountResponseModel.Error.Add(ResponseConstants.ErrorNotFound);
-            }
-            IdentityResult result = await _userManager.ConfirmEmailAsync(user, code);
-            if (result.Succeeded)
-            {
-                confirmEmailAccountResponseModel.Status = true;
-            }
-            confirmEmailAccountResponseModel.Messege = confirmEmailAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
-            return confirmEmailAccountResponseModel;
-        }
-        public async Task<ResetPasswordAccountResponseModel> ResetPassword(ResetPasswordModel reset)                                                                             
-        {
-            ResetPasswordAccountResponseModel resetPasswordAccountResponseModel = new ResetPasswordAccountResponseModel();
-            if (string.IsNullOrEmpty(reset.Code) || string.IsNullOrEmpty(reset.Email))
-            {
-                resetPasswordAccountResponseModel.Error.Add(ResponseConstants.Null);
-            }
-            User user = await _userManager.FindByNameAsync(reset.Email);
-            if (user == null)
-            {
-                resetPasswordAccountResponseModel.Error.Add(ResponseConstants.ErrorNotFound);
-            }
-            await _userManager.CheckPasswordAsync(user, reset.Password);
-            IdentityResult result = await _userManager.ResetPasswordAsync(user, reset.Code, reset.Password);
-            if (result.Succeeded)
-            {
-                resetPasswordAccountResponseModel.Status = true;
-            }
-            resetPasswordAccountResponseModel.Messege = resetPasswordAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
             return resetPasswordAccountResponseModel;
         }
 
-        public async Task<RefreshTokenAccountResponseModel> RefreshToken(RefreshTokenModel refreshTokenModel, IJwtPrivateKey jwtPrivateKey, IJwtRefresh jwtRefresh)             //RefreshToken
+        public async Task<ResetPasswordAccountResponseModel> ValidateResetPassword(ResetPasswordModel reset)
         {
-            RefreshTokenAccountResponseModel refreshTokenAccountResponseModel = new RefreshTokenAccountResponseModel();
-            string jwtEncodedString = refreshTokenModel.tokenString.Substring(7);
-            User user = new User();
-            JwtSecurityToken dtoken = new JwtSecurityToken(jwtEncodedString: jwtEncodedString);
-            string decodingtoken = dtoken.Claims.First(c => c.Type == "Refresh").Value;
-            User UserX = await _userManager.FindByEmailAsync(decodingtoken);
-            if (UserX == null)
-            {
-                refreshTokenAccountResponseModel.Messege = "Error";
-                refreshTokenAccountResponseModel.Status = false;
-                refreshTokenAccountResponseModel.Error.Add("User is not found");
-                return refreshTokenAccountResponseModel;
-            }
-            // Token.    
-            List<Claim> claims = new List<Claim>()
-            {
-            new Claim(ClaimTypes.NameIdentifier, UserX.Id.ToString()),
-            new Claim(ClaimTypes.Email,UserX.Email),
-            new Claim(ClaimTypes.Hash, UserX.PasswordHash),
-            new Claim(ClaimTypes.Role, "User"),
-            };
-            // JWT.
-            JwtSecurityToken token = new JwtSecurityToken(
-                issuer: "MyJwt",
-                audience: "TheBestClient",
-                claims: claims,
-                expires: DateTime.Now.AddSeconds(30),
-                signingCredentials: new SigningCredentials(
-                        jwtPrivateKey.GetKey(),
-                        jwtPrivateKey.SigningAlgorithm)
-            );
-            string jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+            ResetPasswordAccountResponseModel resetPasswordAccountResponseModel = new ResetPasswordAccountResponseModel();
+            User user = await _userManager.FindByEmailAsync(reset.Email);
 
-            List<Claim> claimsref = new List<Claim>()
+            bool isErrorOfNull = string.IsNullOrEmpty(reset.Code) || string.IsNullOrEmpty(reset.Email);
+            bool isErrorOfNotFound = user == null;
+            bool isError = isErrorOfNull || isErrorOfNotFound;
+
+            if (isErrorOfNull)
             {
-            new Claim("Refresh", UserX.Email)
-            };
-            // JWT.
-            JwtSecurityToken refreshtoken = new JwtSecurityToken(
-                issuer: "MyJwt",
-                audience: "TheBestClient",
-                claims: claimsref,
-                expires: DateTime.Now.AddMonths(1),
-                signingCredentials: new SigningCredentials(
-                        jwtRefresh.GetKey(),
-                        jwtRefresh.SigningAlgorithm)
-            );
-            string refreshToken = new JwtSecurityTokenHandler().WriteToken(refreshtoken);
-            refreshTokenAccountResponseModel.AccessToken = jwtToken;
-            refreshTokenAccountResponseModel.RefreshToken = refreshToken;
-            refreshTokenAccountResponseModel.Messege = "Successfully";
-            refreshTokenAccountResponseModel.Status = true;
+                resetPasswordAccountResponseModel.Error.Add(ResponseConstants.Null);
+            }
+            if (isErrorOfNotFound)
+            {
+                resetPasswordAccountResponseModel.Error.Add(ResponseConstants.ErrorNotFoundUser);
+            }
+            resetPasswordAccountResponseModel.Status = !isError;
+            resetPasswordAccountResponseModel.Messege = resetPasswordAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+
+            return resetPasswordAccountResponseModel;
+        }
+
+        public async Task<RefreshTokenAccountResponseModel> RefreshToken(RefreshTokenModel refreshTokenModel)
+        {
+            string jwtEncodedString = refreshTokenModel.TokenString.Substring(7);
+            JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(jwtEncodedString: jwtEncodedString);
+            string decodingtoken = jwtSecurityToken.Claims.First(c => c.Type == "Refresh").Value;
+            User user = await _userManager.FindByEmailAsync(decodingtoken);
+            RefreshTokenAccountResponseModel refreshTokenAccountResponseModel = ValidateRefreshToken(user);
+            if (true)
+            {
+                List<Claim> claimsAccessToken = new List<Claim>();
+                claimsAccessToken.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                claimsAccessToken.Add(new Claim(ClaimTypes.Email, user.Email));
+                claimsAccessToken.Add(new Claim(ClaimTypes.Hash, user.PasswordHash));
+                claimsAccessToken.Add(new Claim(ClaimTypes.Role, "User"));
+
+                string accessToken = GenerateToken(claimsAccessToken, int.Parse(_configuration.GetSection("JWT")["LifeTimeAccessToken"]));
+
+                List<Claim> claimsRefeshToken = new List<Claim>();
+                claimsRefeshToken.Add(new Claim(ClaimTypes.Authentication, accessToken));
+                claimsRefeshToken.Add(new Claim(ClaimTypes.Email, user.Email));
+
+                string refreshToken = GenerateToken(claimsRefeshToken, int.Parse(_configuration.GetSection("JWT")["LifeTimeRefreshToken"]));
+                refreshTokenAccountResponseModel.AccessToken = accessToken;
+                refreshTokenAccountResponseModel.RefreshToken = refreshToken;
+            }
             return refreshTokenAccountResponseModel;
         }
-        public RoleAccountResponseModel GetAllRoleUsers()                                                                                                                          //GetAllRoleUsers
+
+        private RefreshTokenAccountResponseModel ValidateRefreshToken(User user)
         {
-            RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
+            RefreshTokenAccountResponseModel refreshTokenAccountResponseModel = new RefreshTokenAccountResponseModel();
+            bool isErrorOfNull = user == null;
+
+            if (isErrorOfNull)
+            {
+                refreshTokenAccountResponseModel.Error.Add(ResponseConstants.ErrorNotFoundUser);
+            }
+            refreshTokenAccountResponseModel.Status = !isErrorOfNull;
+            refreshTokenAccountResponseModel.Messege = refreshTokenAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+
+            return refreshTokenAccountResponseModel;
+        }
+
+        public RoleAccountResponseModel GetAllRoles()
+        {
+            RoleAccountResponseModel roleAccountResponseModel = ValidateGetAllRoles();
+
             List<Role> roles = _roleManager.Roles.ToList();
             List<RoleAccountModel> roleAccountModels = _mapper.Map<List<Role>, List<RoleAccountModel>>(roles);
             roleAccountResponseModel.roleAccountModels = roleAccountModels;
-            roleAccountResponseModel.Messege = "Successfully";
-            roleAccountResponseModel.Status = true;
+
             return roleAccountResponseModel;
         }
-        public async Task<RoleAccountResponseModel> CreateRoleUser(CreateRoleModel createRoleModel)                                                                            //CreateRoleUser
+
+        private RoleAccountResponseModel ValidateGetAllRoles()
         {
             RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
-            if (createRoleModel.Name == null)
-            {
-                roleAccountResponseModel.Messege = "Error";
-                roleAccountResponseModel.Status = false;
-                roleAccountResponseModel.Error.Add("Name not null");
-                return roleAccountResponseModel;
-            }
+            roleAccountResponseModel.Status = true;
+            roleAccountResponseModel.Messege = ResponseConstants.Successfully;
+
+            return roleAccountResponseModel;
+        }
+
+        public async Task<RoleAccountResponseModel> CreateRole(CreateRoleModel createRoleModel)
+        {
+            RoleAccountResponseModel roleAccountResponseModel = ValidateCreateRole(createRoleModel);
             Role role = new Role();
-            bool x = await _roleManager.RoleExistsAsync("Admin");
-            if (!x)
+
+            if (roleAccountResponseModel.Status)
             {
-                role.Name = "Admin";
+                role.Name = createRoleModel.Name;
                 await _roleManager.CreateAsync(role);
-
-                User user = new User();
-                user.UserName = "God";
-                user.Email = "igortalavuria@gmail.com";
-                string userPWD = "Igor12345"; 
-                IdentityResult Admin = await _userManager.CreateAsync(user, userPWD);
-
-                if (Admin.Succeeded)
-                {
-                    IdentityResult result = await _userManager.AddToRoleAsync(user, "Admin");
-                }
+                RoleAccountModel roleAccountModel = _mapper.Map<Role, RoleAccountModel>(role);
+                roleAccountResponseModel.roleAccountModels.Add(roleAccountModel);
             }
-            role.Name = createRoleModel.Name;
-            await _roleManager.CreateAsync(role);
-            RoleAccountModel roleAccountModel = _mapper.Map<Role,RoleAccountModel>(role);
-            roleAccountResponseModel.roleAccountModels.Add(roleAccountModel);
-            roleAccountResponseModel.Messege = "Successfully";
-            roleAccountResponseModel.Status = true;
             return roleAccountResponseModel;
         }
-        public async Task<RoleAccountResponseModel> UpdateRoleUser(UpdateRoleModel updateRoleModel)                                                                                    //UpdateRoleUser
+
+        private RoleAccountResponseModel ValidateCreateRole(CreateRoleModel createRoleModel)
         {
             RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
-            Role role = await _roleManager.FindByNameAsync(updateRoleModel.Name);
-            if (role == null)
+
+            bool isErrorOfNull = string.IsNullOrEmpty(createRoleModel.Name);
+            if (isErrorOfNull)
             {
-                roleAccountResponseModel.Messege = "Error";
-                roleAccountResponseModel.Status = false;
-                roleAccountResponseModel.Error.Add("This Name not is database");
+                roleAccountResponseModel.Error.Add(ResponseConstants.Null);
             }
-            if (roleAccountResponseModel.Messege == null)
+            roleAccountResponseModel.Status = !isErrorOfNull;
+            roleAccountResponseModel.Messege = roleAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+
+            return roleAccountResponseModel;
+        }
+
+        public async Task<UserInRoleResponseModel> AddingRoleUser(ChangeRoleUserModel changeRoleUserModel)
+        {
+            User user = _userManager.Users.FirstOrDefault(x => x.Email == changeRoleUserModel.Email);
+            Role role = _roleManager.Roles.FirstOrDefault(x => x.Name == changeRoleUserModel.NameRole);
+            UserInRoleResponseModel userInRoleResponseModel = ValidateChangeRoleUser(user, role);
+            if (userInRoleResponseModel.Status)
+            {
+                IdentityResult identityResult = await _userManager.AddToRoleAsync(user, role.Name);
+
+                UserInRoleModel userInRoleModel = new UserInRoleModel();
+                userInRoleModel.UserId = user.Id;
+                userInRoleModel.RoleId = role.Id;
+                userInRoleResponseModel.UserInRoleModels.Add(userInRoleModel);
+            }
+            return userInRoleResponseModel;
+        }
+
+        public async Task<UserInRoleResponseModel> TakingAwayUserRole(ChangeRoleUserModel changeRoleUserModel)
+        {
+            User user = _userManager.Users.FirstOrDefault(x => x.Email == changeRoleUserModel.Email);
+            Role role = _roleManager.Roles.FirstOrDefault(x => x.Name == changeRoleUserModel.NameRole);
+            UserInRoleResponseModel userInRoleResponseModel = ValidateChangeRoleUser(user, role);
+            if (userInRoleResponseModel.Status)
+            {
+                IdentityResult identityResult = await _userManager.RemoveFromRoleAsync(user, role.Name);
+
+                UserInRoleModel userInRoleModel = new UserInRoleModel();
+                userInRoleModel.UserId = user.Id;
+                userInRoleModel.RoleId = role.Id;
+                userInRoleResponseModel.UserInRoleModels.Add(userInRoleModel);
+            }
+            return userInRoleResponseModel;
+        }
+
+        private UserInRoleResponseModel ValidateChangeRoleUser(User user, Role role)
+        {
+            UserInRoleResponseModel userInRoleResponseModel = new UserInRoleResponseModel();
+            bool isErrorOfNotFoundUser = user == null;
+            bool isErrorOfNotFoundRole = role == null;
+            bool isError = isErrorOfNotFoundUser || isErrorOfNotFoundRole;
+
+            if (isErrorOfNotFoundUser)
+            {
+                userInRoleResponseModel.Error.Add(ResponseConstants.ErrorNotFoundUser);
+            }
+            if (isErrorOfNotFoundRole)
+            {
+                userInRoleResponseModel.Error.Add(ResponseConstants.ErrorNotFoundRole);
+            }
+            userInRoleResponseModel.Status = !isError;
+            userInRoleResponseModel.Messege = userInRoleResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+
+            return userInRoleResponseModel;
+        }
+
+        public async Task<RoleAccountResponseModel> UpdateRole(UpdateRoleModel updateRoleModel)
+        {
+            Role role = await _roleManager.FindByNameAsync(updateRoleModel.Name);
+            RoleAccountResponseModel roleAccountResponseModel = ValidateUpdateRole(role);
+
+            if (roleAccountResponseModel.Status)
             {
                 role.Name = updateRoleModel.NewName;
                 await _roleManager.UpdateAsync(role);
                 RoleAccountModel roleAccountModel = _mapper.Map<Role, RoleAccountModel>(role);
                 roleAccountResponseModel.roleAccountModels.Add(roleAccountModel);
-                roleAccountResponseModel.Messege = "Successfully";
-                roleAccountResponseModel.Status = true;
             }
             return roleAccountResponseModel;
         }
-            public async Task<RoleAccountResponseModel> DeleteRoleUser(DeleteRoleModel deleteRoleModel)                                                                              //DeleteRoleUser
+
+        private RoleAccountResponseModel ValidateUpdateRole(Role role)
         {
             RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
-            Role role = await _roleManager.FindByNameAsync(deleteRoleModel.Name);
-            if (role == null)
+            bool isErrorOfNull = role == null;
+
+            if (isErrorOfNull)
             {
-                roleAccountResponseModel.Messege = "Error";
-                roleAccountResponseModel.Status = false;
-                roleAccountResponseModel.Error.Add("This Name not is database");
+                roleAccountResponseModel.Error.Add(ResponseConstants.Null);
             }
-            if (roleAccountResponseModel.Messege == null)
+            roleAccountResponseModel.Status = !isErrorOfNull;
+            roleAccountResponseModel.Messege = roleAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+
+            return roleAccountResponseModel;
+        }
+
+        public async Task<RoleAccountResponseModel> DeleteRole(DeleteRoleModel deleteRoleModel)
+        {
+            Role role = await _roleManager.FindByNameAsync(deleteRoleModel.Name);
+            RoleAccountResponseModel roleAccountResponseModel = ValidateDeleteRole(role);
+
+            if (roleAccountResponseModel.Status)
             {
                 await _roleManager.DeleteAsync(role);
                 RoleAccountModel roleAccountModel = _mapper.Map<Role, RoleAccountModel>(role);
                 roleAccountResponseModel.roleAccountModels.Add(roleAccountModel);
-                roleAccountResponseModel.Messege = "Successfully";
-                roleAccountResponseModel.Status = true;
             }
             return roleAccountResponseModel;
         }
-        public ActionResult<string> ChangeRoleUser(ChangeRoleUserModel changeRoleUserModel)                                                                        //ChangeRoleUser
+
+        private RoleAccountResponseModel ValidateDeleteRole(Role role)
         {
-            User findUser = _userManager.Users.FirstOrDefault(x => x.Email == changeRoleUserModel.Email);
-            Role findRole = _roleManager.Roles.FirstOrDefault(x => x.Name == changeRoleUserModel.NameRole);
-            UserInRole userInRole = new UserInRole
+            RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
+            bool isErrorOfNull = role == null;
+
+            if (isErrorOfNull)
             {
-                UserId = findUser.Id,
-                RoleId = findRole.Id
-            };
-            return $"{findUser.Id} - {findRole.Id}";
+                roleAccountResponseModel.Error.Add(ResponseConstants.Null);
+            }
+            roleAccountResponseModel.Status = !isErrorOfNull;
+            roleAccountResponseModel.Messege = roleAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+
+            return roleAccountResponseModel;
+        }
+
+        private async Task<string> SendEmail(string email, string subject, string body)
+        {
+            string message = "";
+            try
+            {
+                using (var client = new SmtpClient())
+                {
+                    var credential = new NetworkCredential();
+                    credential.UserName = _configuration.GetSection("SMTP")["Email"];
+                    credential.Password = _configuration.GetSection("SMTP")["Password"];
+
+                    client.Credentials = credential;
+                    client.Host = _configuration.GetSection("SMTP")["Host"];
+                    client.Port = int.Parse(_configuration.GetSection("SMTP")["Port"]);
+                    client.EnableSsl = true;
+
+                    using (var emailMessage = new MailMessage())
+                    {
+                        var mailAddress = new MailAddress(email);
+                        emailMessage.To.Add(mailAddress);
+                        emailMessage.From = new MailAddress(_configuration.GetSection("SMTP")["Email"]);
+                        emailMessage.Subject = subject;
+                        emailMessage.IsBodyHtml = true;
+                        emailMessage.Body = body;
+
+                        client.Send(emailMessage);
+                    }
+                }
+                await Task.CompletedTask;
+            }
+            catch
+            {
+                message = ResponseConstants.ErrorSendEmail;
+            }
+            return message;
+        }
+
+        private string GenerateToken(List<Claim> claims, int lifetime)
+        {
+            JwtSecurityToken token = new JwtSecurityToken(
+                issuer: _configuration.GetSection("JWT")["Issuer"],
+                audience: _configuration.GetSection("JWT")["Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(lifetime),
+                signingCredentials: new SigningCredentials(
+                       _token,
+                       SecurityAlgorithms.HmacSha256)
+            );
+            string jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+            return jwtToken;
         }
     }
 }
-

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EducationApp.DataAccessLayer.Entities
 {
-    public class Author : Basic
+    public class Author : BaseEntity
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

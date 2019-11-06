@@ -24,6 +24,7 @@ using Microsoft.OpenApi.Models;
 using Stripe;
 using System;
 using System.IO;
+using System.Text;
 
 namespace EducationApp.PresentationLayer
 {
@@ -53,7 +54,7 @@ namespace EducationApp.PresentationLayer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            var connectionString = Configuration["ConnectionStrings:EmployeeDB"];
+            var connectionString = Configuration.GetSection("ConnectionStrings")["EmployeeDB"];
             services.AddDbContext<ApplicationContext>(opts => opts.UseSqlServer(connectionString));
             services.AddIdentityCore<IdentityUser>();
             services.AddScoped<IUserStore<IdentityUser>, UserOnlyStore<IdentityUser, IdentityDbContext>>();
@@ -95,7 +96,6 @@ namespace EducationApp.PresentationLayer
                 .AddSignInManager<SignInManager<User>>()
                 .AddEntityFrameworkStores<ApplicationContext>()
                 .AddDefaultTokenProviders();
-            services.AddTransient<IEmailService, EmailHelper>();
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
             services.AddSwaggerGen(c =>
             {
@@ -105,16 +105,9 @@ namespace EducationApp.PresentationLayer
                 c.IncludeXmlComments(xmlPath);
             });
 
-            //Jwt Refresh
-            string refreshSecurityKey = Configuration.GetSection("JWT")["RefreshSecretKey"];
-            var refreshKey = new JwtRefresh(refreshSecurityKey);
-            services.AddSingleton<IJwtRefresh>(refreshKey);
-            //Jwt Token
-            string accessSecurityKey = Configuration.GetSection("JWT")["AccesSecretKey"];
-            var accessKey = new JwtHelper(accessSecurityKey, Configuration);
-            services.AddSingleton<IJwtPrivateKey>(accessKey);
-            const string jwtSchemeName = "JwtBearer";
-            var signingDecodingKey = (IJwtPrivateKey)accessKey;
+            string key = Configuration.GetSection("JWT")["SecretKey"];
+            SecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            string jwtSchemeName = Configuration.GetSection("JWT")["JwtSchemeName"];
             services
             .AddAuthentication(options => {
                 options.DefaultAuthenticateScheme = jwtSchemeName;
@@ -124,7 +117,7 @@ namespace EducationApp.PresentationLayer
                 jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = signingDecodingKey.GetKey(),
+                    IssuerSigningKey = securityKey,
                     ValidateIssuer = true,
                     ValidIssuer = Configuration.GetSection("JWT")["Issuer"],
                     ValidateAudience = true,
@@ -141,7 +134,8 @@ namespace EducationApp.PresentationLayer
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        /// <param name="serviceProvider"></param>
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             app.UseMiddleware<LogService>();
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
@@ -163,10 +157,11 @@ namespace EducationApp.PresentationLayer
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Education V1");
             });
-
+        
             app.UseAuthentication();
             app.UseMvc();
 
+            StartRoleService.CreateUserRoles(serviceProvider, Configuration);
         }
     }
 }

@@ -5,6 +5,8 @@ using EducationApp.BusinessLogicLayer.Models.Account;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Account;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
 using EducationApp.BusinessLogicLayer.Models.User;
+using System;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.UserInRole;
 
 namespace EducationApp.PresentationLayer.Controllers
 {
@@ -39,7 +41,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpGet("GetAllRole")]
         public RoleAccountResponseModel GetAllRoleUsers()
         {
-            RoleAccountResponseModel roleAccountResponseModel = _accountService.GetAllRoleUsers();
+            RoleAccountResponseModel roleAccountResponseModel = _accountService.GetAllRoles();
             return roleAccountResponseModel;
         }
         /// <summary>
@@ -52,9 +54,9 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAllIsDeletedUsers")]
-        public async Task<UserResponseModel> GetAllIsDeleted()
+        public async Task<UserResponseModel> GetAll()
         {
-            UserResponseModel userResponseModel = await _userService.GetAllIsDeleted();
+            UserResponseModel userResponseModel = await _userService.GetAll();
             return userResponseModel;
         }
         /// <summary>
@@ -67,9 +69,9 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAllUsers")]
-        public async Task<UserResponseModel> GetAll()
+        public async Task<UserResponseModel> GetAllWithoutRemove()
         {
-            UserResponseModel userResponseModel = await _userService.GetAll();
+            UserResponseModel userResponseModel = await _userService.GetAllWithoutRemove();
             return userResponseModel;
         }
         /// <summary>
@@ -86,15 +88,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpPost("CreateRole")]
         public async Task<RoleAccountResponseModel> CreateRoleUsers([FromBody] CreateRoleModel createRoleModel)
         {
-            RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                roleAccountResponseModel = await _accountService.CreateRoleUser(createRoleModel);
-                return roleAccountResponseModel;
-            }
-            roleAccountResponseModel.Messege = "Error";
-            roleAccountResponseModel.Status = false;
-            roleAccountResponseModel.Error.Add("Not IsValid");
+            RoleAccountResponseModel roleAccountResponseModel = await _accountService.CreateRole(createRoleModel);
             return roleAccountResponseModel;
         }
         /// <summary>
@@ -115,16 +109,46 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpPost("CreateUser")]
         public async Task<UserResponseModel> Create([FromBody]CreateUserModel createmodel)
         {
-            UserResponseModel userResponseModel = new UserResponseModel();
-            if (ModelState.IsValid)
-            {
-                userResponseModel = await _userService.Create(createmodel);
-                return userResponseModel;
-            }
-            userResponseModel.Messege = "Error";
-            userResponseModel.Status = false;
-            userResponseModel.Error.Add("Post, not valide");
+            UserResponseModel userResponseModel = await _userService.Create(createmodel);
             return userResponseModel;
+        }
+        /// <summary>
+        /// Adding Role User
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Post/Create
+        ///     {
+        ///         "Email": "karamba@gmail.com",
+        ///         "NameRole": "Slave"
+        ///     }
+        ///
+        /// </remarks>
+        [HttpPost("AddingRoleUser")]
+        public async Task<UserInRoleResponseModel> AddingRoleUser([FromBody]ChangeRoleUserModel changeRoleUserModel)
+        {
+            UserInRoleResponseModel userInRoleResponseModel = await _accountService.AddingRoleUser(changeRoleUserModel);
+            return userInRoleResponseModel;
+        }
+        /// <summary>
+        /// Taking Away User Role
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Post/Create
+        ///     {
+        ///         "Email": "karamba@gmail.com",
+        ///         "NameRole": "Slave"
+        ///     }
+        ///
+        /// </remarks>
+        [HttpPost("TakingAwayUserRole")]
+        public async Task<UserInRoleResponseModel> TakingAwayUserRole([FromBody]ChangeRoleUserModel changeRoleUserModel)
+        {
+            UserInRoleResponseModel userInRoleResponseModel = await _accountService.TakingAwayUserRole(changeRoleUserModel);
+            return userInRoleResponseModel;
         }
         /// <summary>
         ///  Update Role
@@ -140,15 +164,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpPut("UpdateRole")]
         public async Task<RoleAccountResponseModel> UpdateRoleUser([FromBody] UpdateRoleModel updateRoleModel)
         {
-            RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                roleAccountResponseModel = await _accountService.UpdateRoleUser(updateRoleModel);
-                return roleAccountResponseModel;
-            }
-            roleAccountResponseModel.Messege = "Error";
-            roleAccountResponseModel.Status = false;
-            roleAccountResponseModel.Error.Add("Not IsValid");
+            RoleAccountResponseModel roleAccountResponseModel = await _accountService.UpdateRole(updateRoleModel);
             return roleAccountResponseModel;
         }
         /// <summary>
@@ -167,18 +183,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpPut("UpdateUser")]
-        public async Task<UserResponseModel> Update([FromBody]UpdateUserModel model)
+        [HttpPut("{id}")]
+        public async Task<UserResponseModel> Update(Guid id, [FromBody]CreateUserModel createUserModel)
         {
-            UserResponseModel userResponseModel = new UserResponseModel();
-            if (ModelState.IsValid)
-            {
-                userResponseModel = await _userService.Update(model);
-                return userResponseModel;
-            }
-            userResponseModel.Messege = "Error";
-            userResponseModel.Status = false;
-            userResponseModel.Error.Add("Post, not valide");
+            UserResponseModel userResponseModel = await _userService.Update(id, createUserModel);
             return userResponseModel;
         }
         /// <summary>
@@ -195,15 +203,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpDelete("DeleteRole")]
         public async Task<RoleAccountResponseModel> DeleteRoleUser([FromBody] DeleteRoleModel deleteRoleModel)
         {
-            RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                roleAccountResponseModel = await _accountService.DeleteRoleUser(deleteRoleModel);
-                return roleAccountResponseModel;
-            }
-            roleAccountResponseModel.Messege = "Error";
-            roleAccountResponseModel.Status = false;
-            roleAccountResponseModel.Error.Add("Not IsValid");
+            RoleAccountResponseModel roleAccountResponseModel = await _accountService.DeleteRole(deleteRoleModel);
             return roleAccountResponseModel;
         }
         /// <summary>
@@ -219,17 +219,9 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpDelete("DeleteUser")]
-        public async Task<UserResponseModel> Delete([FromBody]DeleteModel deleteModel)
+        public async Task<UserResponseModel> Delete(Guid id)
         {
-            UserResponseModel userResponseModel = new UserResponseModel();
-            if (ModelState.IsValid)
-            {
-                userResponseModel = await _userService.Delete(deleteModel);
-                return userResponseModel;
-            }
-            userResponseModel.Messege = "Error";
-            userResponseModel.Status = false;
-            userResponseModel.Error.Add("Post, not valide");
+            UserResponseModel userResponseModel = await _userService.Delete(id);
             return userResponseModel;
         }
         /// <summary>
@@ -244,18 +236,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpDelete("FinalRemovalUser")]
-        public async Task<UserResponseModel> FinalRemoval([FromBody]DeleteModel deleteModel)
+        [HttpDelete("FinalRemovalUser/{id}")]
+        public async Task<UserResponseModel> FinalRemoval(Guid id)
         {
-            UserResponseModel userResponseModel = new UserResponseModel();
-            if (ModelState.IsValid)
-            {
-                userResponseModel = await _userService.FinalRemoval(deleteModel);
-                return userResponseModel;
-            }
-            userResponseModel.Messege = "Error";
-            userResponseModel.Status = false;
-            userResponseModel.Error.Add("Post, not valide");
+            UserResponseModel userResponseModel  = await _userService.FinalRemoval(id);
             return userResponseModel;
         }
     }

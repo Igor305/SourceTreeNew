@@ -9,12 +9,12 @@ namespace EducationApp.BusinessLogicLayer.Models.Account
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "Пароль должжен содержать как минимум 6 символов, максимум 100", MinimumLength = 6)]
+        [StringLength(50, ErrorMessage = "Password length from 6 to 50 characters", MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
+        [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }

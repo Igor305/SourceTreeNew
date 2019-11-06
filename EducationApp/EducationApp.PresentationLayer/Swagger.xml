@@ -27,7 +27,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAllIsDeleted">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAll">
              <summary>
              Get all User (IsDeleted = true)
              </summary>
@@ -38,7 +38,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAll">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.GetAllWithoutRemove">
              <summary>
              Get all User 
              </summary>
@@ -79,6 +79,36 @@
             
              </remarks>
         </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.AddingRoleUser(EducationApp.BusinessLogicLayer.Models.Account.ChangeRoleUserModel)">
+             <summary>
+             Adding Role User
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/Create
+                 {
+                     "Email": "karamba@gmail.com",
+                     "NameRole": "Slave"
+                 }
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.TakingAwayUserRole(EducationApp.BusinessLogicLayer.Models.Account.ChangeRoleUserModel)">
+             <summary>
+             Taking Away User Role
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/Create
+                 {
+                     "Email": "karamba@gmail.com",
+                     "NameRole": "Slave"
+                 }
+            
+             </remarks>
+        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.UpdateRoleUser(EducationApp.BusinessLogicLayer.Models.Account.UpdateRoleModel)">
              <summary>
               Update Role
@@ -92,7 +122,7 @@
                  
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Update(EducationApp.BusinessLogicLayer.Models.User.UpdateUserModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Update(System.Guid,EducationApp.BusinessLogicLayer.Models.User.CreateUserModel)">
              <summary>
              Update User for Id
              </summary>
@@ -123,7 +153,7 @@
                  
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Delete(EducationApp.BusinessLogicLayer.Models.User.DeleteModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.Delete(System.Guid)">
              <summary>
              Delete User for Id
              </summary>
@@ -137,7 +167,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.FinalRemoval(EducationApp.BusinessLogicLayer.Models.User.DeleteModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AccountController.FinalRemoval(System.Guid)">
              <summary>
              Final Removal User for Id
              </summary>
@@ -233,7 +263,7 @@
                  
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.RefreshToken(EducationApp.BusinessLogicLayer.Models.Account.RefreshTokenModel,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtPrivateKey,EducationApp.BusinessLogicLayer.Services.Interfaces.IJwtRefresh)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.RefreshToken(EducationApp.BusinessLogicLayer.Models.Account.RefreshTokenModel)">
              <summary>
               Refresh Token
              </summary>
@@ -355,7 +385,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Update(System.Guid,EducationApp.BusinessLogicLayer.Models.Authors.UpdateAuthorModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Update(System.Guid,EducationApp.BusinessLogicLayer.Models.Authors.CreateAuthorModel)">
              <summary>
              Update Author for Id
              </summary>
@@ -398,20 +428,9 @@
             </summary>
             <param name="orderService"></param>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.GetAllIsDeleted">
-             <summary>
-             Get all Order (IsDeleted = true)
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Get/GetAllIsDeleted
-            
-             </remarks>
-        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.GetAll">
              <summary>
-             Get all Order
+             Get all Order (IsDeleted = true)
              </summary>
              <remarks>
              Sample request:
@@ -420,7 +439,18 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.Pagination(EducationApp.BusinessLogicLayer.Models.Orders.PaginationPageOrderModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.GetAllWithoutRemove">
+             <summary>
+             Get All Without Remove
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Get/GetAllWithoutRemove
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.Pagination(EducationApp.BusinessLogicLayer.Models.Orders.PaginationOrderModel)">
              <summary>
              Get Pagination Order
              </summary>
@@ -428,6 +458,19 @@
              Sample request:
             
                  Get/Pagination
+                 "Skip":"1",
+                 "Take":"2"
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.GetById(System.Guid)">
+             <summary>
+             Get by id
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Get/GerById
                  "Skip":"1",
                  "Take":"2"
             
@@ -447,7 +490,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.Update(EducationApp.BusinessLogicLayer.Models.Orders.UpdateOrderModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.Update(System.Guid,EducationApp.BusinessLogicLayer.Models.Orders.CreateOrderModel)">
              <summary>
              Update Order for Id
              </summary>
@@ -462,7 +505,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.Delete(EducationApp.BusinessLogicLayer.Models.Orders.DeleteOrderModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.Delete(System.Guid)">
              <summary>
              Delete Order for Id
              </summary>
@@ -487,7 +530,7 @@
             </summary>
             <param name="printingEditionService"></param>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.GetAllIsDeleted">
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.GetAll">
              <summary>
              Get all PrintingEdition (IsDeleted = true)
              </summary>
@@ -498,7 +541,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.GetAll">
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.GetAllWithoutRemove">
              <summary>
              Get all PrintingEdition 
              </summary>
@@ -509,7 +552,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Pagination(EducationApp.BusinessLogicLayer.Models.PrintingEditions.PaginationPagePrintingEditionModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Pagination(EducationApp.BusinessLogicLayer.Models.PrintingEditions.PaginationPrintingEditionModel)">
              <summary>
              Get Pagination PrintingEdition
              </summary>
@@ -524,7 +567,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.GetById(EducationApp.BusinessLogicLayer.Models.PrintingEditions.GetByIdPrintingEditionModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.GetById(System.Guid)">
              <summary>
              Get by Id PrintingEdition
              </summary>
@@ -538,7 +581,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Buy(EducationApp.BusinessLogicLayer.Models.PrintingEditions.BuyPrintingEditionModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Buy(System.Guid)">
              <summary>
              Buy PrintingEdition
              </summary>
@@ -601,7 +644,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Update(EducationApp.BusinessLogicLayer.Models.PrintingEditions.UpdatePrintingEditionModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Update(System.Guid,EducationApp.BusinessLogicLayer.Models.PrintingEditions.CreatePrintingEditionModel)">
              <summary>
              Update PrintingEdition for Id
              </summary>
@@ -621,7 +664,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Delete(EducationApp.BusinessLogicLayer.Models.PrintingEditions.DeletePrintingEditionModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Delete(System.Guid)">
              <summary>
              Delete PrintingEdition for Id
              </summary>
@@ -675,12 +718,13 @@
             </summary>
             <param name="services"></param>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+        <member name="M:EducationApp.PresentationLayer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,System.IServiceProvider)">
             <summary>
             
             </summary>
             <param name="app"></param>
             <param name="env"></param>
+            <param name="serviceProvider"></param>
         </member>
     </members>
 </doc>

@@ -2,28 +2,30 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EducationApp.DataAccessLayer.AppContext
 {
     public class ApplicationContext : IdentityDbContext<User, Role, Guid>
     {
-
-        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+        private readonly IConfiguration _configuration;
+        private readonly IServiceProvider _serviceProvider;
+        public ApplicationContext(DbContextOptions<ApplicationContext> options, IServiceProvider serviceProvider, IConfiguration configuration)
         : base(options)
-        { }
+        {
+            _configuration = configuration;
+            _serviceProvider = serviceProvider;
+        }
         public DbSet<Author> Authors { get; set; }
         public DbSet<PrintingEdition> PrintingEditions { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
-
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override  void OnModelCreating(ModelBuilder modelBuilder)
         {
-            Role adminRole = new Role { Name = "Admin" };
-            Role userRole = new Role { Name = "User" };
-            User adminUser = new User { Email = "igortalavuria@gmail.com" };
 
             modelBuilder.Entity<Author>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<Order>().HasQueryFilter(e => !e.IsDeleted);

@@ -2,6 +2,7 @@
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Order;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace EducationApp.PresentationLayer.Controllers
@@ -28,28 +29,28 @@ namespace EducationApp.PresentationLayer.Controllers
         /// <remarks>
         /// Sample request:
         ///
-        ///     Get/GetAllIsDeleted
+        ///     Get/GetAll
         ///
         /// </remarks>
         [HttpGet("GetAllIsDeleted")]
-        public async Task<OrderResponseModel> GetAllIsDeleted()
+        public async Task<OrderResponseModel> GetAll()
         {
-            OrderResponseModel orderResponseModel = await _orderService.GetAllIsDeleted();
+            OrderResponseModel orderResponseModel = await _orderService.GetAll();
             return orderResponseModel;
         }
         /// <summary>
-        /// Get all Order
+        /// Get All Without Remove
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     Get/GetAll
+        ///     Get/GetAllWithoutRemove
         ///
         /// </remarks>
         [HttpGet("GetAll")]
-        public async Task<OrderResponseModel> GetAll()
+        public async Task<OrderResponseModel> GetAllWithoutRemove()
         {
-            OrderResponseModel orderResponseModel = await _orderService.GetAll();
+            OrderResponseModel orderResponseModel = await _orderService.GetAllWithoutRemove();
             return orderResponseModel;
         }
         /// <summary>
@@ -64,17 +65,26 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("Pagination")]
-        public async Task<OrderResponseModel> Pagination([FromQuery] PaginationPageOrderModel paginationPageOrderModel)
+        public async Task<OrderResponseModel> Pagination([FromQuery] PaginationOrderModel paginationOrderModel)
         {
-            OrderResponseModel orderResponseModel = new OrderResponseModel();
-            if (ModelState.IsValid)
-            {
-                orderResponseModel = await _orderService.Pagination(paginationPageOrderModel);
-                return orderResponseModel;
-            }
-            orderResponseModel.Messege = "Error";
-            orderResponseModel.Status = false;
-            orderResponseModel.Error.Add("Post, not valide");
+            OrderResponseModel orderResponseModel  = await _orderService.Pagination(paginationOrderModel);
+            return orderResponseModel; 
+        }
+        /// <summary>
+        /// Get by id
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Get/GerById
+        ///     "Skip":"1",
+        ///     "Take":"2"
+        ///
+        /// </remarks>
+        [HttpGet("{id}")]
+        public async Task<OrderResponseModel> GetById(Guid id)
+        {
+            OrderResponseModel orderResponseModel = await _orderService.GetById(id);
             return orderResponseModel;
         }
         /// <summary>
@@ -108,10 +118,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpPut("Update")]
-        public async Task<OrderResponseModel> Update([FromBody]UpdateOrderModel updateOrderModel)
+        [HttpPut("{id}")]
+        public async Task<OrderResponseModel> Update(Guid id,[FromBody]CreateOrderModel createOrderModel)
         {
-            OrderResponseModel orderResponseModel = await _orderService.Update(updateOrderModel);
+            OrderResponseModel orderResponseModel = await _orderService.Update(id, createOrderModel);
             return orderResponseModel;
         }
         /// <summary>
@@ -126,10 +136,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpDelete("Delete")]
-        public async Task<OrderResponseModel> Delete([FromBody]DeleteOrderModel deleteOderModel)
+        [HttpDelete("{id}")]
+        public async Task<OrderResponseModel> Delete(Guid id)
         {
-            OrderResponseModel orderResponseModel = await _orderService.Delete(deleteOderModel);
+            OrderResponseModel orderResponseModel = await _orderService.Delete(id);
             return orderResponseModel;
         }
     }

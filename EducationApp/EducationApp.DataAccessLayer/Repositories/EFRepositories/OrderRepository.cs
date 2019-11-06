@@ -14,23 +14,30 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
         public OrderRepository(ApplicationContext aplicationContext) : base(aplicationContext)
         {
         }
-        public async Task<List<Order>> GetAllIsDeleted()
-        {
-            List<Order> allIsDeleted = await _applicationContext.Orders.IgnoreQueryFilters().ToListAsync();
-            return allIsDeleted;
-        }
+
         public async Task<List<Order>> GetAll()
         {
-            List<Order> all = await _applicationContext.Orders.ToListAsync();
-            return all;
-        }
-        public IQueryable<Order> Pagination()
-        {
-            IQueryable<Order> orders = _applicationContext.Orders
-                .Include(x => x.Payment)
-                .Include(x => x.OrderItem)
-                .Include(x => x.User);
+            List<Order> orders = await _applicationContext.Orders.IgnoreQueryFilters().ToListAsync();
             return orders;
+        }
+
+        public async Task<List<Order>> GetAllWithoutRemove()
+        {
+            List<Order> orders = await _applicationContext.Orders.ToListAsync();
+            return orders;
+        }
+
+        public async Task <List<Order>> Pagination(int Skip, int Take)
+        {
+            List<Order> orders = await _applicationContext.Orders.ToListAsync();
+            List<Order> paginationOrders = orders.Skip(Skip).Take(Take).ToList();
+            return paginationOrders;
+        }
+
+        public async Task<bool> CheckById(Guid id)
+        {
+            bool order = await _applicationContext.Orders.AnyAsync(x => x.Id == id);
+            return order;
         }
     }
 }

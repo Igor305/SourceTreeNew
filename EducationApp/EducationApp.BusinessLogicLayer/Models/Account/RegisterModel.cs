@@ -4,21 +4,21 @@ namespace EducationApp.BusinessLogicLayer.Models.Account
 {
     public class RegisterModel
     {
-        [Required(ErrorMessage = "Укажите Email")]
-        [EmailAddress(ErrorMessage = "Не корректный Email")]
+        [Required(ErrorMessage = "Enter email")]
+        [EmailAddress(ErrorMessage = "Invalid email")]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Укажите пароль")]
-        [StringLength(50, MinimumLength = 6, ErrorMessage = "Длина пароля от 6 до 50 сиволов")]
+        [Required(ErrorMessage = "Enter password")]
+        [StringLength(50, MinimumLength = 6, ErrorMessage = "Password length from 6 to 50 characters")]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Укажите подтверждающий пароль")]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
+        [Required(ErrorMessage = "Confirm password")]
+        [Compare("Password", ErrorMessage = "Passwords do not match")]
         [DataType(DataType.Password)]
-        [Display(Name = "Подтвердить пароль")]
+        [Display(Name = "PasswordConfirm")]
         public string PasswordConfirm { get; set; }
     }
 }

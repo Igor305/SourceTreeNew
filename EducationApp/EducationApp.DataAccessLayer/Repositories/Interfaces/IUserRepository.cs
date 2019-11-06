@@ -9,6 +9,6 @@ namespace EducationApp.DataAccessLayer.Repositories.Interfaces
     {
         Task<List<User>> GetAll();
         Task<List<User>> GetAllWithoutRemove();
-        Task<User> GetByIdAll(Guid Id);
+        Task<bool> CheckById(Guid id);
     }
 }

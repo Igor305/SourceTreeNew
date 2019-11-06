@@ -14,11 +14,13 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
         {
 
         }
+
         public async Task<List<Payment>> GetAllIsDeleted()
         {
             List<Payment> payments = await _applicationContext.Payments.IgnoreQueryFilters().ToListAsync();
             return payments;
         }
+
         public async Task<List<Payment>> GetAll()
         {
             List<Payment> payments = await _applicationContext.Payments.ToListAsync();

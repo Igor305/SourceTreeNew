@@ -17,19 +17,22 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
         }
         public async Task<List<Author>> GetAll()
         {
-            List<Author> all = await _applicationContext.Authors.IgnoreQueryFilters().ToListAsync();
-            return all;
+            List<Author> authors = await _applicationContext.Authors.IgnoreQueryFilters().ToListAsync();
+            return authors;
         }
+
         public async Task<List<Author>> GetAllWithoutRemove()
         {
-            List<Author> all = await _applicationContext.Authors.ToListAsync();
-            return all;
+            List<Author> authors = await _applicationContext.Authors.ToListAsync();
+            return authors;
         }
+
         public async Task<bool> CheckById(Guid id)
         {
             bool author = await _applicationContext.Authors.AnyAsync(x => x.Id == id);
             return author;
         }
+
         public async Task<bool> CheckByName(string FirstName, string LastName)
         {
             bool author = false;
@@ -41,19 +44,21 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
             }
             return author;
         }
+
         public async Task<Author> GetByFullName(string FirstName, string LastName)
         {
             List<Author> authors = await _applicationContext.Authors.Where(x =>x.LastName == LastName).ToListAsync();
             Author author = authors.FirstOrDefault(x =>x.FirstName == FirstName);
             return author;
         }
+
         public async Task<List<Author>> Pagination(int Skip, int Take)
         {
             List<Author> authors = await _applicationContext.Authors.ToListAsync();
-            int count = authors.Count();
             List<Author> paginationAuthors = authors.Skip(Skip).Take(Take).ToList();
             return paginationAuthors;
         }
+
         public List<Author> Filter(string FirstName, string LastName, DateTime? DateBirthFrom, DateTime? DateBirthTo, DateTime? DateDeathFrom, DateTime? DateDeathTo)
         {
             List<Author> filtrauthor = _applicationContext.Authors.Where(x => x.FirstName == FirstName || string.IsNullOrEmpty(FirstName) 

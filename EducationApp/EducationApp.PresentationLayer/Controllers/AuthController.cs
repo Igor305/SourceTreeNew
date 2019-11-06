@@ -38,15 +38,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [AllowAnonymous]
         public async Task<ConfirmEmailAccountResponseModel> ConfirmEmail([FromQuery]ConfirmEmail confirmEmail)
         {
-            ConfirmEmailAccountResponseModel confirmEmailAccountResponseModel = new ConfirmEmailAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                confirmEmailAccountResponseModel = await _accountService.ConfirmEmail(confirmEmail.userId, confirmEmail.code);
-                return confirmEmailAccountResponseModel;
-            }
-            confirmEmailAccountResponseModel.Messege = "Error";
-            confirmEmailAccountResponseModel.Status = false;
-            confirmEmailAccountResponseModel.Error.Add("Not IsValid");
+            ConfirmEmailAccountResponseModel confirmEmailAccountResponseModel = await _accountService.ConfirmEmail(confirmEmail);
             return confirmEmailAccountResponseModel;
         }
         /// <summary>
@@ -65,15 +57,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpPost("Register")]
         public async Task<RegisterAccountResponseModel> Register([FromBody]RegisterModel reg)
         {
-            RegisterAccountResponseModel registerAccountResponseModel = new RegisterAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                registerAccountResponseModel = await _accountService.Register(reg);
-                return registerAccountResponseModel;
-            }
-            registerAccountResponseModel.Messege = "Error";
-            registerAccountResponseModel.Status = false;
-            registerAccountResponseModel.Error.Add("Not IsValid");
+            RegisterAccountResponseModel registerAccountResponseModel = await _accountService.Register(reg);
             return registerAccountResponseModel;
         }
         /// <summary>
@@ -92,17 +76,9 @@ namespace EducationApp.PresentationLayer.Controllers
         [AllowAnonymous]
         public async Task<LoginAccountResponseModel> Login([FromBody] LoginModel login)
         {
-            LoginAccountResponseModel loginAccountResponseModel = new LoginAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-
-                loginAccountResponseModel = await _accountService.Login(login);
-                return loginAccountResponseModel;
-            }
-            loginAccountResponseModel.Messege = "Error";
-            loginAccountResponseModel.Status = false;
-            loginAccountResponseModel.Error.Add("Not IsValid");
+            LoginAccountResponseModel loginAccountResponseModel =  await _accountService.Login(login);
             return loginAccountResponseModel;
+ 
         }   
         /// <summary>
         ///  Forgot Password
@@ -119,18 +95,9 @@ namespace EducationApp.PresentationLayer.Controllers
         [AllowAnonymous]
         public async Task<ForgotPasswordResponseModel> ForgotPassword([FromBody]ForgotPassword forgotPassword)
         {
-            ForgotPasswordResponseModel forgotPasswordResponseModel = new ForgotPasswordResponseModel();
-            if (ModelState.IsValid)
-            {
-                forgotPasswordResponseModel = await _accountService.ForgotPassword(forgotPassword);
-                return forgotPasswordResponseModel;
-            }
-            forgotPasswordResponseModel.Messege = "Error";
-            forgotPasswordResponseModel.Status = false;
-            forgotPasswordResponseModel.Error.Add("Not IsValid");
+            ForgotPasswordResponseModel forgotPasswordResponseModel = await _accountService.ForgotPassword(forgotPassword);
             return forgotPasswordResponseModel;
         }
-
         /// <summary>
         ///  Reset Password
         /// </summary>
@@ -147,17 +114,9 @@ namespace EducationApp.PresentationLayer.Controllers
         /// </remarks>
         [HttpPost("ResetPassword")]
         [AllowAnonymous]
-        public async Task<ResetPasswordAccountResponseModel> ResetPassword([FromBody] ResetPasswordModel reset)
+        public async Task<ResetPasswordAccountResponseModel> ResetPassword([FromQuery] ResetPasswordModel reset)
         {
-            ResetPasswordAccountResponseModel resetPasswordAccountResponseModel = new ResetPasswordAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                resetPasswordAccountResponseModel = await _accountService.ResetPassword(reset);
-                return resetPasswordAccountResponseModel;
-            }
-            resetPasswordAccountResponseModel.Messege = "Error";
-            resetPasswordAccountResponseModel.Status = false;
-            resetPasswordAccountResponseModel.Error.Add("Not IsValid");
+            ResetPasswordAccountResponseModel resetPasswordAccountResponseModel = await _accountService.ResetPassword(reset);
             return resetPasswordAccountResponseModel;
         }
         /// <summary>
@@ -172,20 +131,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     
         /// </remarks>
         [HttpPost("RefreshToken")]
-        public async Task<RefreshTokenAccountResponseModel> RefreshToken([FromBody] RefreshTokenModel refreshTokenModel, [FromServices] IJwtPrivateKey jwtPrivateKey, [FromServices] IJwtRefresh jwtRefresh)
+        public async Task<RefreshTokenAccountResponseModel> RefreshToken([FromBody] RefreshTokenModel refreshTokenModel)
         {
-            RefreshTokenAccountResponseModel refreshTokenAccountResponseModel = new RefreshTokenAccountResponseModel();
-            if (ModelState.IsValid)
-            {
-                refreshTokenAccountResponseModel = await _accountService.RefreshToken(refreshTokenModel, jwtPrivateKey, jwtRefresh);
-                return refreshTokenAccountResponseModel;
-            }
-            refreshTokenAccountResponseModel.Messege = "Error";
-            refreshTokenAccountResponseModel.Status = false;
-            refreshTokenAccountResponseModel.Error.Add("Not IsValid");
+            RefreshTokenAccountResponseModel refreshTokenAccountResponseModel = await _accountService.RefreshToken(refreshTokenModel);
             return refreshTokenAccountResponseModel;
         }
-
     }
-
 }

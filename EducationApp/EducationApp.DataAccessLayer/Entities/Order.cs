@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EducationApp.DataAccessLayer.Entities
 {
-    public class Order : Basic
+    public class Order : BaseEntity
     {
         public Guid UserId { get; set; }
         public User User { get; set; }

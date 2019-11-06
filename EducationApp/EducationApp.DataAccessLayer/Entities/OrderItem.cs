@@ -4,7 +4,7 @@ using System;
 
 namespace EducationApp.DataAccessLayer.Entities
 {
-    public class OrderItem : Basic
+    public class OrderItem : BaseEntity
     {
         public int Amount { get; set; }
         public Currency Currency { get; set; }

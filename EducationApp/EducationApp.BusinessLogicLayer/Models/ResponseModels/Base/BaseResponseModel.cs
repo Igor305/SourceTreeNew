@@ -7,8 +7,7 @@ namespace EducationApp.BusinessLogicLayer.Models.ResponseModels.Base
         public string Messege { get; set; }
         public bool Status { get; set; }
         public List<string> Warning { get; set; }
-        public List <string> Error { get; set; }
-
+        public List<string> Error { get; set; }
 
         public BaseResponseModel()
         {

@@ -2,6 +2,7 @@
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace EducationApp.PresentationLayer.Controllers
@@ -32,9 +33,9 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAllIsDeleted")]
-        public async Task<PrintingEditionResponseModel> GetAllIsDeleted()
+        public async Task<PrintingEditionResponseModel> GetAll()
         {
-            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.GetAllIsDeleted();
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.GetAll();
             return printingEditionResponseModel;
         }
         /// <summary>
@@ -47,9 +48,9 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAll")]
-        public async Task <PrintingEditionResponseModel> GetAll()
+        public async Task <PrintingEditionResponseModel> GetAllWithoutRemove()
         {
-            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.GetAll();
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.GetAllWithoutRemove();
             return printingEditionResponseModel;
         }
         /// <summary>
@@ -66,17 +67,9 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("Pagination")]
-        public PrintingEditionResponseModel Pagination([FromQuery] PaginationPagePrintingEditionModel paginationPagePrintingEditionModel)
+        public async Task<PrintingEditionResponseModel> Pagination([FromQuery] PaginationPrintingEditionModel paginationPrintingEditionModel)
         {
-            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            if (ModelState.IsValid)
-            {
-                printingEditionResponseModel = _printingEditionService.Pagination(paginationPagePrintingEditionModel);
-                return printingEditionResponseModel;
-            }
-            printingEditionResponseModel.Messege = "Error";
-            printingEditionResponseModel.Status = false;
-            printingEditionResponseModel.Error.Add("Post, not valide");
+            PrintingEditionResponseModel printingEditionResponseModel  = await _printingEditionService.Pagination(paginationPrintingEditionModel);
             return printingEditionResponseModel;
         }
         /// <summary>
@@ -91,18 +84,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpGet("GetById")]
-        public async Task<PrintingEditionResponseModel> GetById([FromQuery]GetByIdPrintingEditionModel getByIdPrintingEditionModel)
+        [HttpGet("{id}")]
+        public async Task<PrintingEditionResponseModel> GetById(Guid id)
         {
-            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            if (ModelState.IsValid)
-            {
-                printingEditionResponseModel = await _printingEditionService.GetById(getByIdPrintingEditionModel);
-                return printingEditionResponseModel;
-            }
-            printingEditionResponseModel.Messege = "Error";
-            printingEditionResponseModel.Status = false;
-            printingEditionResponseModel.Error.Add("Post, not valide");
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.GetById(id);
             return printingEditionResponseModel;
         }
         /// <summary>
@@ -117,18 +102,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpGet("Buy")]
-        public async Task<PrintingEditionResponseModel> Buy([FromQuery]BuyPrintingEditionModel buyPrintingEditionModel)
+        [HttpGet("Buy/{id}")]
+        public async Task<PrintingEditionResponseModel> Buy(Guid id)
         {
-            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            if (ModelState.IsValid)
-            {
-                printingEditionResponseModel = await _printingEditionService.Buy(buyPrintingEditionModel);
-                return printingEditionResponseModel;
-            }
-            printingEditionResponseModel.Messege = "Error";
-            printingEditionResponseModel.Status = false;
-            printingEditionResponseModel.Error.Add("Post, not valide");
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.Buy(id);
             return printingEditionResponseModel;
         }
         /// <summary>
@@ -146,15 +123,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpGet("Sort")]
         public async Task<PrintingEditionResponseModel> Sort([FromQuery]SortPrintingEditionModel sortPrintingEditionModel)
         {
-            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            if (ModelState.IsValid)
-            {
-                printingEditionResponseModel = await _printingEditionService.Sort(sortPrintingEditionModel);
-                return printingEditionResponseModel;
-            }
-            printingEditionResponseModel.Messege = "Error";
-            printingEditionResponseModel.Status = false;
-            printingEditionResponseModel.Error.Add("Post, not valide");
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.Sort(sortPrintingEditionModel);
             return printingEditionResponseModel;
         }
         /// <summary>
@@ -174,15 +143,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpGet("Filter")]
         public async Task<PrintingEditionResponseModel> Filter([FromQuery]FiltrationPrintingEditionModel filtrationPrintingEditionModel)
         {
-            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            if (ModelState.IsValid)
-            {
-                printingEditionResponseModel = await _printingEditionService.Filter(filtrationPrintingEditionModel);
-                return printingEditionResponseModel;
-            }
-            printingEditionResponseModel.Messege = "Error";
-            printingEditionResponseModel.Status = false;
-            printingEditionResponseModel.Error.Add("Post, not valide");
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.Filter(filtrationPrintingEditionModel);
             return printingEditionResponseModel;
         }
         /// <summary>
@@ -205,16 +166,9 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpPost("Create")]
         public async Task<PrintingEditionResponseModel> Create([FromBody]CreatePrintingEditionModel createPrintingEditionModel)
         {
-            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            if (ModelState.IsValid)
-            {
-                printingEditionResponseModel = await _printingEditionService.Create(createPrintingEditionModel);
-                return printingEditionResponseModel;
-            }
-            printingEditionResponseModel.Messege = "Error";
-            printingEditionResponseModel.Status = false;
-            printingEditionResponseModel.Error.Add("Post, not valide");
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.Create(createPrintingEditionModel);
             return printingEditionResponseModel;
+
         }
         /// <summary>
         /// Update PrintingEdition for Id
@@ -234,18 +188,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpPut("Update")]
-        public async Task<PrintingEditionResponseModel> Update([FromBody]UpdatePrintingEditionModel updatePrintingEditionModel)
+        [HttpPut("{id}")]
+        public async Task<PrintingEditionResponseModel> Update(Guid id, [FromBody]CreatePrintingEditionModel createPrintingEditionModel)
         {
-            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            if (ModelState.IsValid)
-            {
-                printingEditionResponseModel = await _printingEditionService.Update(updatePrintingEditionModel);
-                return printingEditionResponseModel;
-            }
-            printingEditionResponseModel.Messege = "Error";
-            printingEditionResponseModel.Status = false;
-            printingEditionResponseModel.Error.Add("Post, not valide");
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.Update(id, createPrintingEditionModel);
             return printingEditionResponseModel;
         }
         /// <summary>
@@ -260,18 +206,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpDelete("Delete")]
-        public async Task<PrintingEditionResponseModel> Delete([FromBody]DeletePrintingEditionModel deletePrintingEditionModel)
+        [HttpDelete("{id}")]
+        public async Task<PrintingEditionResponseModel> Delete(Guid id)
         {
-            PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
-            if (ModelState.IsValid)
-            {
-                printingEditionResponseModel = await _printingEditionService.Delete(deletePrintingEditionModel);
-                return printingEditionResponseModel;
-            }
-            printingEditionResponseModel.Messege = "Error";
-            printingEditionResponseModel.Status = false;
-            printingEditionResponseModel.Error.Add("Post, not valide");
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.Delete(id);
             return printingEditionResponseModel;
         }
     }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EducationApp.DataAccessLayer.Migrations
 {
-    public partial class D : Migration
+    public partial class help : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

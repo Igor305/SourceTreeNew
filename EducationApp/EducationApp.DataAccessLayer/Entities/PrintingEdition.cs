@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EducationApp.DataAccessLayer.Entities
 {
-    public class PrintingEdition : Basic
+    public class PrintingEdition : BaseEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }

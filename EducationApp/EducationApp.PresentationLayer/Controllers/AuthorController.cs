@@ -69,15 +69,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpGet("Pagination")]
         public async Task <AuthorResponseModel> Pagination([FromQuery] PaginationAuthorModel paginationAuthorModel)
         {
-            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            if (ModelState.IsValid)
-            {
-                authorResponseModel = await _authorService.Pagination(paginationAuthorModel);
-                return authorResponseModel;
-            }
-            authorResponseModel.Messege = "Error";
-            authorResponseModel.Status = false;
-            authorResponseModel.Error.Add("Post, not valide");
+            AuthorResponseModel authorResponseModel = await _authorService.Pagination(paginationAuthorModel);
             return authorResponseModel;
         }
         /// <summary>
@@ -95,15 +87,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpGet("{id}")]
         public async Task<AuthorResponseModel> GetById(Guid id)
         {
-            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            if (ModelState.IsValid)
-            {
-                authorResponseModel = await _authorService.GetById(id);
-                return authorResponseModel;
-            }
-            authorResponseModel.Messege = "Error";
-            authorResponseModel.Status = false;
-            authorResponseModel.Error.Add("Post, not valide");
+            AuthorResponseModel authorResponseModel = await _authorService.GetById(id);
             return authorResponseModel;
         }
         /// <summary>
@@ -122,15 +106,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpGet("FindName")]
         public async Task<AuthorResponseModel> GetByFullName([FromQuery] GetNameAuthorModel getNameAuthorModel)
         {
-            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            if (ModelState.IsValid)
-            {
-                authorResponseModel = await _authorService.GetByFullName(getNameAuthorModel);
-                return authorResponseModel;
-            }
-            authorResponseModel.Messege = "Error";
-            authorResponseModel.Status = false;
-            authorResponseModel.Error.Add("Post, not valide");
+            AuthorResponseModel authorResponseModel = await _authorService.GetByFullName(getNameAuthorModel);
             return authorResponseModel;
         }
         /// <summary>
@@ -146,18 +122,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpGet("Filtr")]
+        [HttpGet("Filter")]
         public AuthorResponseModel Filter([FromQuery] FiltrationAuthorModel filtrationAuthorModel)
         {
-            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            if (ModelState.IsValid)
-            {
-                authorResponseModel = _authorService.Filter(filtrationAuthorModel);
-                return authorResponseModel;
-            }
-            authorResponseModel.Messege = "Error";
-            authorResponseModel.Status = false;
-            authorResponseModel.Error.Add("Post, not valide");
+            AuthorResponseModel authorResponseModel = _authorService.Filter(filtrationAuthorModel);
             return authorResponseModel;
         }
         /// <summary>
@@ -179,15 +147,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpPost("Create")]
         public async Task<AuthorResponseModel> Create([FromBody]CreateAuthorModel createAuthorModel)
         {
-            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            if (ModelState.IsValid)
-            {
-                authorResponseModel = await _authorService.Create(createAuthorModel);
-                return authorResponseModel;
-            }
-            authorResponseModel.Messege = "Error";
-            authorResponseModel.Status = false;
-            authorResponseModel.Error.Add("Post, not valide");
+            AuthorResponseModel authorResponseModel = await _authorService.Create(createAuthorModel);
             return authorResponseModel;
         }
         /// <summary>
@@ -208,15 +168,9 @@ namespace EducationApp.PresentationLayer.Controllers
         /// </remarks>
         [Produces("application/json")]
         [HttpPut("{id}")]
-        public async Task<AuthorResponseModel> Update(Guid id, [FromBody]UpdateAuthorModel updateAuthorModel)
+        public async Task<AuthorResponseModel> Update(Guid id, [FromBody]CreateAuthorModel createAuthorModel)
         {
-            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            if (ModelState.IsValid)
-            {
-                authorResponseModel = await _authorService.Update(id, updateAuthorModel);
-                return authorResponseModel;
-            }
-            authorResponseModel.Messege = "Post, not valide";
+            AuthorResponseModel authorResponseModel = await _authorService.Update(id, createAuthorModel);
             return authorResponseModel;
         }
         /// <summary>
@@ -235,13 +189,7 @@ namespace EducationApp.PresentationLayer.Controllers
         [HttpDelete("{id}")]
         public async Task<AuthorResponseModel> Delete(Guid id)
         {
-            AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            if (ModelState.IsValid)
-            {
-                authorResponseModel = await _authorService.Delete(id);
-                return authorResponseModel;
-            }
-            authorResponseModel.Messege = "Post, not valide";
+            AuthorResponseModel authorResponseModel = await _authorService.Delete(id);
             return authorResponseModel;
         }
     }

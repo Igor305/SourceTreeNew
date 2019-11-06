@@ -2,7 +2,7 @@
 {
     public class ConfirmEmail
     {
-        public string userId { get; set; }
-        public string code { get; set; }
+        public string UserId { get; set; }
+        public string Code { get; set; }
     }
 }

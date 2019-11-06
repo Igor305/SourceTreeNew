@@ -2,7 +2,7 @@
 
 namespace EducationApp.DataAccessLayer.Entities.Base
 {
-    public class Basic
+    public class BaseEntity
     {
         public Guid Id { get; set; }
         public DateTime CreateDateTime { get; set; }

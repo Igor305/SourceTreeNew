@@ -14,20 +14,23 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
         public UserRepository(ApplicationContext dbContext) : base(dbContext)
         {
         }
+
         public async Task<List<User>> GetAll()
         {
-            List<User> allIsDeleted = await _applicationContext.Users.IgnoreQueryFilters().ToListAsync();
-            return allIsDeleted;
+            List<User> users = await _applicationContext.Users.IgnoreQueryFilters().ToListAsync();
+            return users;
         }
+
         public async Task<List<User>> GetAllWithoutRemove()
         {
-            List<User> all = await _applicationContext.Users.ToListAsync();
-            return all;
+            List<User> users = await _applicationContext.Users.ToListAsync();
+            return users;
         }
-        public async Task<User> GetByIdAll(Guid Id)
+
+        public async Task<bool> CheckById(Guid id)
         {
-            User finduser = await _applicationContext.Users.IgnoreQueryFilters().FirstOrDefaultAsync(x=>x.Id == Id);
-            return finduser;
+            bool user = await _applicationContext.Users.AnyAsync(x => x.Id == id);
+            return user;
         }
     }
 }
