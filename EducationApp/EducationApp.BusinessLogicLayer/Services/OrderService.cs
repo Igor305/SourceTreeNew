@@ -4,11 +4,14 @@ using EducationApp.BusinessLogicLayer.Models.ResponseModels;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Order;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using EducationApp.DataAccessLayer.Entities;
+using EducationApp.DataAccessLayer.Entities.Enum;
 using EducationApp.DataAccessLayer.Repositories.Interfaces;
+using Stripe;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Order = EducationApp.DataAccessLayer.Entities.Order;
+using OrderItem = EducationApp.DataAccessLayer.Entities.OrderItem;
 
 namespace EducationApp.BusinessLogicLayer.Services
 {
@@ -34,12 +37,6 @@ namespace EducationApp.BusinessLogicLayer.Services
         {
             List<Order> orders = await _orderRepository.GetAll();
             List<OrderModel> orderModels = _mapper.Map<List<Order>, List<OrderModel>>(orders);
-            foreach (OrderModel orderModel in orderModels)
-            {
-                Payment payment = await _paymentRepository.GetById(orderModel.PaymentId);
-                PaymentModel paymentModels = _mapper.Map<Payment, PaymentModel>(payment);
-                List<OrderItemModel> orderItemModels = _mapper.Map<List<OrderItem>, List<OrderItemModel>>(orderModel.OrderItems);
-            }
             OrderResponseModel orderResponseModel = ValidateGetAll();
             orderResponseModel.orderModels = orderModels;
 
@@ -50,12 +47,6 @@ namespace EducationApp.BusinessLogicLayer.Services
         {
             List<Order> orders = await _orderRepository.GetAllWithoutRemove();
             List<OrderModel> orderModels = _mapper.Map<List<Order>, List<OrderModel>>(orders);
-            foreach (OrderModel orderModel in orderModels)
-            {
-                Payment payment = await _paymentRepository.GetById(orderModel.PaymentId);
-                PaymentModel paymentModels = _mapper.Map<Payment, PaymentModel>(payment);
-                List<OrderItemModel> orderItemModels = _mapper.Map<List<OrderItem>, List<OrderItemModel>>(orderModel.OrderItems);
-            }
             OrderResponseModel orderResponseModel = ValidateGetAll();
             orderResponseModel.orderModels = orderModels;
             return orderResponseModel;
@@ -79,13 +70,6 @@ namespace EducationApp.BusinessLogicLayer.Services
             {
                 List<Order> pagination = await _orderRepository.Pagination(paginationOrderModel.Skip, paginationOrderModel.Take);            
                 List<OrderModel> orderModels = _mapper.Map<List<Order>, List<OrderModel>>(pagination);
-
-                foreach (OrderModel orderModel in orderModels)
-                {
-                    Payment payment = await _paymentRepository.GetById(orderModel.PaymentId);
-                    PaymentModel paymentModels = _mapper.Map<Payment, PaymentModel>(payment);
-                    List<OrderItemModel> orderItemModels = _mapper.Map<List<OrderItem>, List<OrderItemModel>>(orderModel.OrderItems);
-                }
                 orderResponseModel.orderModels = orderModels;
             }
             return orderResponseModel;
@@ -112,14 +96,9 @@ namespace EducationApp.BusinessLogicLayer.Services
 
             if (orderResponseModel.Status)
             {
-                Order order = await _orderRepository.GetById(id);
-                Payment payment = await _paymentRepository.GetById(order.PaymentId);
+                Order order = await _orderRepository.GetById(id);            
                 OrderModel orderModel = _mapper.Map<Order, OrderModel>(order);
-                PaymentModel paymentModel = _mapper.Map<Payment, PaymentModel>(payment);
-                List<OrderItemModel> orderItemModel = _mapper.Map<List<OrderItem>, List<OrderItemModel>>(order.OrderItem);
                 orderResponseModel.orderModels.Add(orderModel);
-                orderResponseModel.paymentModels.Add(paymentModel);
-                orderResponseModel.orderItemModels = orderItemModel;
             }
             return orderResponseModel;      
         }
@@ -138,41 +117,76 @@ namespace EducationApp.BusinessLogicLayer.Services
             return orderResponseModel;
         }
 
-        public async Task<OrderResponseModel> Create(CreateOrderModel createOrderModel)
+        public async Task<OrderModel> Create(CreateOrderModel createOrderModel)
         {
-            Payment payment = await _paymentRepository.GetById(createOrderModel.PaymentId);
-            User user = await _userRepository.GetById(createOrderModel.UserId);
-            OrderResponseModel orderResponseModel = ValidateCreateOrder(payment, user);
-            if (orderResponseModel.Status)
+            Order order = new Order();
+            OrderItem orderItem = new OrderItem();
+            long totalAmount = 0;
+            foreach (OrderPrintingEdition orderPrintingEdition in createOrderModel.OrderPrintingEditions)
             {
-                Order order = _mapper.Map<CreateOrderModel, Order>(createOrderModel);
+                PrintingEdition printingEdition = await _printingEditionRepository.GetById(orderPrintingEdition.Id);
 
-                List<CreateOrderItemModel> createOrderItemModels = new List<CreateOrderItemModel>();
-                foreach (CreateOrderItemModel createOrderItemModel in createOrderItemModels)
-                {
-                    PrintingEdition printingEdition = await _printingEditionRepository.GetById(createOrderItemModel.PrintingEditionId);
-                    orderResponseModel = ValidateCreateOrderItems(printingEdition, createOrderItemModel);         
-                }
-                if (orderResponseModel.Status)
-                {
-                    order.CreateDateTime = DateTime.Now;
-                    order.UpdateDateTime = DateTime.Now;
-                    await _orderRepository.Create(order);
-                    await _paymentRepository.Create(payment);
-                    foreach (CreateOrderItemModel createOrderItemModel in createOrderItemModels)
-                    {
-                        OrderItem orderItem = _mapper.Map<CreateOrderItemModel, OrderItem>(createOrderItemModel);
-                        await _orderItemRepository.Create(orderItem);
-                    }
-                    OrderModel orderModel = _mapper.Map<Order, OrderModel>(order);
-                    PaymentModel paymentModel = _mapper.Map<Payment, PaymentModel>(payment);
-                    List<OrderItemModel> orderItemModels = _mapper.Map<List<OrderItem>, List<OrderItemModel>>(order.OrderItem);
-                    orderResponseModel.orderModels.Add(orderModel);
-                    orderResponseModel.paymentModels.Add(paymentModel);
-                    orderResponseModel.orderItemModels = orderItemModels;
-                }
+                orderItem.Count = orderPrintingEdition.Count;
+                orderItem.UnitPrice = printingEdition.Price;
+                orderItem.Amount = orderItem.Count * orderItem.UnitPrice;
+                totalAmount =+ orderItem.Amount;
+
             }
-            return orderResponseModel;
+            User user = await _userRepository.GetById(createOrderModel.UserId);
+            Payment payment = new Payment();
+
+            string transactionId = PaymentCharge(user.Email, createOrderModel.TypeOfPaymentCard, createOrderModel.Description, createOrderModel.Currency, totalAmount);
+            payment.TransactionId = transactionId;
+            payment.CreateDateTime = DateTime.Now;
+            payment.UpdateDateTime = DateTime.Now;
+            await _paymentRepository.Create(payment);
+
+            order.UserId = user.Id;
+            order.Description = createOrderModel.Description;
+            order.PaymentId = payment.Id;
+            order.CreateDateTime = DateTime.Now;
+            order.UpdateDateTime = DateTime.Now;
+            await _orderRepository.Create(order);
+            foreach (OrderPrintingEdition orderPrintingEdition in createOrderModel.OrderPrintingEditions)
+            {
+                PrintingEdition printingEdition = await _printingEditionRepository.GetById(orderPrintingEdition.Id);
+
+                orderItem.OrderId = order.Id;
+                orderItem.Count = orderPrintingEdition.Count;
+                orderItem.PrintingEditionId = printingEdition.Id;
+                orderItem.UnitPrice = printingEdition.Price;
+                orderItem.Currency = printingEdition.Currency;
+                orderItem.Amount = orderItem.Count * orderItem.UnitPrice;
+                await _orderItemRepository.Create(orderItem);
+                order.OrderItems.Add(orderItem);
+            }
+                OrderModel orderModel = _mapper.Map<Order, OrderModel>(order);
+            return orderModel;
+        }
+
+        public string PaymentCharge(string email, string source, string Description, Currency currency, long amount)
+        {
+            var customers = new CustomerService();
+            var charges = new ChargeService();
+            var customer = customers.Create(new CustomerCreateOptions
+            {
+                Email = email,
+                Source = source
+            });
+
+            var charge = charges.Create(new ChargeCreateOptions
+            {
+                Amount = amount,
+                Description = Description,
+                Currency = currency.ToString(),
+                Customer = customer.Id
+            });
+            if (charge.Status == ResponseConstants.Successfully)
+            {
+                string BalanceTransactionId = charge.BalanceTransactionId;
+                return BalanceTransactionId;
+            }
+            return ResponseConstants.Error;
         }
 
         private OrderResponseModel ValidateCreateOrder(Payment payment, User user)
@@ -211,7 +225,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             return orderResponseModel;
         }
 
-        public async Task<OrderResponseModel> Update(Guid id, CreateOrderModel createOrderModel)
+        /*public async Task<OrderResponseModel> Update(Guid id, CreateOrderModel createOrderModel)
         {
             OrderResponseModel orderResponseModel = await ValidateGetById(id);
             if (orderResponseModel.Status)
@@ -250,7 +264,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 }
             }
             return orderResponseModel;
-        }
+        }*/
         public async Task<OrderResponseModel> Delete(Guid id)
         {
             OrderResponseModel orderResponseModel = await ValidateGetById(id);

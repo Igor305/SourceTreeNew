@@ -1,6 +1,4 @@
-﻿using EducationApp.BusinessLogicLayer.Models.ResponseModels;
-using EducationApp.DataAccessLayer.Entities.Enum;
-using System.ComponentModel.DataAnnotations;
+﻿using EducationApp.DataAccessLayer.Entities.Enum;
 
 namespace EducationApp.BusinessLogicLayer.Models.PrintingEditions
 {

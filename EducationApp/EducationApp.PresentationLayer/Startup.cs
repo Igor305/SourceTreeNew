@@ -1,6 +1,5 @@
 using AutoMapper;
 using EducationApp.BusinessLogicLayer.AutoMapper;
-using EducationApp.BusinessLogicLayer.Helpers;
 using EducationApp.BusinessLogicLayer.Services;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using EducationApp.BusinessLogicLayer.Stripe.Infrastructure;
@@ -93,6 +92,7 @@ namespace EducationApp.PresentationLayer
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireDigit = false;
             })
+                .AddRoles<Role>()
                 .AddSignInManager<SignInManager<User>>()
                 .AddEntityFrameworkStores<ApplicationContext>()
                 .AddDefaultTokenProviders();
@@ -134,8 +134,9 @@ namespace EducationApp.PresentationLayer
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        /// <param name="serviceProvider"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
+        /// <param name="roleManager"></param>
+        /// <param name="userManager"></param>
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, RoleManager<Role> roleManager ,UserManager<User> userManager)
         {
             app.UseMiddleware<LogService>();
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
@@ -159,9 +160,10 @@ namespace EducationApp.PresentationLayer
             });
         
             app.UseAuthentication();
+      
             app.UseMvc();
 
-            StartRoleService.CreateUserRoles(serviceProvider, Configuration);
+            MyIdentityDataInitializer.SeedData(userManager, roleManager, Configuration);
         }
     }
 }

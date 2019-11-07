@@ -3,20 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace EducationApp.DataAccessLayer.AppContext
 {
     public class ApplicationContext : IdentityDbContext<User, Role, Guid>
     {
-        private readonly IConfiguration _configuration;
-        private readonly IServiceProvider _serviceProvider;
-        public ApplicationContext(DbContextOptions<ApplicationContext> options, IServiceProvider serviceProvider, IConfiguration configuration)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)
         {
-            _configuration = configuration;
-            _serviceProvider = serviceProvider;
         }
         public DbSet<Author> Authors { get; set; }
         public DbSet<PrintingEdition> PrintingEditions { get; set; }

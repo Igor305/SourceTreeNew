@@ -55,6 +55,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     
         /// </remarks>
         [HttpPost("Register")]
+        [AllowAnonymous]
         public async Task<RegisterAccountResponseModel> Register([FromBody]RegisterModel reg)
         {
             RegisterAccountResponseModel registerAccountResponseModel = await _accountService.Register(reg);
@@ -92,7 +93,6 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     
         /// </remarks>
         [HttpPost("ForgotPassword")]
-        [AllowAnonymous]
         public async Task<ForgotPasswordResponseModel> ForgotPassword([FromBody]ForgotPassword forgotPassword)
         {
             ForgotPasswordResponseModel forgotPasswordResponseModel = await _accountService.ForgotPassword(forgotPassword);
@@ -113,7 +113,6 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     
         /// </remarks>
         [HttpPost("ResetPassword")]
-        [AllowAnonymous]
         public async Task<ResetPasswordAccountResponseModel> ResetPassword([FromQuery] ResetPasswordModel reset)
         {
             ResetPasswordAccountResponseModel resetPasswordAccountResponseModel = await _accountService.ResetPassword(reset);

@@ -1,9 +1,6 @@
-﻿using EducationApp.BusinessLogicLayer.Helpers;
-using EducationApp.BusinessLogicLayer.Models.ResponseModels.Order;
+﻿using EducationApp.BusinessLogicLayer.Models.ResponseModels.Order;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
-using EducationApp.DataAccessLayer.Entities;
 using EducationApp.DataAccessLayer.Repositories.Interfaces;
-using System;
 
 namespace EducationApp.BusinessLogicLayer.Services
 {

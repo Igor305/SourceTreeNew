@@ -113,7 +113,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             {
                 userResponseModel.Warning.Add(ResponseConstants.Null);
             }
-            userResponseModel.Status = isErrorOfNull;
+            userResponseModel.Status = !isErrorOfNull;
             userResponseModel.Messege = userResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return userResponseModel;

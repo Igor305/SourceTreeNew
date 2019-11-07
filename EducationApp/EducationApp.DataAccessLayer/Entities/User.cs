@@ -11,7 +11,7 @@ namespace EducationApp.DataAccessLayer.Entities
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public bool IsDeleted { get; set; }
-        public Order Order { get; set; }
+        public List<Order> Orders { get; set; }
         public List<UserInRole> UserInRoly { get; set; }
     }
 }

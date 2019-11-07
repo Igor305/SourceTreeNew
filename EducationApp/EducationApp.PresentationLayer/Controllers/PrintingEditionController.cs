@@ -1,6 +1,7 @@
 ﻿using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     Get/GetAllIsDeleted
         ///
         /// </remarks>
-        [HttpGet("GetAllIsDeleted")]
+        [HttpGet("GetAll")]
         public async Task<PrintingEditionResponseModel> GetAll()
         {
             PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.GetAll();
@@ -47,7 +48,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     Get/GetAll
         ///
         /// </remarks>
-        [HttpGet("GetAll")]
+        [HttpGet("GetAllWithoutRemove")]
         public async Task <PrintingEditionResponseModel> GetAllWithoutRemove()
         {
             PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.GetAllWithoutRemove();

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducationApp.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20191106125703_helppp")]
-    partial class helppp
+    [Migration("20191107153006_dsfgwer")]
+    partial class dsfgwer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,8 +80,7 @@ namespace EducationApp.DataAccessLayer.Migrations
                     b.HasIndex("PaymentId")
                         .IsUnique();
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -91,9 +90,9 @@ namespace EducationApp.DataAccessLayer.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Amount");
+                    b.Property<long>("Amount");
 
-                    b.Property<decimal>("Count");
+                    b.Property<int>("Count");
 
                     b.Property<DateTime>("CreateDateTime");
 
@@ -105,7 +104,7 @@ namespace EducationApp.DataAccessLayer.Migrations
 
                     b.Property<Guid>("PrintingEditionId");
 
-                    b.Property<decimal>("UnitPrice");
+                    b.Property<long>("UnitPrice");
 
                     b.Property<DateTime>("UpdateDateTime");
 
@@ -152,7 +151,7 @@ namespace EducationApp.DataAccessLayer.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<decimal>("Price");
+                    b.Property<long>("Price");
 
                     b.Property<int>("Status");
 
@@ -367,15 +366,15 @@ namespace EducationApp.DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("EducationApp.DataAccessLayer.Entities.User", "User")
-                        .WithOne("Order")
-                        .HasForeignKey("EducationApp.DataAccessLayer.Entities.Order", "UserId")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EducationApp.DataAccessLayer.Entities.OrderItem", b =>
                 {
                     b.HasOne("EducationApp.DataAccessLayer.Entities.Order", "Order")
-                        .WithMany("OrderItem")
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EducationApp.DataAccessLayer.Migrations
 {
-    public partial class help : Migration
+    public partial class dsfgwer : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -95,7 +95,7 @@ namespace EducationApp.DataAccessLayer.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    Price = table.Column<decimal>(nullable: false),
+                    Price = table.Column<long>(nullable: false),
                     Type = table.Column<string>(nullable: true),
                     Status = table.Column<int>(nullable: false),
                     Currency = table.Column<int>(nullable: false)
@@ -244,9 +244,9 @@ namespace EducationApp.DataAccessLayer.Migrations
                     CreateDateTime = table.Column<DateTime>(nullable: false),
                     UpdateDateTime = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    PaymentId = table.Column<Guid>(nullable: false)
+                    PaymentId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -297,10 +297,10 @@ namespace EducationApp.DataAccessLayer.Migrations
                     CreateDateTime = table.Column<DateTime>(nullable: false),
                     UpdateDateTime = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    Amount = table.Column<int>(nullable: false),
+                    Amount = table.Column<long>(nullable: false),
                     Currency = table.Column<int>(nullable: false),
-                    Count = table.Column<decimal>(nullable: false),
-                    UnitPrice = table.Column<decimal>(nullable: false),
+                    Count = table.Column<int>(nullable: false),
+                    UnitPrice = table.Column<long>(nullable: false),
                     PrintingEditionId = table.Column<Guid>(nullable: false),
                     OrderId = table.Column<Guid>(nullable: false)
                 },
@@ -385,8 +385,7 @@ namespace EducationApp.DataAccessLayer.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
                 table: "Orders",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

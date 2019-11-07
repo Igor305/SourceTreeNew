@@ -4,6 +4,7 @@ using EducationApp.BusinessLogicLayer.Models.Authors;
 using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Account;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.Order;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.UserInRole;
@@ -30,6 +31,12 @@ namespace EducationApp.BusinessLogicLayer.AutoMapper
             CreateMap<User, CreateUserModel>();
             CreateMap<Role, RoleAccountModel>();
             CreateMap<RoleAccountModel,Role>();
+            CreateMap<OrderItem, OrderItemModel>();
+            CreateMap<OrderItemModel, OrderItem>();
+            CreateMap<Payment, PaymentModel>();
+            CreateMap<PaymentModel,Payment>();
+            CreateMap<Order, OrderModel>();
+            CreateMap<OrderModel,Order>();
         }
     }
 }

@@ -7,6 +7,7 @@ using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
 using EducationApp.BusinessLogicLayer.Models.User;
 using System;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.UserInRole;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EducationApp.PresentationLayer.Controllers
 {

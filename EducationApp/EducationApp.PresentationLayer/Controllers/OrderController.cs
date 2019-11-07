@@ -1,6 +1,7 @@
 ﻿using EducationApp.BusinessLogicLayer.Models.Orders;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Order;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     Get/GetAll
         ///
         /// </remarks>
-        [HttpGet("GetAllIsDeleted")]
+        [HttpGet("GetAll")]
         public async Task<OrderResponseModel> GetAll()
         {
             OrderResponseModel orderResponseModel = await _orderService.GetAll();
@@ -47,7 +48,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     Get/GetAllWithoutRemove
         ///
         /// </remarks>
-        [HttpGet("GetAll")]
+        [HttpGet("GetAllWithoutRemove")]
         public async Task<OrderResponseModel> GetAllWithoutRemove()
         {
             OrderResponseModel orderResponseModel = await _orderService.GetAllWithoutRemove();
@@ -100,29 +101,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpPost("Create")]
-        public async Task<OrderResponseModel> Create([FromBody]CreateOrderModel createOrderModel)
+        public async Task<OrderModel> Create([FromBody]CreateOrderModel createOrderModel)
         {
-            OrderResponseModel orderResponseModel = await _orderService.Create(createOrderModel);
-            return orderResponseModel;
-        }
-        /// <summary>
-        /// Update Order for Id
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     PUT/Update
-        ///     {
-        ///         "Id": "",
-        ///         "Description": "Выгодный товар"
-        ///     }
-        ///
-        /// </remarks>
-        [HttpPut("{id}")]
-        public async Task<OrderResponseModel> Update(Guid id,[FromBody]CreateOrderModel createOrderModel)
-        {
-            OrderResponseModel orderResponseModel = await _orderService.Update(id, createOrderModel);
-            return orderResponseModel;
+            OrderModel orderModel = await _orderService.Create(createOrderModel);
+            return orderModel;
         }
         /// <summary>
         /// Delete Order for Id

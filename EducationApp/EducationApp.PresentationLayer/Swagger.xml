@@ -490,21 +490,6 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.Update(System.Guid,EducationApp.BusinessLogicLayer.Models.Orders.CreateOrderModel)">
-             <summary>
-             Update Order for Id
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 PUT/Update
-                 {
-                     "Id": "",
-                     "Description": "Выгодный товар"
-                 }
-            
-             </remarks>
-        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.OrderController.Delete(System.Guid)">
              <summary>
              Delete Order for Id
@@ -718,13 +703,14 @@
             </summary>
             <param name="services"></param>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,System.IServiceProvider)">
+        <member name="M:EducationApp.PresentationLayer.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.AspNetCore.Identity.RoleManager{EducationApp.DataAccessLayer.Entities.Role},Microsoft.AspNetCore.Identity.UserManager{EducationApp.DataAccessLayer.Entities.User})">
             <summary>
             
             </summary>
             <param name="app"></param>
             <param name="env"></param>
-            <param name="serviceProvider"></param>
+            <param name="roleManager"></param>
+            <param name="userManager"></param>
         </member>
     </members>
 </doc>
