@@ -28,6 +28,13 @@ namespace EducationApp.DataAccessLayer.AppContext
             modelBuilder.Entity<PrintingEdition>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<User>().HasQueryFilter(e => !e.IsDeleted);
 
+            modelBuilder.Entity<OrderItem> ()
+                .HasIndex(u => u.PrintingEditionId)
+                .IsUnique(false);
+            modelBuilder.Entity<OrderItem>()
+                .HasIndex(u => u.OrderId)
+                .IsUnique(false);
+
             modelBuilder.Entity<UserInRole>()
                 .HasKey(bc => new { bc.UserId, bc.RoleId });
             modelBuilder.Entity<UserInRole>()

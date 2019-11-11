@@ -225,46 +225,6 @@ namespace EducationApp.BusinessLogicLayer.Services
             return orderResponseModel;
         }
 
-        /*public async Task<OrderResponseModel> Update(Guid id, CreateOrderModel createOrderModel)
-        {
-            OrderResponseModel orderResponseModel = await ValidateGetById(id);
-            if (orderResponseModel.Status)
-            {
-                Payment payment = await _paymentRepository.GetById(createOrderModel.PaymentId);
-                User user = await _userRepository.GetById(createOrderModel.UserId);
-                orderResponseModel = ValidateCreateOrder(payment, user);
-                if (orderResponseModel.Status)
-                {
-                    Order order = _mapper.Map<CreateOrderModel, Order>(createOrderModel);
-
-                    List<CreateOrderItemModel> createOrderItemModels = new List<CreateOrderItemModel>();
-                    foreach (CreateOrderItemModel createOrderItemModel in createOrderItemModels)
-                    {
-                        PrintingEdition printingEdition = await _printingEditionRepository.GetById(createOrderItemModel.PrintingEditionId);
-                        orderResponseModel = ValidateCreateOrderItems(printingEdition, createOrderItemModel);
-
-                    }
-                    if (orderResponseModel.Status)
-                    {
-                        order.UpdateDateTime = DateTime.Now;
-                        await _orderRepository.Update(order);
-                        await _paymentRepository.Update(payment);
-                        foreach (CreateOrderItemModel createOrderItemModel in createOrderItemModels)
-                        {
-                            OrderItem orderItem = _mapper.Map<CreateOrderItemModel, OrderItem>(createOrderItemModel);
-                            await _orderItemRepository.Update(orderItem);
-                        }
-                        OrderModel orderModel = _mapper.Map<Order, OrderModel>(order);
-                        PaymentModel paymentModel = _mapper.Map<Payment, PaymentModel>(payment);
-                        List<OrderItemModel> orderItemModels = _mapper.Map<List<OrderItem>, List<OrderItemModel>>(order.OrderItem);
-                        orderResponseModel.orderModels.Add(orderModel);
-                        orderResponseModel.paymentModels.Add(paymentModel);
-                        orderResponseModel.orderItemModels = orderItemModels;
-                    }
-                }
-            }
-            return orderResponseModel;
-        }*/
         public async Task<OrderResponseModel> Delete(Guid id)
         {
             OrderResponseModel orderResponseModel = await ValidateGetById(id);

@@ -110,8 +110,7 @@ namespace EducationApp.DataAccessLayer.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("PrintingEditionId")
-                        .IsUnique();
+                    b.HasIndex("PrintingEditionId");
 
                     b.ToTable("OrderItems");
                 });

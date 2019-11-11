@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EducationApp.DataAccessLayer.Migrations
 {
-    public partial class dsfgwer : Migration
+    public partial class rety : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -373,8 +373,7 @@ namespace EducationApp.DataAccessLayer.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_PrintingEditionId",
                 table: "OrderItems",
-                column: "PrintingEditionId",
-                unique: true);
+                column: "PrintingEditionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_PaymentId",

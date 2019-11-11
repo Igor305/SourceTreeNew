@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducationApp.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20191107153006_dsfgwer")]
-    partial class dsfgwer
+    [Migration("20191111152701_rety")]
+    partial class rety
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -112,8 +112,7 @@ namespace EducationApp.DataAccessLayer.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("PrintingEditionId")
-                        .IsUnique();
+                    b.HasIndex("PrintingEditionId");
 
                     b.ToTable("OrderItems");
                 });
