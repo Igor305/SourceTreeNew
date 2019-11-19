@@ -11,7 +11,7 @@ namespace EducationApp.PresentationLayer.Controllers
     /// <summary>
     /// AuthorController
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AuthorController : ControllerBase
     {

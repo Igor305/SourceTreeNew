@@ -160,7 +160,8 @@ namespace EducationApp.PresentationLayer
             });
         
             app.UseAuthentication();
-      
+
+            app.UseCors();
             app.UseMvc();
 
             MyIdentityDataInitializer.SeedData(userManager, roleManager, Configuration);
