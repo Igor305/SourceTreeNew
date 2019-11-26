@@ -48,7 +48,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
 
             printingEditionResponseModel.Status = true;
-            printingEditionResponseModel.Messege = ResponseConstants.Successfully;
+            printingEditionResponseModel.Message = ResponseConstants.Successfully;
 
             return printingEditionResponseModel;
         }
@@ -75,7 +75,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 printingEditionResponseModel.Warning.Add(ResponseConstants.LessThanZero);
             }
             printingEditionResponseModel.Status = true;
-            printingEditionResponseModel.Messege = ResponseConstants.Successfully;
+            printingEditionResponseModel.Message = ResponseConstants.Successfully;
 
             return printingEditionResponseModel;
         }
@@ -105,7 +105,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 printingEditionResponseModel.Error.Add(ResponseConstants.ErrorId);
             }
             printingEditionResponseModel.Status = isExist;
-            printingEditionResponseModel.Messege = printingEditionResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            printingEditionResponseModel.Message = printingEditionResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return printingEditionResponseModel;
         }
@@ -151,20 +151,20 @@ namespace EducationApp.BusinessLogicLayer.Services
             return printingEditionResponseModel;
         }
 
-        public async Task<PrintingEditionResponseModel> Filter(FiltrationPrintingEditionModel filtrationPrintingEditionModel)
+        public async Task<PrintingEditionResponseModel> Filtration(FiltrationPrintingEditionModel filtrationPrintingEditionModel)
         {
-            PrintingEditionResponseModel printingEditionResponseModel = ValidateFilter(filtrationPrintingEditionModel);
+            PrintingEditionResponseModel printingEditionResponseModel = ValidateFiltration(filtrationPrintingEditionModel);
 
             if (printingEditionResponseModel.Status)
             {
-                List<PrintingEdition> printingEditions = await _printingEditionsRepository.Filter(filtrationPrintingEditionModel.Name, filtrationPrintingEditionModel.Price, filtrationPrintingEditionModel.Status);   
+                List<PrintingEdition> printingEditions = await _printingEditionsRepository.Filtration(filtrationPrintingEditionModel.Name, filtrationPrintingEditionModel.Price, filtrationPrintingEditionModel.Status);   
                 List<PrintingEditionModel> printingEditionModel = _mapper.Map<List<PrintingEdition>, List<PrintingEditionModel>>(printingEditions);
                 printingEditionResponseModel.PrintingEditionModel = printingEditionModel;
             }
             return printingEditionResponseModel;
         }
 
-        private PrintingEditionResponseModel ValidateFilter(FiltrationPrintingEditionModel filtrationPrintingEditionModel)
+        private PrintingEditionResponseModel ValidateFiltration(FiltrationPrintingEditionModel filtrationPrintingEditionModel)
         {
             PrintingEditionResponseModel printingEditionResponseModel = new PrintingEditionResponseModel();
 
@@ -175,7 +175,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 printingEditionResponseModel.Warning.Add(ResponseConstants.Null);
             }
             printingEditionResponseModel.Status = true;
-            printingEditionResponseModel.Messege = ResponseConstants.Successfully;
+            printingEditionResponseModel.Message = ResponseConstants.Successfully;
 
             return printingEditionResponseModel;
         }
@@ -221,7 +221,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 printingEditionResponseModel.Error.Add(ResponseConstants.Null);
             }
             printingEditionResponseModel.Status = !isError;
-            printingEditionResponseModel.Messege = printingEditionResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            printingEditionResponseModel.Message = printingEditionResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return printingEditionResponseModel;
         }

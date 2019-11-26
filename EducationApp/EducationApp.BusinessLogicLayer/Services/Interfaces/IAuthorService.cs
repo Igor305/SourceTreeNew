@@ -12,7 +12,7 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
         Task<AuthorResponseModel> Pagination(PaginationAuthorModel paginationAuthorModel);
         Task<AuthorResponseModel> GetById(Guid id);
         Task<AuthorResponseModel> GetByFullName(GetNameAuthorModel getNameAuthorModel);
-        AuthorResponseModel Filter(FiltrationAuthorModel filtrationAuthorModel);
+        AuthorResponseModel Filtration(FiltrationAuthorModel filtrationAuthorModel);
         Task<AuthorResponseModel> Create(CreateAuthorModel createAuthorModel);
         Task<AuthorResponseModel> Update(Guid id, CreateAuthorModel createAuthorModel);
         Task<AuthorResponseModel> Delete(Guid id);

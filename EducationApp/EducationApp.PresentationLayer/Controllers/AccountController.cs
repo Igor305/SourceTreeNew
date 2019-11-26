@@ -14,7 +14,7 @@ namespace EducationApp.PresentationLayer.Controllers
     /// <summary>
     /// AccountController
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -54,7 +54,8 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     Get/GetAllIsDeleted
         ///
         /// </remarks>
-        [HttpGet("GetAllIsDeletedUsers")]
+        [HttpGet("GetAll")]
+        [Authorize]
         public async Task<UserResponseModel> GetAll()
         {
             UserResponseModel userResponseModel = await _userService.GetAll();
@@ -69,7 +70,8 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     Get/GetAll
         ///
         /// </remarks>
-        [HttpGet("GetAllUsers")]
+        [HttpGet("GetAllWithoutRemove")]
+        [Authorize(Roles = "Admin")]
         public async Task<UserResponseModel> GetAllWithoutRemove()
         {
             UserResponseModel userResponseModel = await _userService.GetAllWithoutRemove();
@@ -162,7 +164,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     "Name":"Slave"
         ///     
         /// </remarks>
-        [HttpPut("UpdateRole")]
+        [HttpPut("UpdateRoleUser")]
         public async Task<RoleAccountResponseModel> UpdateRoleUser([FromBody] UpdateRoleModel updateRoleModel)
         {
             RoleAccountResponseModel roleAccountResponseModel = await _accountService.UpdateRole(updateRoleModel);
@@ -219,7 +221,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpDelete("DeleteUser")]
+        [HttpDelete("DeleteUser/{id}")]
         public async Task<UserResponseModel> Delete(Guid id)
         {
             UserResponseModel userResponseModel = await _userService.Delete(id);

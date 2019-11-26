@@ -57,7 +57,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             OrderResponseModel orderResponseModel = new OrderResponseModel();
 
             orderResponseModel.Status = true;
-            orderResponseModel.Messege = ResponseConstants.Successfully;
+            orderResponseModel.Message = ResponseConstants.Successfully;
 
             return orderResponseModel;
         }
@@ -85,7 +85,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 orderResponseModel.Warning.Add(ResponseConstants.LessThanZero);
             }
             orderResponseModel.Status = true;
-            orderResponseModel.Messege = ResponseConstants.Successfully;
+            orderResponseModel.Message = ResponseConstants.Successfully;
 
             return orderResponseModel;
         }
@@ -112,7 +112,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 orderResponseModel.Error.Add(ResponseConstants.ErrorId);
             }
             orderResponseModel.Status = isExist;
-            orderResponseModel.Messege = orderResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            orderResponseModel.Message = orderResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return orderResponseModel;
         }
@@ -199,7 +199,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 orderResponseModel.Error.Add(ResponseConstants.ErrorId);
             }
             orderResponseModel.Status = !isErrorOfNull;
-            orderResponseModel.Messege = orderResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            orderResponseModel.Message = orderResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return orderResponseModel;
         }
@@ -220,7 +220,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 orderResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
             orderResponseModel.Status = !isError;
-            orderResponseModel.Messege = orderResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            orderResponseModel.Message = orderResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return orderResponseModel;
         }

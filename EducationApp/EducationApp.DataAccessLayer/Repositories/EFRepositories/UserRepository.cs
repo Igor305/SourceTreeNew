@@ -27,9 +27,19 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
             return users;
         }
 
+        public async Task<User> GetByIdByAll(Guid id)
+        {
+            User user = await _applicationContext.Users.IgnoreQueryFilters().FirstAsync(x => x.Id == id);
+            return user;
+        }
         public async Task<bool> CheckById(Guid id)
         {
             bool user = await _applicationContext.Users.AnyAsync(x => x.Id == id);
+            return user;
+        }
+        public async Task<bool> CheckByIdByAll(Guid id)
+        {
+            bool user = await _applicationContext.Users.IgnoreQueryFilters().AnyAsync(x => x.Id == id);
             return user;
         }
     }

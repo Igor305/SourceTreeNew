@@ -123,10 +123,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpGet("Filter")]
-        public AuthorResponseModel Filter([FromQuery] FiltrationAuthorModel filtrationAuthorModel)
+        [HttpGet("Filtration")]
+        public AuthorResponseModel Filtration([FromQuery] FiltrationAuthorModel filtrationAuthorModel)
         {
-            AuthorResponseModel authorResponseModel = _authorService.Filter(filtrationAuthorModel);
+            AuthorResponseModel authorResponseModel = _authorService.Filtration(filtrationAuthorModel);
             return authorResponseModel;
         }
         /// <summary>

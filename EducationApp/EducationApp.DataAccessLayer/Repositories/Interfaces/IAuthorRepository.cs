@@ -13,6 +13,6 @@ namespace EducationApp.DataAccessLayer.Repositories.Interfaces
         Task<bool> CheckByName(string FirstName, string LastName);
         Task<Author> GetByFullName(string FirstName, string LastName);
         Task<List<Author>> Pagination(int Skip, int Take);
-        List<Author> Filter(string FirstName, string LastName, DateTime? DateBirthFirst, DateTime? DateBirthLast, DateTime? DateDeathFirst, DateTime? DateDeathLast);
+        List<Author> Filtration(string FirstName, string LastName, DateTime? DateBirthFirst, DateTime? DateBirthLast, DateTime? DateDeathFirst, DateTime? DateDeathLast);
     }
 }

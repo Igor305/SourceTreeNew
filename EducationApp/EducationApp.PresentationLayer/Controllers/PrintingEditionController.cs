@@ -141,10 +141,10 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     }
         ///
         /// </remarks>
-        [HttpGet("Filter")]
-        public async Task<PrintingEditionResponseModel> Filter([FromQuery]FiltrationPrintingEditionModel filtrationPrintingEditionModel)
+        [HttpGet("Filtration")]
+        public async Task<PrintingEditionResponseModel> Filtration([FromQuery]FiltrationPrintingEditionModel filtrationPrintingEditionModel)
         {
-            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.Filter(filtrationPrintingEditionModel);
+            PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.Filtration(filtrationPrintingEditionModel);
             return printingEditionResponseModel;
         }
         /// <summary>

@@ -50,7 +50,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             UserResponseModel userResponseModel = new UserResponseModel();
 
             userResponseModel.Status = true;
-            userResponseModel.Messege = ResponseConstants.Successfully;
+            userResponseModel.Message = ResponseConstants.Successfully;
 
             return userResponseModel;
         }
@@ -77,7 +77,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 userResponseModel.Error.Add(ResponseConstants.ErrorId);
             }
             userResponseModel.Status = isExist;
-            userResponseModel.Messege = userResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            userResponseModel.Message = userResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return userResponseModel;
         }
@@ -114,14 +114,14 @@ namespace EducationApp.BusinessLogicLayer.Services
                 userResponseModel.Warning.Add(ResponseConstants.Null);
             }
             userResponseModel.Status = !isErrorOfNull;
-            userResponseModel.Messege = userResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            userResponseModel.Message = userResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return userResponseModel;
         }
 
         public async Task<UserResponseModel> Update(Guid id, CreateUserModel createUserModel)
         {
-            UserResponseModel userResponseModel = new UserResponseModel();
+            UserResponseModel userResponseModel = await ValidateUpdate(id, createUserModel);
 
             if (userResponseModel.Status)
             {
@@ -159,14 +159,28 @@ namespace EducationApp.BusinessLogicLayer.Services
         }
         public async Task<UserResponseModel> FinalRemoval(Guid id)
         {
-            UserResponseModel userResponseModel = await ValidateGetById(id);
+            UserResponseModel userResponseModel = await ValidateGetByIdByAll(id);
             if (userResponseModel.Status)
             {
-                User findUser = await _userRepository.GetById(id);
+                User findUser = await _userRepository.GetByIdByAll(id);
                 await _userRepository.Delete(findUser);
                 UserModel userModel = _mapper.Map<User, UserModel>(findUser);
                 userResponseModel.UserModels.Add(userModel);
             }
+            return userResponseModel;
+        }
+        private async Task<UserResponseModel> ValidateGetByIdByAll(Guid id)
+        {
+            UserResponseModel userResponseModel = new UserResponseModel();
+
+            bool isExist = await _userRepository.CheckByIdByAll(id);
+            if (!isExist)
+            {
+                userResponseModel.Error.Add(ResponseConstants.ErrorId);
+            }
+            userResponseModel.Status = isExist;
+            userResponseModel.Message = userResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+
             return userResponseModel;
         }
     }

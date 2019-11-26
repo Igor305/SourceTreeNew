@@ -49,7 +49,7 @@ namespace EducationApp.BusinessLogicLayer.Services
         private readonly string confirmRegister = "Confirm register";
         private readonly string changePassword = "Change password";
 
-        public async Task<ConfirmEmailAccountResponseModel> ConfirmEmail(ConfirmEmail confirmEmail)
+        public async Task <IActionResult> ConfirmEmail(ConfirmEmail confirmEmail)
         {
             ConfirmEmailAccountResponseModel confirmEmailAccountResponseModel = await ValidateConfirmEmail(confirmEmail.UserId, confirmEmail.Code);
             if (confirmEmailAccountResponseModel.Status)
@@ -57,7 +57,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 User user = await _userManager.FindByIdAsync(confirmEmail.UserId);
                 IdentityResult result = await _userManager.ConfirmEmailAsync(user, confirmEmail.Code);
             }
-            return confirmEmailAccountResponseModel;
+            return new RedirectResult(_configuration.GetSection("Client")["Redirect"]);
         }
 
         private async Task<ConfirmEmailAccountResponseModel> ValidateConfirmEmail(string userId, string code)
@@ -78,7 +78,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 confirmEmailAccountResponseModel.Error.Add(ResponseConstants.ErrorNotFoundUser);
             }
             confirmEmailAccountResponseModel.Status = !isError;
-            confirmEmailAccountResponseModel.Messege = confirmEmailAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            confirmEmailAccountResponseModel.Message = confirmEmailAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return confirmEmailAccountResponseModel;
         }
@@ -101,7 +101,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                     protocol: _httpContextAccessor.HttpContext.Request.Scheme);
                 string subject = confirmRegister;
                 string message = $"Confirm registration by clicking on the link: <a href={regurl}>Confirm email</a>";
-                registerAccountResponseModel.Messege = await SendEmail(reg.Email, subject, message);
+                registerAccountResponseModel.Message = await SendEmail(reg.Email, subject, message);
             }
             return registerAccountResponseModel;
         }
@@ -112,7 +112,7 @@ namespace EducationApp.BusinessLogicLayer.Services
 
             if (!result.Succeeded)
             {
-                registerAccountResponseModel.Messege = ResponseConstants.Error;
+                registerAccountResponseModel.Message = ResponseConstants.Error;
                 registerAccountResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
             registerAccountResponseModel.Status = result.Succeeded;
@@ -128,12 +128,21 @@ namespace EducationApp.BusinessLogicLayer.Services
 
             if (confirmPassword)
             {
-                await _userManager.AddToRoleAsync(user, _configuration.GetSection("Role")["Client"]);
+                IList<string> roleUser = await _userManager.GetRolesAsync(user);
+                if (roleUser == null)
+                {
+                    await _userManager.AddToRoleAsync(user, _configuration.GetSection("Role")["Client"]);
+                    roleUser = await _userManager.GetRolesAsync(user);
+                }
 
                 List<Claim> claimsAccessToken = new List<Claim>();
                 claimsAccessToken.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
                 claimsAccessToken.Add(new Claim(ClaimTypes.Email, user.Email));
                 claimsAccessToken.Add(new Claim(ClaimTypes.Hash, user.PasswordHash));
+                foreach (var role in roleUser)
+                {
+                    claimsAccessToken.Add(new Claim(ClaimTypes.Role, role));
+                }
 
                 string accessToken = GenerateToken(claimsAccessToken, int.Parse(_configuration.GetSection("JWT")["LifeTimeAccessToken"]));
 
@@ -159,7 +168,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 loginAccountResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
             loginAccountResponseModel.Status = confirmpass;
-            loginAccountResponseModel.Messege = loginAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            loginAccountResponseModel.Message = loginAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return loginAccountResponseModel;
         }
@@ -179,7 +188,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 protocol: _httpContextAccessor.HttpContext.Request.Scheme);
                 string subject = changePassword;
                 string message = $"To reset your password, follow the link: <a href='{callbackUrl}'>Change password</a>";
-                forgotPasswordResponseModel.Messege = await SendEmail(forgotPassword.Email, subject, message);
+                forgotPasswordResponseModel.Message = await SendEmail(forgotPassword.Email, subject, message);
             }
             return forgotPasswordResponseModel;
         }
@@ -196,7 +205,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 forgotPasswordResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
             }
             forgotPasswordResponseModel.Status = isSuccessfully;
-            forgotPasswordResponseModel.Messege = forgotPasswordResponseModel.Status ? ResponseConstants.ConfirmEmail : ResponseConstants.Error;
+            forgotPasswordResponseModel.Message = forgotPasswordResponseModel.Status ? ResponseConstants.ConfirmEmail : ResponseConstants.Error;
 
             return forgotPasswordResponseModel;
         }
@@ -232,7 +241,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 resetPasswordAccountResponseModel.Error.Add(ResponseConstants.ErrorNotFoundUser);
             }
             resetPasswordAccountResponseModel.Status = !isError;
-            resetPasswordAccountResponseModel.Messege = resetPasswordAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            resetPasswordAccountResponseModel.Message = resetPasswordAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return resetPasswordAccountResponseModel;
         }
@@ -275,7 +284,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 refreshTokenAccountResponseModel.Error.Add(ResponseConstants.ErrorNotFoundUser);
             }
             refreshTokenAccountResponseModel.Status = !isErrorOfNull;
-            refreshTokenAccountResponseModel.Messege = refreshTokenAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            refreshTokenAccountResponseModel.Message = refreshTokenAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return refreshTokenAccountResponseModel;
         }
@@ -295,7 +304,7 @@ namespace EducationApp.BusinessLogicLayer.Services
         {
             RoleAccountResponseModel roleAccountResponseModel = new RoleAccountResponseModel();
             roleAccountResponseModel.Status = true;
-            roleAccountResponseModel.Messege = ResponseConstants.Successfully;
+            roleAccountResponseModel.Message = ResponseConstants.Successfully;
 
             return roleAccountResponseModel;
         }
@@ -325,7 +334,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 roleAccountResponseModel.Error.Add(ResponseConstants.Null);
             }
             roleAccountResponseModel.Status = !isErrorOfNull;
-            roleAccountResponseModel.Messege = roleAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            roleAccountResponseModel.Message = roleAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return roleAccountResponseModel;
         }
@@ -380,7 +389,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 userInRoleResponseModel.Error.Add(ResponseConstants.ErrorNotFoundRole);
             }
             userInRoleResponseModel.Status = !isError;
-            userInRoleResponseModel.Messege = userInRoleResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            userInRoleResponseModel.Message = userInRoleResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return userInRoleResponseModel;
         }
@@ -410,7 +419,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 roleAccountResponseModel.Error.Add(ResponseConstants.Null);
             }
             roleAccountResponseModel.Status = !isErrorOfNull;
-            roleAccountResponseModel.Messege = roleAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            roleAccountResponseModel.Message = roleAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return roleAccountResponseModel;
         }
@@ -439,14 +448,14 @@ namespace EducationApp.BusinessLogicLayer.Services
                 roleAccountResponseModel.Error.Add(ResponseConstants.Null);
             }
             roleAccountResponseModel.Status = !isErrorOfNull;
-            roleAccountResponseModel.Messege = roleAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            roleAccountResponseModel.Message = roleAccountResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return roleAccountResponseModel;
         }
 
         private async Task<string> SendEmail(string email, string subject, string body)
         {
-            string message = "";
+            string message = ResponseConstants.ConfirmEmail + " " + email;
             try
             {
                 using (var client = new SmtpClient())

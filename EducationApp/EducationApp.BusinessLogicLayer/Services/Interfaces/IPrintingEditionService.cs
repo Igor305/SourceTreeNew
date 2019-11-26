@@ -17,7 +17,7 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
         Task<PrintingEditionResponseModel> Update(Guid id, CreatePrintingEditionModel createPrintingEditionModel);
         Task<PrintingEditionResponseModel> Delete(Guid id);
         Task<PrintingEditionResponseModel> Sort(SortPrintingEditionModel sortPrintingEditionModel);
-        Task<PrintingEditionResponseModel> Filter(FiltrationPrintingEditionModel filtrationPrintingEditionModel);
+        Task<PrintingEditionResponseModel> Filtration(FiltrationPrintingEditionModel filtrationPrintingEditionModel);
 
     }
 }

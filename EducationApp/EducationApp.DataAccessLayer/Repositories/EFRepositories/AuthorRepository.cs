@@ -59,7 +59,7 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
             return paginationAuthors;
         }
 
-        public List<Author> Filter(string FirstName, string LastName, DateTime? DateBirthFrom, DateTime? DateBirthTo, DateTime? DateDeathFrom, DateTime? DateDeathTo)
+        public List<Author> Filtration(string FirstName, string LastName, DateTime? DateBirthFrom, DateTime? DateBirthTo, DateTime? DateDeathFrom, DateTime? DateDeathTo)
         {
             List<Author> filtrauthor = _applicationContext.Authors.Where(x => x.FirstName == FirstName || string.IsNullOrEmpty(FirstName) 
             && x.LastName == LastName || string.IsNullOrEmpty(LastName)

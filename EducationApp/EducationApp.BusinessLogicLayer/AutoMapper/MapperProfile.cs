@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using EducationApp.BusinessLogicLayer.Models.Account;
 using EducationApp.BusinessLogicLayer.Models.Authors;
 using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Account;
@@ -7,7 +6,6 @@ using EducationApp.BusinessLogicLayer.Models.ResponseModels.Authors;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.Order;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.User;
-using EducationApp.BusinessLogicLayer.Models.ResponseModels.UserInRole;
 using EducationApp.BusinessLogicLayer.Models.User;
 using EducationApp.DataAccessLayer.Entities;
 

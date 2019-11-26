@@ -353,7 +353,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Filter(EducationApp.BusinessLogicLayer.Models.Authors.FiltrationAuthorModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthorController.Filtration(EducationApp.BusinessLogicLayer.Models.Authors.FiltrationAuthorModel)">
              <summary>
              Filtr Author
              </summary>
@@ -594,7 +594,7 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Filter(EducationApp.BusinessLogicLayer.Models.PrintingEditions.FiltrationPrintingEditionModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.Filtration(EducationApp.BusinessLogicLayer.Models.PrintingEditions.FiltrationPrintingEditionModel)">
              <summary>
              Filter Order
              </summary>

@@ -161,7 +161,7 @@ namespace EducationApp.PresentationLayer
         
             app.UseAuthentication();
 
-            app.UseCors();
+            app.UseCors(x => x.WithOrigins(Configuration.GetSection("Client")["Url"]).AllowAnyHeader().AllowAnyMethod());
             app.UseMvc();
 
             MyIdentityDataInitializer.SeedData(userManager, roleManager, Configuration);

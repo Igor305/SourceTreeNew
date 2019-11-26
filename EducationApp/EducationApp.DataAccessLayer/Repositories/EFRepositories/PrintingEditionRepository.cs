@@ -59,7 +59,7 @@ namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
             return printingEditions;
         }
 
-        public async Task<List<PrintingEdition>> Filter(string Name, decimal Price, Status Status)
+        public async Task<List<PrintingEdition>> Filtration(string Name, decimal Price, Status Status)
         {
             List<PrintingEdition> printingEditions = await _applicationContext.PrintingEditions.Where(x => x.Name == Name).Where(x => x.Price == Price).Where(x => x.Status == Status).ToListAsync();
             return printingEditions;

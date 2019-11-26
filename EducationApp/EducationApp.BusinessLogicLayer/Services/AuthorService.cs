@@ -46,7 +46,7 @@ namespace EducationApp.BusinessLogicLayer.Services
         private AuthorResponseModel ValidateOfSuccessfully()
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
-            authorResponseModel.Messege = ResponseConstants.Successfully;
+            authorResponseModel.Message = ResponseConstants.Successfully;
             authorResponseModel.Status = true;
 
             return authorResponseModel;
@@ -74,7 +74,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 authorResponseModel.Warning.Add(ResponseConstants.LessThanZero);
             }
             authorResponseModel.Status = true;
-            authorResponseModel.Messege = ResponseConstants.Successfully;
+            authorResponseModel.Message = ResponseConstants.Successfully;
 
             return authorResponseModel;
         }
@@ -102,7 +102,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 authorResponseModel.Error.Add(ResponseConstants.ErrorId);
             }
             authorResponseModel.Status = isExist;
-            authorResponseModel.Messege = authorResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            authorResponseModel.Message = authorResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return authorResponseModel;
         }
@@ -130,23 +130,23 @@ namespace EducationApp.BusinessLogicLayer.Services
                 authorResponseModel.Error.Add(ResponseConstants.Null);
             }
             authorResponseModel.Status = !isError;
-            authorResponseModel.Messege = authorResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            authorResponseModel.Message = authorResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return authorResponseModel;
         }
 
-        public AuthorResponseModel Filter(FiltrationAuthorModel filtrationAuthorModel)
+        public AuthorResponseModel Filtration(FiltrationAuthorModel filtrationAuthorModel)
         {
-            AuthorResponseModel authorResponseModel = ValidateFilter(filtrationAuthorModel);
+            AuthorResponseModel authorResponseModel = ValidateFiltration(filtrationAuthorModel);
 
-            List<Author> authors = _authorRepository.Filter(filtrationAuthorModel.FirstName, filtrationAuthorModel.LastName, filtrationAuthorModel.DateBirthFrom, filtrationAuthorModel.DateBirthTo, filtrationAuthorModel.DateDeathFrom, filtrationAuthorModel.DateDeathTo);
+            List<Author> authors = _authorRepository.Filtration(filtrationAuthorModel.FirstName, filtrationAuthorModel.LastName, filtrationAuthorModel.DateBirthFrom, filtrationAuthorModel.DateBirthTo, filtrationAuthorModel.DateDeathFrom, filtrationAuthorModel.DateDeathTo);
             List<AuthorModel> authorModels = _mapper.Map<List<Author>, List<AuthorModel>>(authors);
             authorResponseModel.AuthorModel = authorModels;
 
             return authorResponseModel;
         }
 
-        private AuthorResponseModel ValidateFilter(FiltrationAuthorModel filtrationAuthorModel)
+        private AuthorResponseModel ValidateFiltration(FiltrationAuthorModel filtrationAuthorModel)
         {
             AuthorResponseModel authorResponseModel = new AuthorResponseModel();
 
@@ -160,7 +160,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 authorResponseModel.Warning.Add(ResponseConstants.Null);
             }
             authorResponseModel.Status = true;
-            authorResponseModel.Messege = ResponseConstants.Successfully;
+            authorResponseModel.Message = ResponseConstants.Successfully;
 
             return authorResponseModel;
         }
@@ -212,7 +212,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             }
 
             authorResponseModel.Status = !isError;
-            authorResponseModel.Messege = authorResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
+            authorResponseModel.Message = authorResponseModel.Status ? ResponseConstants.Successfully : ResponseConstants.Error;
 
             return authorResponseModel;
         }

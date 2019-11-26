@@ -15,6 +15,6 @@ namespace EducationApp.DataAccessLayer.Repositories.Interfaces
         List<PrintingEdition> SortById();
         List<PrintingEdition> SortByName();
         List<PrintingEdition> SortByPrice();
-        Task<List<PrintingEdition>> Filter(string Name, decimal Price, Status Status);
+        Task<List<PrintingEdition>> Filtration(string Name, decimal Price, Status Status);
     }
 }

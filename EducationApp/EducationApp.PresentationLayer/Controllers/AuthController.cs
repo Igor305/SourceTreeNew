@@ -10,7 +10,7 @@ namespace EducationApp.PresentationLayer.Controllers
     /// <summary>
     /// 
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -36,10 +36,10 @@ namespace EducationApp.PresentationLayer.Controllers
              /// </remarks>
         [HttpGet("ConfirmEmail")]
         [AllowAnonymous]
-        public async Task<ConfirmEmailAccountResponseModel> ConfirmEmail([FromQuery]ConfirmEmail confirmEmail)
+        public async Task<IActionResult> ConfirmEmail([FromQuery]ConfirmEmail confirmEmail)
         {
-            ConfirmEmailAccountResponseModel confirmEmailAccountResponseModel = await _accountService.ConfirmEmail(confirmEmail);
-            return confirmEmailAccountResponseModel;
+            IActionResult redirect = await _accountService.ConfirmEmail(confirmEmail);
+            return redirect;
         }
         /// <summary>
         ///  Register
@@ -73,7 +73,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     "Password":"karaganda"
         ///
         /// </remarks>
-        [HttpPost("Auth")]
+        [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<LoginAccountResponseModel> Login([FromBody] LoginModel login)
         {
