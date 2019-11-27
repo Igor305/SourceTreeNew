@@ -205,6 +205,22 @@
                  
              </remarks>
         </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.ResetPassword(EducationApp.BusinessLogicLayer.Models.Account.ResetPasswordModel)">
+             <summary>
+              Reset Password
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 Post/ResetPassword
+             
+                 "Email":"karakymba@gmail.com",
+                 "Password":"karaganda",
+                 "PasswordConfirm":"karaganda",
+                 "Code":"ioprewthjypoiwreyortpo"
+                 
+             </remarks>
+        </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.Register(EducationApp.BusinessLogicLayer.Models.Account.RegisterModel)">
              <summary>
               Register
@@ -244,22 +260,6 @@
                  Post/ForgotPassword
             
                  "Email":"karakymba@gmail.com"
-                 
-             </remarks>
-        </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.AuthController.ResetPassword(EducationApp.BusinessLogicLayer.Models.Account.ResetPasswordModel)">
-             <summary>
-              Reset Password
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 Post/ResetPassword
-             
-                 "Email":"karakymba@gmail.com",
-                 "Password":"karaganda",
-                 "PasswordConfirm":"karaganda",
-                 "Code":"ioprewthjypoiwreyortpo"
                  
              </remarks>
         </member>

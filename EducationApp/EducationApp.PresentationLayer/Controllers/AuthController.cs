@@ -42,6 +42,26 @@ namespace EducationApp.PresentationLayer.Controllers
             return redirect;
         }
         /// <summary>
+        ///  Reset Password
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Post/ResetPassword
+        /// 
+        ///     "Email":"karakymba@gmail.com",
+        ///     "Password":"karaganda",
+        ///     "PasswordConfirm":"karaganda",
+        ///     "Code":"ioprewthjypoiwreyortpo"
+        ///     
+        /// </remarks>
+        [HttpGet("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromQuery] ResetPasswordModel reset)
+        {
+            IActionResult redirect = await _accountService.ResetPassword(reset);
+            return redirect;
+        }
+        /// <summary>
         ///  Register
         /// </summary>
         /// <remarks>
@@ -97,26 +117,6 @@ namespace EducationApp.PresentationLayer.Controllers
         {
             ForgotPasswordResponseModel forgotPasswordResponseModel = await _accountService.ForgotPassword(forgotPassword);
             return forgotPasswordResponseModel;
-        }
-        /// <summary>
-        ///  Reset Password
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     Post/ResetPassword
-        /// 
-        ///     "Email":"karakymba@gmail.com",
-        ///     "Password":"karaganda",
-        ///     "PasswordConfirm":"karaganda",
-        ///     "Code":"ioprewthjypoiwreyortpo"
-        ///     
-        /// </remarks>
-        [HttpPost("ResetPassword")]
-        public async Task<ResetPasswordAccountResponseModel> ResetPassword([FromQuery] ResetPasswordModel reset)
-        {
-            ResetPasswordAccountResponseModel resetPasswordAccountResponseModel = await _accountService.ResetPassword(reset);
-            return resetPasswordAccountResponseModel;
         }
         /// <summary>
         ///  Refresh Token

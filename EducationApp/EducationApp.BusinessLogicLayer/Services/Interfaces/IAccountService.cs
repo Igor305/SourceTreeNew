@@ -13,7 +13,7 @@ namespace EducationApp.BusinessLogicLayer.Services.Interfaces
         Task<LoginAccountResponseModel> Login(LoginModel login);
         Task<ForgotPasswordResponseModel> ForgotPassword(ForgotPassword forgotPassword);
         Task<IActionResult> ConfirmEmail(ConfirmEmail confirmEmail);
-        Task<ResetPasswordAccountResponseModel> ResetPassword(ResetPasswordModel reset);
+        Task<IActionResult> ResetPassword(ResetPasswordModel reset);
         Task<RefreshTokenAccountResponseModel> RefreshToken(RefreshTokenModel refreshTokenModel);
         RoleAccountResponseModel GetAllRoles();
         Task<RoleAccountResponseModel> CreateRole(CreateRoleModel createRoleModel);

@@ -1,0 +1,25 @@
+    <div class = "registration">
+        <div class = "div1"><p>Registration</p></div>
+        <div class = "div2"> <form method="post" action="" class="reg">
+            <p>
+              <label for="email">Email:</label>
+              <input type="email" name="email" id="email" [(ngModel)]="postRequestLoginModel.email" placeholder="karamba@gmail.com">
+            </p>
+        
+            <p>
+              <label for="password">Password:</label>
+              <input type="password" name="password" id="password" [(ngModel)]="postRequestLoginModel.password" placeholder="Rakamakafo111">
+            </p>
+    
+            <p>
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" name="confirmPassword" id="confirmPassword" [(ngModel)]="postRequestLoginModel.password" placeholder="Rakamakafo111">
+            </p>
+        
+            <p class="registration-submit">
+              <button type="submit" (click)="this.login()" class="login-button">Ok</button>
+            </p>
+          </form>
+        </div>
+        <div class = "div3">3</div>
+    </div>

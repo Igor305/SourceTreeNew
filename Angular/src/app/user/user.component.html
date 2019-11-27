@@ -1,0 +1,62 @@
+<p>user works!</p>
+
+<table>
+    <tr>
+      <td>id></td> 
+      <td>email</td> 
+      <td>firstName</td> 
+      <td>lastName</td> 
+      <td>phoneNumber</td> 
+      <td>createDateTime</td> 
+      <td>updateDateTime</td> 
+      <td>isDeleted</td> 
+    </tr>
+    <tr *ngFor="let user of this.responseUserModel.userModels">
+      <td>{{user.id}}></td> 
+      <td>{{user.email}}></td> 
+      <td>{{user.firstName}}></td> 
+      <td>{{user.lastName}}></td> 
+      <td>{{user.phoneNumber}}></td> 
+      <td>{{user.createDateTime}}></td> 
+      <td>{{user.updateDateTime}}></td> 
+      <td>{{user.isDeleted}}></td> 
+    </tr>
+</table>
+
+<form>
+        <p><b>Create</b></p>
+
+        <p><label for="name">Email</label></p>
+        <p><input type="email" name="email" [(ngModel)]="this.postCreateRequestUserModel.email" placeholder="rakamakafo@gmail.com"></p>
+        <p><label for="name">FirstName</label></p>
+        <p><input type="text" name="firstName" [(ngModel)]="this.postCreateRequestUserModel.firstName"  placeholder="Rakamaka"></p>
+        <p><label for="name">LastName</label></p>
+        <p><input type="text" name="lastName" [(ngModel)]="this.postCreateRequestUserModel.lastName" placeholder="Rakamakafo"></p>
+        <p><label for="name">Phone Number</label></p>
+        <p><input type="text" name="phoneNumber" [(ngModel)]="this.postCreateRequestUserModel.phoneNumber" placeholder="2345-234523-2345"></p>
+    
+       
+        <p><input type="submit" (click)="this.create()"> </p>
+</form>
+
+<form>
+    <p><b>Edit</b></p>
+ 
+    <p><label for="id">Id</label></p>
+    <p><input type="text" name="id" [(ngModel)]="this.userId" placeholder="12348972140231472894"></p>
+    <p><label for="name">Email</label></p>
+    <p><input type="email" name="email" [(ngModel)]="this.postCreateRequestUserModel.email" placeholder="this.postCreateRequestUserModel.email"></p>
+    <p><label for="name">FirstName</label></p>
+    <p><input type="text" name="firstName" [(ngModel)]="this.postCreateRequestUserModel.firstName"  placeholder="this.postCreateRequestUserModel.firstName"></p>
+    <p><label for="name">LastName</label></p>
+    <p><input type="text" name="lastName" [(ngModel)]="this.postCreateRequestUserModel.lastName" placeholder="this.postCreateRequestUserModel.lastName"></p>
+    <p><label for="name">Phone Number</label></p>
+    <p><input type="text" name="phoneNumber" [(ngModel)]="this.postCreateRequestUserModel.phoneNumber" placeholder="this.postCreateRequestUserModel.phoneNumber"></p>
+
+   
+    <p><input type="submit" (click)="this.update()"> </p>
+</form>
+
+<p><input type="submit" (click)="this.deleteMarkAsDeleted()"> </p>
+
+<p><input type="submit" (click)="this.deleteFinalRemoval()"> </p>

@@ -12,7 +12,7 @@
         public static string ErrorNotFoundRole { get; } = "Role is not found";
         public static string ErrorSendEmail { get; } = "Error Send Email";
         public static string ErrorIncorrectData { get; } = "You entered incorrect data";
-        public static string ConfirmEmail { get; } = "Confirm account from email";
+        public static string ConfirmEmail { get; } = "Go to email";
 
     }
 }
