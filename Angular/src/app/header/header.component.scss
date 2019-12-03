@@ -1,0 +1,46 @@
+@mixin global($height, $width, $background) {
+    height: $height;
+    width: $width;
+    background: $background;
+}
+
+.headerIcon{
+    width: 1px;
+}
+
+.header{
+    display: grid;
+    grid-template-columns: auto;
+    @include global(70px,100% ,rgb(94, 115, 185));
+}
+
+.button-home{
+    @include global(45px,140px ,rgb(87, 73, 110));
+    color:white ;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 21px;
+    position: absolute;
+    top: 11px;
+    left: 150px;
+    right: 10px;
+}
+
+.button-registration{
+    @include global(45px,140px ,rgb(87, 73, 110));
+    color:white ;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 21px;
+    position: absolute;
+    top: 11px;
+    right: 165px;
+}
+
+.button-login{
+    @include global(45px,140px ,rgb(87, 73, 110));
+    color:white ;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 21px;
+    position: absolute;
+    top: 11px;
+    right: 10px;
+}

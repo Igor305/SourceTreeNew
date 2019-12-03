@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { JwtHelperService } from "@auth0/angular-jwt";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
@@ -69,6 +70,21 @@ constructor(private http: HttpClient, private router: Router) { }
         environment.auth + environment.refreshToken, postRequestRefreshTokenModel).toPromise();
 
         return postResponseRefreshTokenModel;
+    }
+
+    public isAdmin(token : string){
+        const helper = new JwtHelperService();
+        const decodeaccesstoken = helper.decodeToken(token);
+        const isAdmin = decodeaccesstoken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] === 'Admin';
+        localStorage.setItem('isAdmin', isAdmin.toString());
+    }
+
+    public isExpared(token : string): boolean{
+        const helper = new JwtHelperService();
+        const refreshtokenValisTo = helper.getTokenExpirationDate(token);
+        const displayDate = new Date();
+        const isExpired = refreshtokenValisTo > displayDate;
+        return isExpired;
     }
 }
 

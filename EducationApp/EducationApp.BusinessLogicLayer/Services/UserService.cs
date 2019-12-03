@@ -26,7 +26,7 @@ namespace EducationApp.BusinessLogicLayer.Services
         public async Task<UserResponseModel> GetAll()
         {
             UserResponseModel userResponseModel = ValidateSuccessfully();
-
+            
             List<User> allIsDeleted = await _userRepository.GetAll();
             List<UserModel> userModels = _mapper.Map<List<User>, List<UserModel>>(allIsDeleted);
             userResponseModel.UserModels = userModels;

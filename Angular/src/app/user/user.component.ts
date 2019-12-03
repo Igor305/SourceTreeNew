@@ -15,7 +15,7 @@ export class UserComponent implements OnInit {
 
   constructor(private userService: UserService) { }
 
-  async  getAll() {
+  public async  getAll() {
     this.responseUserModel = await this.userService.getAll();
 
     this.responseUserModel = await this.userService.getAllWithoutRemove();

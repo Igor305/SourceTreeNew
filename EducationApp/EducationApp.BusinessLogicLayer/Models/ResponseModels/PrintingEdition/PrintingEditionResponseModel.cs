@@ -5,11 +5,11 @@ namespace EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions
 {
     public class PrintingEditionResponseModel : BaseResponseModel
     {
-        public List<PrintingEditionModel> PrintingEditionModel { get; set; }
+        public List<PrintingEditionModel> PrintingEditionModels { get; set; }
 
         public PrintingEditionResponseModel()
         {
-            PrintingEditionModel = new List<PrintingEditionModel>();
+            PrintingEditionModels = new List<PrintingEditionModel>();
         }
     }  
 }

@@ -1,10 +1,10 @@
 import { BaseResponseModel } from './base.response.model';
 
 export interface ResponsePrintingEditionModel extends BaseResponseModel {
-    printingEditionModel? : PrintingEditionModel[]
+    printingEditionModels? : PrintingEditionModels[]
 }
  
-export interface PrintingEditionModel{
+export interface PrintingEditionModels{
     id? : string;
     name? : string;
     description? : string;

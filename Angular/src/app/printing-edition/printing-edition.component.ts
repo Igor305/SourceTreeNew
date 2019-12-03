@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ResponsePrintingEditionModel } from '../models/response/response.printingEdition.model';
 import { PrintingEditionService } from '../services/printingEdition.service';
 import { PostCreateRequestPrintingEditionModel } from '../models/request/postCreate.request.printingEdition.model';
 
 @Component({
-  selector: 'app-printingEdition',
-  templateUrl: './printingEdition.component.html',
-  styleUrls: ['./printingEdition.component.scss']
+  selector: 'app-printing-edition',
+  templateUrl: './printing-edition.component.html',
+  styleUrls: ['./printing-edition.component.scss']
 })
-export class PrintingEditionComponent {
+export class PrintingEditionComponent implements OnInit {
   postCreateRequestPrintingEditionModel : PostCreateRequestPrintingEditionModel = {};
   responsePrintingEditionModel : ResponsePrintingEditionModel = {};
   printingEditionId : string;
-
+  image : any;
+  event : any;
   constructor(private printingEditionService: PrintingEditionService) { }
 
   public async getAll(){
@@ -55,4 +56,28 @@ export class PrintingEditionComponent {
     this.responsePrintingEditionModel = await this.printingEditionService.delete(this.printingEditionId);
   }
 
+  public async getBase64(event : Event) {
+    
+    let file: HTMLInputElement = event.target as HTMLInputElement;
+
+    if (file && file.files.length){
+    let fileData = file.files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(fileData);
+    reader.onload = () => {
+      this.image = reader.result.toString();
+      console.log(this.image);
+    };
+    
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+  }
+}
+ 
+
+  ngOnInit(){
+    this.getAllWithoutRemove();
+    console.log(this.getAllWithoutRemove());
+  }
 }

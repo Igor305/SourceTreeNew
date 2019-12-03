@@ -1,4 +1,6 @@
-﻿using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
+﻿using EducationApp.BusinessLogicLayer.Models.PicturePrintingEdition;
+using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.PicturePrintingEdition;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -11,18 +13,21 @@ namespace EducationApp.PresentationLayer.Controllers
     /// <summary>
     /// PrintingEditionController
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PrintingEditionController : ControllerBase
     {
         private readonly IPrintingEditionService _printingEditionService;
+        private readonly IPicturePrintingEditionService _picturePrintingEditionService;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="printingEditionService"></param>
-        public PrintingEditionController(IPrintingEditionService printingEditionService)
+        /// <param name="picturePrintingEditionService"></param>
+        public PrintingEditionController(IPrintingEditionService printingEditionService, IPicturePrintingEditionService picturePrintingEditionService)
         {
             _printingEditionService = printingEditionService;
+            _picturePrintingEditionService = picturePrintingEditionService;
         }
         /// <summary>
         /// Get all PrintingEdition (IsDeleted = true)
@@ -146,6 +151,26 @@ namespace EducationApp.PresentationLayer.Controllers
         {
             PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.Filtration(filtrationPrintingEditionModel);
             return printingEditionResponseModel;
+        }
+        /// <summary>
+        /// Create new PrintingEdition
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Post/Create
+        ///     {
+        ///         "Picture": "Козак",
+        ///         "PrintingEditionId": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
+        ///     }
+        ///
+        /// </remarks>
+        [HttpPost("AddPicture")]
+        public async Task<PicturePrintingEditionResponseModel> AddPicture([FromBody]CreatePicturePrintingEditionModel createPicturePrintingEditionModel)
+        {
+            PicturePrintingEditionResponseModel picturePrintingEditionResponseModel = await _picturePrintingEditionService.Create(createPicturePrintingEditionModel);
+            return picturePrintingEditionResponseModel;
+
         }
         /// <summary>
         /// Create new PrintingEdition

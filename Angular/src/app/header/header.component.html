@@ -1,0 +1,20 @@
+<div class = 'header'>
+    <div class = 'headerIcon'>
+        <img src = "../../assets/images/Book1.jpg"
+        width="80"
+        height="72">
+    </div>
+    <div class = 'headerButtons'>
+        <a routerLink="/home">
+            <button class = 'button-home'>Home</button>
+        </a>
+        <p ng-if = "!isExpired">
+        <a routerLink='/auth/registration'>
+            <button class = 'button-registration'>Sing-Up</button>
+        </a>
+        <a routerLink="/auth/login">
+            <button class = 'button-login'>Sing-In</button>
+        </a>
+        </p>
+    </div>
+</div>

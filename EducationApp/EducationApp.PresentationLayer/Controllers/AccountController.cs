@@ -71,7 +71,7 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpGet("GetAllWithoutRemove")]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<UserResponseModel> GetAllWithoutRemove()
         {
             UserResponseModel userResponseModel = await _userService.GetAllWithoutRemove();

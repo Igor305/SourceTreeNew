@@ -28,7 +28,7 @@ namespace EducationApp.BusinessLogicLayer.Services
 
             List<PrintingEdition> allIsDeleted = await _printingEditionsRepository.GetAll();
             List<PrintingEditionModel> printingEditionModel = _mapper.Map<List<PrintingEdition>, List<PrintingEditionModel>>(allIsDeleted);
-            printingEditionResponseModel.PrintingEditionModel = printingEditionModel;
+            printingEditionResponseModel.PrintingEditionModels = printingEditionModel;
 
             return printingEditionResponseModel;
         }
@@ -39,7 +39,7 @@ namespace EducationApp.BusinessLogicLayer.Services
 
             List<PrintingEdition> all = await _printingEditionsRepository.GetAllWithoutRemove();
             List<PrintingEditionModel> printingEditionModel = _mapper.Map<List<PrintingEdition>, List<PrintingEditionModel>>(all);
-            printingEditionResponseModel.PrintingEditionModel = printingEditionModel;
+            printingEditionResponseModel.PrintingEditionModels = printingEditionModel;
 
             return printingEditionResponseModel;
         }
@@ -59,7 +59,7 @@ namespace EducationApp.BusinessLogicLayer.Services
 
             List<PrintingEdition> printingEditions = await _printingEditionsRepository.Pagination(paginationPrintingEditionModel.Skip,  paginationPrintingEditionModel.Take);
             List<PrintingEditionModel> printingEditionModel = _mapper.Map<List<PrintingEdition>, List<PrintingEditionModel>>(printingEditions);
-            printingEditionResponseModel.PrintingEditionModel = printingEditionModel;
+            printingEditionResponseModel.PrintingEditionModels = printingEditionModel;
 
             return printingEditionResponseModel;
         }
@@ -88,7 +88,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             {
                 PrintingEdition findPrintingEdition = await _printingEditionsRepository.GetById(id);
                 PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(findPrintingEdition);
-                printingEditionResponseModel.PrintingEditionModel.Add(printingEditionModel);
+                printingEditionResponseModel.PrintingEditionModels.Add(printingEditionModel);
             }
 
             return printingEditionResponseModel;
@@ -118,7 +118,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             {
                 PrintingEdition findbuyPrintingEdition = await _printingEditionsRepository.GetById(id);
                 PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(findbuyPrintingEdition);
-                printingEditionResponseModel.PrintingEditionModel.Add(printingEditionModel);
+                printingEditionResponseModel.PrintingEditionModels.Add(printingEditionModel);
             }
             return printingEditionResponseModel;
         }
@@ -146,7 +146,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                     printingEditionModel = _mapper.Map<List<PrintingEdition>, List<PrintingEditionModel>>(sortPrice);
                     break;
             }
-            printingEditionResponseModel.PrintingEditionModel = printingEditionModel;
+            printingEditionResponseModel.PrintingEditionModels = printingEditionModel;
 
             return printingEditionResponseModel;
         }
@@ -159,7 +159,7 @@ namespace EducationApp.BusinessLogicLayer.Services
             {
                 List<PrintingEdition> printingEditions = await _printingEditionsRepository.Filtration(filtrationPrintingEditionModel.Name, filtrationPrintingEditionModel.Price, filtrationPrintingEditionModel.Status);   
                 List<PrintingEditionModel> printingEditionModel = _mapper.Map<List<PrintingEdition>, List<PrintingEditionModel>>(printingEditions);
-                printingEditionResponseModel.PrintingEditionModel = printingEditionModel;
+                printingEditionResponseModel.PrintingEditionModels = printingEditionModel;
             }
             return printingEditionResponseModel;
         }
@@ -191,7 +191,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 printingEdition.UpdateDateTime = DateTime.Now;
                 await _printingEditionsRepository.Create(printingEdition);
                 PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(printingEdition);
-                printingEditionResponseModel.PrintingEditionModel.Add(printingEditionModel);
+                printingEditionResponseModel.PrintingEditionModels.Add(printingEditionModel);
             }
             return printingEditionResponseModel;
         }
@@ -236,7 +236,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 PrintingEdition.UpdateDateTime = DateTime.Now;
                 await _printingEditionsRepository.Update(PrintingEdition);
                 PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(PrintingEdition);
-                printingEditionResponseModel.PrintingEditionModel.Add(printingEditionModel);
+                printingEditionResponseModel.PrintingEditionModels.Add(printingEditionModel);
             }
             return printingEditionResponseModel;
         }
@@ -259,7 +259,7 @@ namespace EducationApp.BusinessLogicLayer.Services
                 findPrintingEdition.IsDeleted = true;
                 await _printingEditionsRepository.Update(findPrintingEdition);
                 PrintingEditionModel printingEditionModel = _mapper.Map<PrintingEdition, PrintingEditionModel>(findPrintingEdition);
-                printingEditionResponseModel.PrintingEditionModel.Add(printingEditionModel);
+                printingEditionResponseModel.PrintingEditionModels.Add(printingEditionModel);
             }
             return printingEditionResponseModel;
         }

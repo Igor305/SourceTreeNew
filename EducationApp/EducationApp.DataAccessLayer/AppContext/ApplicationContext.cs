@@ -14,6 +14,7 @@ namespace EducationApp.DataAccessLayer.AppContext
         }
         public DbSet<Author> Authors { get; set; }
         public DbSet<PrintingEdition> PrintingEditions { get; set; }
+        public DbSet<PicturePrintingEdition> PicturePrintingEditions { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
@@ -26,6 +27,7 @@ namespace EducationApp.DataAccessLayer.AppContext
             modelBuilder.Entity<OrderItem>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<Payment>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<PrintingEdition>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<PicturePrintingEdition>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<User>().HasQueryFilter(e => !e.IsDeleted);
 
             modelBuilder.Entity<OrderItem> ()

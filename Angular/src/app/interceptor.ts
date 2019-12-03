@@ -16,6 +16,9 @@ export class Interceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const accesstoken = 'Bearer ' + localStorage.getItem('accessToken');
         const refreshtoken = localStorage.getItem('refreshToken');
+        this.authService.isAdmin(accesstoken);
+        const isExpired = this.authService.isExpared(accesstoken);
+        localStorage.setItem('isExpired', isExpired.toString());
         const auth = req.clone({
             setHeaders: {
                 'Authorization': accesstoken,
@@ -27,10 +30,7 @@ export class Interceptor implements HttpInterceptor {
                 async error  => {
                     let status = false;
                     if (error.status === 401) {
-                        const helper = new JwtHelperService();
-                        const refreshtokenValisTo = helper.getTokenExpirationDate(refreshtoken);
-                        const displayDate = new Date();
-                        const isExpired = refreshtokenValisTo > displayDate;
+                        const isExpired = this.authService.isExpared(refreshtoken);
                         if (isExpired){
                             const postRequestRefreshTokenModel: PostRequestRefreshTokenModel = {};                        
                             postRequestRefreshTokenModel.tokenString = refreshtoken;

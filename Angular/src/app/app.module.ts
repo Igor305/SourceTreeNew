@@ -4,13 +4,14 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Interceptor } from './interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
-import { HomeModule } from './home/home.module';
+import { HeaderModule } from './header/header.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { PrintingEditionModule } from './printingEdition/printingEdition.module'; 
+import { PrintingEditionModule } from './printing-edition/printing-edition.module';
 
 import { AppComponent } from './app.component';
 import { AuthorComponent } from './author/author.component';
+import { MainLayoutComponent } from './main-layout/main-layout.component';
 
 import { AuthorService } from './services';
 import { AuthService  } from './services/auth.service';
@@ -19,13 +20,15 @@ import { UserService } from './services/user.service';
 import { RoleService } from './services/role.service';
 
 
+
 @NgModule({
-  declarations: [AppComponent, AuthorComponent],
+  declarations: [AppComponent, AuthorComponent, MainLayoutComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    HomeModule,
+
+    HeaderModule,
     UserModule,
     AuthModule,
     PrintingEditionModule

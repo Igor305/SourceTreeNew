@@ -1,0 +1,17 @@
+<div>
+        <table>
+            <tr>
+                <td>Name</td> 
+                <td>Description</td> 
+            </tr>
+            <tr *ngFor="let printingEdition of this.responsePrintingEditionModel.printingEditionModels">
+                <td>{{printingEdition.name}}</td> 
+                <td>{{printingEdition.description}}</td> 
+            </tr>
+        </table>
+        <form enctype="multipart/form-data" method="post">
+            <p><input type="file" name="f" (change) = "this.getBase64($event)" multiple accept="image/*">
+            <input type="submit"  value="Отправить"></p>
+            <img src = "{{this.image}}">
+        </form> 
+    </div>
