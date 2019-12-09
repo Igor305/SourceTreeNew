@@ -509,12 +509,12 @@
             PrintingEditionController
             </summary>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IPrintingEditionService,EducationApp.BusinessLogicLayer.Services.Interfaces.IPicturePrintingEditionService)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.#ctor(EducationApp.BusinessLogicLayer.Services.Interfaces.IPrintingEditionService,EducationApp.BusinessLogicLayer.Services.Interfaces.IImagePrintingEditionService)">
             <summary>
             
             </summary>
             <param name="printingEditionService"></param>
-            <param name="picturePrintingEditionService"></param>
+            <param name="ImagePrintingEditionService"></param>
         </member>
         <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.GetAll">
              <summary>
@@ -611,16 +611,16 @@
             
              </remarks>
         </member>
-        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.AddPicture(EducationApp.BusinessLogicLayer.Models.PicturePrintingEdition.CreatePicturePrintingEditionModel)">
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.AddImage(EducationApp.BusinessLogicLayer.Models.ImagePrintingEdition.CreateImagePrintingEditionModel)">
              <summary>
-             Create new PrintingEdition
+             Add Image
              </summary>
              <remarks>
              Sample request:
             
-                 Post/Create
+                 Post/AddImage
                  {
-                     "Picture": "Козак",
+                     "Image": "Козак",
                      "PrintingEditionId": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
                  }
             
@@ -675,6 +675,20 @@
                  DELETE/Delete
                  {
                      "Id": "1d2267b6-b099-4139-0236-08d75c6d0bb9"
+                 }
+            
+             </remarks>
+        </member>
+        <member name="M:EducationApp.PresentationLayer.Controllers.PrintingEditionController.DeleteImage(System.Guid)">
+             <summary>
+             Delete Image
+             </summary>
+             <remarks>
+             Sample request:
+            
+                  DELETE/Delete
+                 {
+                     "ImageId": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
                  }
             
              </remarks>

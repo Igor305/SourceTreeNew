@@ -1,6 +1,6 @@
-﻿using EducationApp.BusinessLogicLayer.Models.PicturePrintingEdition;
+﻿using EducationApp.BusinessLogicLayer.Models.ImagePrintingEdition;
 using EducationApp.BusinessLogicLayer.Models.PrintingEditions;
-using EducationApp.BusinessLogicLayer.Models.ResponseModels.PicturePrintingEdition;
+using EducationApp.BusinessLogicLayer.Models.ResponseModels.ImagePrintingEdition;
 using EducationApp.BusinessLogicLayer.Models.ResponseModels.PrintingEditions;
 using EducationApp.BusinessLogicLayer.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -18,16 +18,16 @@ namespace EducationApp.PresentationLayer.Controllers
     public class PrintingEditionController : ControllerBase
     {
         private readonly IPrintingEditionService _printingEditionService;
-        private readonly IPicturePrintingEditionService _picturePrintingEditionService;
+        private readonly IImagePrintingEditionService _ImagePrintingEditionService;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="printingEditionService"></param>
-        /// <param name="picturePrintingEditionService"></param>
-        public PrintingEditionController(IPrintingEditionService printingEditionService, IPicturePrintingEditionService picturePrintingEditionService)
+        /// <param name="ImagePrintingEditionService"></param>
+        public PrintingEditionController(IPrintingEditionService printingEditionService, IImagePrintingEditionService ImagePrintingEditionService)
         {
             _printingEditionService = printingEditionService;
-            _picturePrintingEditionService = picturePrintingEditionService;
+            _ImagePrintingEditionService = ImagePrintingEditionService;
         }
         /// <summary>
         /// Get all PrintingEdition (IsDeleted = true)
@@ -153,23 +153,23 @@ namespace EducationApp.PresentationLayer.Controllers
             return printingEditionResponseModel;
         }
         /// <summary>
-        /// Create new PrintingEdition
+        /// Add Image
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
-        ///     Post/Create
+        ///     Post/AddImage
         ///     {
-        ///         "Picture": "Козак",
+        ///         "Image": "Козак",
         ///         "PrintingEditionId": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
         ///     }
         ///
         /// </remarks>
-        [HttpPost("AddPicture")]
-        public async Task<PicturePrintingEditionResponseModel> AddPicture([FromBody]CreatePicturePrintingEditionModel createPicturePrintingEditionModel)
+        [HttpPost("AddImage")]
+        public async Task<ImagePrintingEditionResponseModel> AddImage([FromBody]CreateImagePrintingEditionModel createImagePrintingEditionModel)
         {
-            PicturePrintingEditionResponseModel picturePrintingEditionResponseModel = await _picturePrintingEditionService.Create(createPicturePrintingEditionModel);
-            return picturePrintingEditionResponseModel;
+            ImagePrintingEditionResponseModel ImagePrintingEditionResponseModel = await _ImagePrintingEditionService.Create(createImagePrintingEditionModel);
+            return ImagePrintingEditionResponseModel;
 
         }
         /// <summary>
@@ -237,6 +237,24 @@ namespace EducationApp.PresentationLayer.Controllers
         {
             PrintingEditionResponseModel printingEditionResponseModel = await _printingEditionService.Delete(id);
             return printingEditionResponseModel;
+        }
+        /// <summary>
+        /// Delete Image
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///      DELETE/Delete
+        ///     {
+        ///         "ImageId": "1d2267b6-b099-4139-0236-08d75c6d0bb9",
+        ///     }
+        ///
+        /// </remarks>
+        [HttpDelete("DeleteImage/{id}")]
+        public async Task<ImagePrintingEditionResponseModel> DeleteImage(Guid id)
+        {
+            ImagePrintingEditionResponseModel ImagePrintingEditionResponseModel = await _ImagePrintingEditionService.Delete(id);
+            return ImagePrintingEditionResponseModel;
         }
     }
 }

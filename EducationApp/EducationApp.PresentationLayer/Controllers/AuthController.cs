@@ -75,7 +75,6 @@ namespace EducationApp.PresentationLayer.Controllers
         ///     
         /// </remarks>
         [HttpPost("Register")]
-        [AllowAnonymous]
         public async Task<RegisterAccountResponseModel> Register([FromBody]RegisterModel reg)
         {
             RegisterAccountResponseModel registerAccountResponseModel = await _accountService.Register(reg);
@@ -94,7 +93,6 @@ namespace EducationApp.PresentationLayer.Controllers
         ///
         /// </remarks>
         [HttpPost("Login")]
-        [AllowAnonymous]
         public async Task<LoginAccountResponseModel> Login([FromBody] LoginModel login)
         {
             LoginAccountResponseModel loginAccountResponseModel =  await _accountService.Login(login);

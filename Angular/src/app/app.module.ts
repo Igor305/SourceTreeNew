@@ -4,6 +4,9 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Interceptor } from './interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSelectModule } from '@angular/material/select';
 import { HeaderModule } from './header/header.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -20,25 +23,28 @@ import { UserService } from './services/user.service';
 import { RoleService } from './services/role.service';
 
 
-
 @NgModule({
   declarations: [AppComponent, AuthorComponent, MainLayoutComponent],
   imports: [
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
-
+    MatSelectModule,
     HeaderModule,
     UserModule,
     AuthModule,
-    PrintingEditionModule
+    PrintingEditionModule,
+    BrowserAnimationsModule
   ],
   providers: [
     AuthorService,
     PrintingEditionService,
     UserService,
     RoleService,
-    AuthService, {
+    AuthService,
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: Interceptor,
       multi: true

@@ -62,8 +62,8 @@ namespace EducationApp.PresentationLayer
             services.AddScoped<IAccountService, BusinessLogicLayer.Services.AccountService>();
             services.AddScoped<IPrintingEditionRepository, PrintingEditionRepository>();
             services.AddScoped<IPrintingEditionService, PrintingEditionService>();
-            services.AddScoped<IPicturePrintingEditionRepository, PicturePrintingEditionRepository>();
-            services.AddScoped<IPicturePrintingEditionService, PicturePrintingEditionService>();
+            services.AddScoped<IImagePrintingEditionRepository, ImagePrintingEditionRepository>();
+            services.AddScoped<IImagePrintingEditionService, ImagePrintingEditionService>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();

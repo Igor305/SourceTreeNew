@@ -1,0 +1,94 @@
+label{
+  font-family: 'mv boli';
+  font-size: 25px;
+}
+
+p{
+  font-family: 'mv boli';
+  color: white;
+  font-size: 25px;
+}
+
+button{
+  height: 45px;
+  width: 100px;
+  background:rgb(38, 0, 99);
+  color:white ;
+  border-radius: 25px;
+  font-family: 'mv boli';
+  font-size: 21px;
+  position: absolute;
+}
+
+.title{
+  font-size: 30px;
+}
+
+.registration{
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 100%;
+  grid-gap: 10px;
+  width: 50%;
+  left: 43%;
+  position: absolute;
+  top : 12%;
+  text-align: center;
+  font-size: 36px;
+  height: 650px;
+  width: 650px;
+  background-repeat: no-repeat;
+  background-position: center ;
+  background-size: contain;
+  background-image: url('https://i.pinimg.com/originals/3a/7a/dd/3a7add14c1bfb848225e24b24c8ef1b5.png');
+}
+
+.title{
+  padding-top: 22%;
+
+}
+
+.form-group{
+  font-family: 'mv boli';
+  color: white;
+}
+
+.errorMessage{
+  font-size: 20px;
+  color: rgb(255, 0, 0);
+}
+
+@media (max-width: 600px){
+   body{
+     font-size: 25px;
+   }
+}
+
+@mixin label($position, $left){
+  position: $position;
+  left: $left;
+}
+
+#email{
+  @include label(relative, 30px);
+}
+
+#password{
+  @include label(relative, 15px);
+}
+
+#passwordConfirm{
+  @include label(relative, -20px);
+}
+
+#labelEmail{
+  @include label(relative, 15px);
+}
+
+#labelPassword{
+  @include label(relative, 0px);
+}
+
+#labelConfirmPassword{
+  @include label(relative, -33px);
+}

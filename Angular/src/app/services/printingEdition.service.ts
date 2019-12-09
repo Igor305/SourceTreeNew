@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { ResponsePrintingEditionModel } from '../models/response/response.printingEdition.model';
 import { PostCreateRequestPrintingEditionModel } from  '../models/request/postCreate.request.printingEdition.model';
+import { BaseResponseModel } from '../models/response/base.response.model';
+import { PostAddImageRequestPrintingEditionModel } from '../models/request/postAddImage.request.printingEdition.model';
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +75,13 @@ export class PrintingEditionService {
       environment.printingEdition + environment.create, postCreateRequestPrintingEditionModel).toPromise();
 
       return responsePrintingEditionModel;
+  }
+
+  public async postAddImage(postAddImageRequestPrintingEditionModel : PostAddImageRequestPrintingEditionModel) : Promise<BaseResponseModel>{
+    const baseResponseModel : BaseResponseModel = await this.http.post<ResponsePrintingEditionModel>(
+      environment.protocol + environment.host + environment.port +
+      environment.printingEdition + environment.addImage, postAddImageRequestPrintingEditionModel).toPromise();
+    return  baseResponseModel;
   }
 
   public async putUpdate (postCreateRequestPrintingEditionModel : PostCreateRequestPrintingEditionModel, printingEditionId: string) : Promise<ResponsePrintingEditionModel>{

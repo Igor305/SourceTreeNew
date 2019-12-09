@@ -2,7 +2,7 @@
 
 namespace EducationApp.DataAccessLayer.Repositories.Interfaces
 {
-    public interface IPicturePrintingEditionRepository : IGenericRepository<PicturePrintingEdition>
+    public interface IImagePrintingEditionRepository : IGenericRepository<ImagePrintingEdition>
     {
     }
 }

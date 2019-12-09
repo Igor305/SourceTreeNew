@@ -12,8 +12,8 @@ export class PrintingEditionComponent implements OnInit {
   postCreateRequestPrintingEditionModel : PostCreateRequestPrintingEditionModel = {};
   responsePrintingEditionModel : ResponsePrintingEditionModel = {};
   printingEditionId : string;
-  image : any;
-  event : any;
+  image : string;
+  
   constructor(private printingEditionService: PrintingEditionService) { }
 
   public async getAll(){
@@ -42,10 +42,6 @@ export class PrintingEditionComponent implements OnInit {
 
   public async getFiltration(){
     this.responsePrintingEditionModel = await this.printingEditionService.getFiltration();
-  }
-
-  public async postCreate(){
-    this.responsePrintingEditionModel = await this.printingEditionService.postCreate(this.postCreateRequestPrintingEditionModel);
   }
 
   public async putUpdate(){

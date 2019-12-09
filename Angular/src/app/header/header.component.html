@@ -1,20 +1,35 @@
 <div class = 'header'>
+
     <div class = 'headerIcon'>
-        <img src = "../../assets/images/Book1.jpg"
+        <img src = "https://cdn.icon-icons.com/icons2/1356/PNG/128/if-spell-book-2913104_88820.png"
         width="80"
         height="72">
     </div>
+
     <div class = 'headerButtons'>
         <a routerLink="/home">
-            <button class = 'button-home'>Home</button>
+            <button class = 'button button-home'>Home</button>
         </a>
-        <p ng-if = "!isExpired">
-        <a routerLink='/auth/registration'>
-            <button class = 'button-registration'>Sing-Up</button>
-        </a>
-        <a routerLink="/auth/login">
-            <button class = 'button-login'>Sing-In</button>
-        </a>
-        </p>
+
+        <div class = isExpired *ngIf ="isExpired">
+            <label class="email">{{this.Email}}</label>
+            <a routerLink="/home">
+                <button class = 'button button-singOut' (click) = "this.singOut()">Sing-Out</button>
+            </a>
+        </div>
+
+        <div class = incognita *ngIf ="!isExpired">
+
+            <a routerLink='/auth/registration'>
+                <button class = 'button button-registration'>Sing-Up</button>
+            </a>
+
+            <a routerLink="/auth/login">
+                <button class = 'button button-login'>Sing-In</button>
+            </a>
+
+        </div>
+
     </div>
+
 </div>

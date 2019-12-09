@@ -10,7 +10,7 @@ namespace EducationApp.BusinessLogicLayer.Models.Account
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Enter password")]
-        [StringLength(50, MinimumLength = 6, ErrorMessage = "Password length from 6 to 50 characters")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "Password length from 8 to 50 characters")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }

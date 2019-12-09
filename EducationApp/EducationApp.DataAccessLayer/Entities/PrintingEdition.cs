@@ -13,7 +13,7 @@ namespace EducationApp.DataAccessLayer.Entities
         public Status Status { get; set; }
         public Currency Currency { get; set; }
         public OrderItem OrderItem { get; set; }
-        public PicturePrintingEdition PicturePrintingEdition { get; set; }
+        public ICollection<ImagePrintingEdition> ImagePrintingEdition { get; set; }
 
         private ICollection<AuthorInPrintingEdition> _autorInPrintingEditions;
         public virtual ICollection<AuthorInPrintingEdition> AutorInPrintingEdition

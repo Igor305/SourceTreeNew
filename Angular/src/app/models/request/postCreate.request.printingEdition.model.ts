@@ -1,7 +1,7 @@
 export interface PostCreateRequestPrintingEditionModel{
     name?: string;
     description?: string;
-    price?: string;
+    price?: number;
     type?: string;
     status?: string;
     currency?: string;

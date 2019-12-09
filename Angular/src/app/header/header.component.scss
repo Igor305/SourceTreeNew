@@ -4,6 +4,11 @@
     background: $background;
 }
 
+.email{
+    top: 11px;
+    right: 165px;
+}
+
 .headerIcon{
     width: 1px;
 }
@@ -11,36 +16,35 @@
 .header{
     display: grid;
     grid-template-columns: auto;
-    @include global(70px,100% ,rgb(94, 115, 185));
+    @include global(70px,100% ,rgb(15, 27, 70));
+}
+
+.button{
+    @include global(45px,140px ,rgb(38, 0, 99));
+    color:white ;
+    border-radius: 25px;
+    font-family: 'mv boli';
+    font-size: 21px;
+    position: absolute;
 }
 
 .button-home{
-    @include global(45px,140px ,rgb(87, 73, 110));
-    color:white ;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 21px;
-    position: absolute;
     top: 11px;
-    left: 150px;
+    left: 100px;
     right: 10px;
 }
 
 .button-registration{
-    @include global(45px,140px ,rgb(87, 73, 110));
-    color:white ;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 21px;
-    position: absolute;
     top: 11px;
     right: 165px;
 }
 
 .button-login{
-    @include global(45px,140px ,rgb(87, 73, 110));
-    color:white ;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 21px;
-    position: absolute;
+    top: 11px;
+    right: 10px;
+}
+
+.button-singOut{
     top: 11px;
     right: 10px;
 }

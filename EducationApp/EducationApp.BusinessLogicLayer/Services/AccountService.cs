@@ -147,8 +147,11 @@ namespace EducationApp.BusinessLogicLayer.Services
 
             if (!result.Succeeded)
             {
+                string errorDescription = "";
+                var err = result.Errors.ToList();
+                err.ForEach(delegate (IdentityError error) { errorDescription = error.Description; });
                 registerAccountResponseModel.Message = ResponseConstants.Error;
-                registerAccountResponseModel.Error.Add(ResponseConstants.ErrorIncorrectData);
+                registerAccountResponseModel.Error.Add(errorDescription);
             }
             registerAccountResponseModel.Status = result.Succeeded;
 

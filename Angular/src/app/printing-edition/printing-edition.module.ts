@@ -1,26 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { MatSelectModule} from '@angular/material/select';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { PrintingEditionComponent } from './printing-edition.component';
+import { CreatePrintingEditionComponent } from './create-printing-edition/create-printing-edition.component';
 import { EditPrintingEditionComponent } from './edit-printing-edition/edit-printing-edition.component';
-
+import { PrintingEditionRoutingModule } from './printing-edition-routing.module';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
-  declarations: [PrintingEditionComponent, EditPrintingEditionComponent],
+  declarations: [PrintingEditionComponent, CreatePrintingEditionComponent, EditPrintingEditionComponent],
   imports: [
     CommonModule,
-    FormsModule,
-    RouterModule.forChild([{
-      path: '', children : [
-      { path: '',component: PrintingEditionComponent},
-      { path: 'editPrintingEdition', component: EditPrintingEditionComponent}
-    ]
-  }
-])
-],
-  exports: [PrintingEditionComponent, EditPrintingEditionComponent],
+    FormsModule, 
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatNativeDateModule,
+    PrintingEditionRoutingModule
+  ],
+  exports: [PrintingEditionComponent, EditPrintingEditionComponent, CreatePrintingEditionComponent],
 })
 export class PrintingEditionModule { }

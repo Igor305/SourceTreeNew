@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EducationApp.DataAccessLayer.Migrations
 {
-    public partial class rety : Migration
+    public partial class Image : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -290,6 +290,28 @@ namespace EducationApp.DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ImagePrintingEditions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreateDateTime = table.Column<DateTime>(nullable: false),
+                    UpdateDateTime = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    Image = table.Column<string>(nullable: true),
+                    PrintingEditionId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImagePrintingEditions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ImagePrintingEditions_PrintingEditions_PrintingEditionId",
+                        column: x => x.PrintingEditionId,
+                        principalTable: "PrintingEditions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
@@ -366,6 +388,11 @@ namespace EducationApp.DataAccessLayer.Migrations
                 column: "PrintingEditionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ImagePrintingEditions_PrintingEditionId",
+                table: "ImagePrintingEditions",
+                column: "PrintingEditionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
                 column: "OrderId");
@@ -406,6 +433,9 @@ namespace EducationApp.DataAccessLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "AuthorInPrintingEdition");
+
+            migrationBuilder.DropTable(
+                name: "ImagePrintingEditions");
 
             migrationBuilder.DropTable(
                 name: "OrderItems");

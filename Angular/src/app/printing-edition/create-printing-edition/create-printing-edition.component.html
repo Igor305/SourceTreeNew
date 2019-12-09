@@ -1,0 +1,62 @@
+<div class ="createPE" enctype="multipart/form-data" method="post">
+    <form [formGroup]="createPEForm">
+        
+        <label>Name</label><br>
+        <input type="text" formControlName = "name" [(ngModel)]= "this.postCreateRequestPrintingEditionModel.name"><br>
+        
+        <div class="errorMessage" *ngIf="createPEForm.controls.name.invalid 
+        && createPEForm.controls.name.touched && createPEForm.controls.name.dirty">Enter the title</div>
+    
+        <img src = "{{this.image}}">
+        <input type="file" name="f" (change) = "this.getBase64($event)" multiple accept="image/*"><br>         
+       
+        <label>Description</label><br>   
+        <textarea [(ngModel)]= "this.postCreateRequestPrintingEditionModel.description" [ngModelOptions]="{standalone: true}">sdfgsdgf</textarea><br>     
+              
+        <label>Author</label> <br>
+        <select size="1" >
+            <option value="none" hidden="">Author</option>         
+            <option *ngFor="let author of this.authors">{{author.lastName}} {{author.firstName}} </option>
+        </select><br>
+    
+        <h4>Basic mat-select</h4>
+            <mat-form-field>
+            <mat-label>Favorite food</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let author of this.authors" >
+                        {{author.lastName}} {{author.firstName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+        
+        <label>Price</label><br>
+        <input type = "number" min = "0.01" formControlName = "price" [(ngModel)]= "this.postCreateRequestPrintingEditionModel.price"><br>
+        
+        <div class="errorMessage" *ngIf="createPEForm.controls.price.invalid 
+        && createPEForm.controls.price.touched && createPEForm.controls.price.dirty">Enter the price</div>
+
+        <label>Currency</label><br>
+        <select formControlName = "currency" [(ngModel)]= "this.postCreateRequestPrintingEditionModel.currency">
+                <option name="1">USD</option>
+                <option name="121">UAH</option>
+                <option name="102">RUB</option>
+        </select><br>
+    
+        <label>Type</label><br>
+        <select formControlName = "type" [(ngModel)]= "this.postCreateRequestPrintingEditionModel.type">
+            <option >Book</option>
+            <option >Newspaper</option>
+            <option >Magazine</option>
+        </select><br>
+        
+        <label>Status</label><br>
+        <select formControlName = "status" [(ngModel)]= "this.postCreateRequestPrintingEditionModel.status">
+                <option name="1">Available</option>
+                <option name="2">NotAvailable</option>
+        </select><br>
+
+        <button type ="sumbit" (click) = postCreate(); [disabled]="createPEForm.invalid"> Create </button>
+
+    </form>
+</div>

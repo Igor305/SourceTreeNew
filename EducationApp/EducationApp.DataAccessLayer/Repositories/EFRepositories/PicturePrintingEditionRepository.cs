@@ -4,9 +4,9 @@ using EducationApp.DataAccessLayer.Repositories.Interfaces;
 
 namespace EducationApp.DataAccessLayer.Repositories.EFRepositories
 {
-    public class PicturePrintingEditionRepository : GenericRepository<PicturePrintingEdition>, IPicturePrintingEditionRepository
+    public class ImagePrintingEditionRepository : GenericRepository<ImagePrintingEdition>, IImagePrintingEditionRepository
     {
-        public PicturePrintingEditionRepository(ApplicationContext applicationContext) : base(applicationContext)
+        public ImagePrintingEditionRepository(ApplicationContext applicationContext) : base(applicationContext)
         {
         }
     }

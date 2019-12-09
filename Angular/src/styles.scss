@@ -1,5 +1,10 @@
 body{
     margin: 0px;
-    background-color: rgb(116, 145, 199);
-
+    background-image: url('https://i.pinimg.com/originals/2c/af/00/2caf00bba40b02fc7b90eb64443e8b34.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center ;
+    background-size: cover;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

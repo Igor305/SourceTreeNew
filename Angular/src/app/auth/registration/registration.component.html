@@ -1,0 +1,53 @@
+<div class = "registration">
+  <form [formGroup]="registrationForm">
+    <p class="title">Registration</p>
+
+    <div class="form-group">
+      <label for="email" id = labelEmail>Email:</label>
+      <input type="email" name="email" formControlName="email" [(ngModel)] ="postRequestRegisterModel.email" id="email" placeholder="karamba@gmail.com" >
+    </div>
+
+    <div class="errorMessage" *ngIf="registrationForm.controls.email.invalid 
+    && registrationForm.controls.email.touched && registrationForm.controls.email.dirty">Invalid email</div>
+    
+    <div class="form-group">
+      <label for="password" id = labelPassword>Password:</label>
+      <input type="password" name="password" formControlName="password" [(ngModel)] ="postRequestRegisterModel.password" id="password"  placeholder="Rakamakafo111">
+    </div>
+
+    <div class="errorMessage" *ngIf="registrationForm.controls.password.invalid 
+    && registrationForm.controls.password.touched && registrationForm.controls.password.dirty">
+      
+      <div class="errorMessage" *ngIf="registrationForm.controls.password.errors.minlength != null">
+        Minimum password length {{registrationForm.controls.password.errors.minlength.requiredLength}} characters,
+        {{registrationForm.controls.password.errors.minlength.requiredLength - registrationForm.controls.password.errors.minlength.actualLength}} characters missing
+      </div>
+
+      <div class="errorMessage" *ngIf="registrationForm.controls.password.errors.pattern != null">
+          At least 1 uppercase letter 1 lowercase letter 1 number
+      </div>
+      
+    </div>
+
+    <div class="form-group">
+        <label for="passwordConfirm" id = labelConfirmPassword>Confirm Password:</label>
+        <input type="password" name="passwordConfirm" formControlName="passwordConfirm" [(ngModel)] ="postRequestRegisterModel.passwordConfirm" id="passwordConfirm" placeholder="Rakamakafo111">
+    </div>
+    
+    <div class="errorMessage" *ngIf="registrationForm.controls.password.value != registrationForm.controls.passwordConfirm.value
+    && registrationForm.controls.passwordConfirm.touched && registrationForm.controls.passwordConfirm.dirty ">Confirmed password does not match password</div>
+
+    <p class="registration-submit">
+      <button type="submit" (click)="this.registration()" class="registration-button" [disabled]="registrationForm.invalid" >Ok</button>
+    </p>
+    
+    <p><label for="passwordConfirm" id = labelConfirmPassword >{{this.registrationMessage}}</label></p>
+  </form>
+</div>
+
+<div>ConfirmPassword: {{registrationForm.controls.passwordConfirm.value}}</div>
+<div>Password: {{registrationForm.controls.password.value}}</div>
+<div>IsValidForm: {{registrationForm.valid}}</div>
+<div>IsValidEmail: {{registrationForm.controls.email.valid}}</div>
+<div>IsvalidPassword: {{registrationForm.controls.password.valid}}</div>
+<div>IsvalidConfirmPassword: {{registrationForm.controls.passwordConfirm.valid}}</div>

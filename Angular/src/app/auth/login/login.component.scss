@@ -22,6 +22,10 @@ button{
   bottom: -25px;
 }
 
+.errorMessage{
+  color: red;
+}
+
 .login{
   display: grid;
   grid-template-columns: 1fr;

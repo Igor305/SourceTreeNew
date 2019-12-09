@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EducationApp.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20191203115404_qwer")]
-    partial class qwer
+    [Migration("20191204090747_Image")]
+    partial class Image
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -56,6 +56,28 @@ namespace EducationApp.DataAccessLayer.Migrations
                     b.HasIndex("PrintingEditionId");
 
                     b.ToTable("AuthorInPrintingEdition");
+                });
+
+            modelBuilder.Entity("EducationApp.DataAccessLayer.Entities.ImagePrintingEdition", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreateDateTime");
+
+                    b.Property<string>("Image");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<Guid>("PrintingEditionId");
+
+                    b.Property<DateTime>("UpdateDateTime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PrintingEditionId");
+
+                    b.ToTable("ImagePrintingEditions");
                 });
 
             modelBuilder.Entity("EducationApp.DataAccessLayer.Entities.Order", b =>
@@ -133,29 +155,6 @@ namespace EducationApp.DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("EducationApp.DataAccessLayer.Entities.PicturePrintingEdition", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreateDateTime");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<byte[]>("Picture");
-
-                    b.Property<Guid>("PrintingEditionId");
-
-                    b.Property<DateTime>("UpdateDateTime");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PrintingEditionId")
-                        .IsUnique();
-
-                    b.ToTable("PicturePrintingEditions");
                 });
 
             modelBuilder.Entity("EducationApp.DataAccessLayer.Entities.PrintingEdition", b =>
@@ -380,6 +379,14 @@ namespace EducationApp.DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("EducationApp.DataAccessLayer.Entities.ImagePrintingEdition", b =>
+                {
+                    b.HasOne("EducationApp.DataAccessLayer.Entities.PrintingEdition", "PrintingEdition")
+                        .WithMany("ImagePrintingEdition")
+                        .HasForeignKey("PrintingEditionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("EducationApp.DataAccessLayer.Entities.Order", b =>
                 {
                     b.HasOne("EducationApp.DataAccessLayer.Entities.Payment", "Payment")
@@ -403,14 +410,6 @@ namespace EducationApp.DataAccessLayer.Migrations
                     b.HasOne("EducationApp.DataAccessLayer.Entities.PrintingEdition", "PrintingEdition")
                         .WithOne("OrderItem")
                         .HasForeignKey("EducationApp.DataAccessLayer.Entities.OrderItem", "PrintingEditionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("EducationApp.DataAccessLayer.Entities.PicturePrintingEdition", b =>
-                {
-                    b.HasOne("EducationApp.DataAccessLayer.Entities.PrintingEdition", "PrintingEdition")
-                        .WithOne("PicturePrintingEdition")
-                        .HasForeignKey("EducationApp.DataAccessLayer.Entities.PicturePrintingEdition", "PrintingEditionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
