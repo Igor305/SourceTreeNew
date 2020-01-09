@@ -8,11 +8,14 @@ import { PostCreateRequestPrintingEditionModel } from '../models/request/postCre
   templateUrl: './printing-edition.component.html',
   styleUrls: ['./printing-edition.component.scss']
 })
+
 export class PrintingEditionComponent implements OnInit {
   postCreateRequestPrintingEditionModel : PostCreateRequestPrintingEditionModel = {};
   responsePrintingEditionModel : ResponsePrintingEditionModel = {};
   printingEditionId : string;
   image : string;
+  displayedColumns: string[] = ['name', 'description', 'price'];
+  dataSource = this.responsePrintingEditionModel.printingEditionModels;
   
   constructor(private printingEditionService: PrintingEditionService) { }
 
@@ -70,10 +73,9 @@ export class PrintingEditionComponent implements OnInit {
     };
   }
 }
- 
 
   ngOnInit(){
     this.getAllWithoutRemove();
-    console.log(this.getAllWithoutRemove());
+    console.log(this.responsePrintingEditionModel.printingEditionModels);
   }
 }

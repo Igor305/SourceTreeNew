@@ -8,6 +8,8 @@ import { CreatePrintingEditionComponent } from './create-printing-edition/create
 import { EditPrintingEditionComponent } from './edit-printing-edition/edit-printing-edition.component';
 import { PrintingEditionRoutingModule } from './printing-edition-routing.module';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [PrintingEditionComponent, CreatePrintingEditionComponent, EditPrintingEditionComponent],
@@ -17,6 +19,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     ReactiveFormsModule,
     MatSelectModule,
     MatNativeDateModule,
+    MatTabsModule,
+    MatTableModule,
     PrintingEditionRoutingModule
   ],
   exports: [PrintingEditionComponent, EditPrintingEditionComponent, CreatePrintingEditionComponent],

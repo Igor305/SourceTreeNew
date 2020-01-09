@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../services/order.service';
 import { ResponseOrderModel } from '../models/response/resposnse.order.model';
 import { PostCreateRequestOrderModel } from '../models/request/postCreate.request.order.model';
+import { StripeScriptTag } from "stripe-angular";
 
 @Component({
   selector: 'app-order',
@@ -9,9 +10,14 @@ import { PostCreateRequestOrderModel } from '../models/request/postCreate.reques
   styleUrls: ['./order.component.scss']
 })
 export class OrderComponent implements OnInit {
+  private publishableKey:string = "...YOUR-STRIPE-KEY-HERE..."
+ 
+  constructor(public StripeScriptTag:StripeScriptTag, private orderServise: OrderService){
+    this.StripeScriptTag.setPublishableKey( this.publishableKey )
+  }
+
   postCreateRequiredOrderModel : PostCreateRequestOrderModel = {};
   orderId : string;
-  constructor(private orderServise: OrderService) { }
 
   public async getAll(){
     const responseOrderModel: ResponseOrderModel = await this.orderServise.getAll();

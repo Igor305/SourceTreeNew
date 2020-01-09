@@ -4,12 +4,32 @@
         <img src = "https://cdn.icon-icons.com/icons2/1356/PNG/128/if-spell-book-2913104_88820.png"
         width="80"
         height="72">
+        
     </div>
-
-    <div class = 'headerButtons'>
-        <a routerLink="/home">
-            <button class = 'button button-home'>Home</button>
+    <button class = 'button button-home' mat-button [matMenuTriggerFor]="menu">Menu</button>
+    <mat-menu #menu="matMenu">
+        <a routerLink='/home'>
+        <button mat-menu-item >Home</button>
         </a>
+        <button mat-menu-item [matMenuTriggerFor]="author">Author</button>
+        <button mat-menu-item [matMenuTriggerFor]="printingEdition">Printing edition</button>
+    </mat-menu>
+    <mat-menu #author="matMenu">
+        <button mat-menu-item>Show list</button>
+        <a routerLink='/auth/registration'>
+        <button mat-menu-item>Create</button>
+        </a>
+        <button mat-menu-item>Edit</button>
+    </mat-menu>
+    <mat-menu #printingEdition="matMenu">
+        <button mat-menu-item>Show list</button>
+        <a routerLink='home/printingEdition/create'>
+        <button mat-menu-item>Create</button>
+        </a>
+        <button mat-menu-item>Edit</button>
+    </mat-menu>
+    <div class = 'headerButtons'>
+
 
         <div class = isExpired *ngIf ="isExpired">
             <label class="email">{{this.Email}}</label>

@@ -1,19 +1,44 @@
 <div>
-        <table>
-            <tr>
-                <td>Name</td> 
-                <td>Description</td> 
-            </tr>
-            <tr *ngFor="let printingEdition of this.responsePrintingEditionModel.printingEditionModels">
-                <td>{{printingEdition.name}}</td> 
-                <td>{{printingEdition.description}}</td> 
-            </tr>
-        </table>
-        <form enctype="multipart/form-data" method="post">
-            <p><input type="file" name="f" (change) = "this.getBase64($event)" multiple accept="image/*">
-            <input type="submit"  value="Отправить"></p>
-            <img src = "{{this.image}}">
-        </form> 
-        <a routerLink="/home/printingEdition/create">
-        <button> Create </button></a>
-    </div>
+    <table>
+        <tr>
+            <td>Name</td> 
+            <td>Description</td> 
+        </tr>
+        <tr *ngFor="let printingEdition of this.responsePrintingEditionModel.printingEditionModels">
+            <td>{{printingEdition.name}}</td> 
+            <td>{{printingEdition.description}}</td> 
+        </tr>
+    </table>
+    <form enctype="multipart/form-data" method="post">
+        <p><input type="file" name="f" (change) = "this.getBase64($event)" multiple accept="image/*">
+        <input type="submit"  value="Отправить"></p>
+        <img src = "{{this.image}}">
+    </form> 
+    <a routerLink="/home/printingEdition/create">
+    <button> Create </button></a>
+    <mat-tab-group>
+        <mat-tab label="PrintingEdition"> 
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef> Description </th>
+                  <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef> Price </th>
+                    <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+              
+        </mat-tab>
+    </mat-tab-group>
+</div>

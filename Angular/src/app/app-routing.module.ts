@@ -8,6 +8,7 @@ const routes: Routes = [
     { path: 'home', loadChildren: () => import('./printing-edition/printing-edition.module').then(mod =>mod.PrintingEditionModule ) },
     { path: 'auth', loadChildren: () => import('./auth/auth.module').then(mod =>mod.AuthModule ) },
     { path: 'user', loadChildren: () => import('./user/user.module').then(mod =>mod.UserModule ) }, 
+    { path: 'order', loadChildren: () => import('./order/order.module').then(mod =>mod.OrderModule)}
  // { path: 'author', loadChildren: () => import('./author/author.module').then(mod =>mod.AuthorModule ) },
     ],
   }
